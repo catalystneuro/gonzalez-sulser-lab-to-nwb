@@ -1,0 +1,382 @@
+# Per-subject metadata for GRIN2B conversion
+# All TODO fields require lab input (see metadata_request_email.md)
+# species is confirmed: Rattus norvegicus (SFARI ARC uses rats)
+# Recording dates and associated .dat filenames are derived from Sample_start_end_GRIN2B.xlsx
+#
+# NOTE on animal 424: The xlsx incorrectly references TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat
+# for animal 424 with overlapping windows vs animal 366. The actual file on disk is
+# TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat. Lab must confirm correct .dat and BL windows.
+
+GRIN2B_129:
+  subject_id: GRIN2B_129
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-26. Raw .dat: TAINI_1047_B_Grin2B_129_Baseline-2021_03_26-0000.dat"
+
+GRIN2B_130:
+  subject_id: GRIN2B_130
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-26. Raw .dat: TAINI_1048_A_Grin2B_130_Baseline-2021_03_26-0000.dat"
+
+GRIN2B_131:
+  subject_id: GRIN2B_131
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-26. Raw .dat: TAINI_1044_C_Grin2B_131_Baseline-2021_03_26-0000.dat"
+
+GRIN2B_132:
+  subject_id: GRIN2B_132
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-26. Raw .dat: TAINI_1045_D_Grin2B_132_Baseline-2021_03_26-0000.dat"
+
+GRIN2B_137:
+  subject_id: GRIN2B_137
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-31. Raw .dat: TAINI_1047_B_Grin2B_137_Baseline_Attempt2-2021_03_31-0000.dat"
+
+GRIN2B_138:
+  subject_id: GRIN2B_138
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-31. Raw .dat: TAINI_1045_D_Grin2B_138_Baseline_Attempt2-2021_03_31-0000.dat"
+
+GRIN2B_139:
+  subject_id: GRIN2B_139
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-31. Raw .dat: TAINI_1048_A_Grin2B_139_Baseline_Attempt2-2021_03_31-0000.dat"
+
+GRIN2B_140:
+  subject_id: GRIN2B_140
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-03-31. Raw .dat: TAINI_1044_C_Grin2B_140_Baseline_Attempt2-2021_03_31-0000.dat"
+
+GRIN2B_227:
+  subject_id: GRIN2B_227
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-07-28. Raw .dat: TAINI_1048_B_GRIN2B_227_Baseline-2021_07_28-0000.dat"
+
+GRIN2B_228:
+  subject_id: GRIN2B_228
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-07-28. Raw .dat: TAINI_1045_D_GRIN2B_228_Baseline-2021_07_28-0000.dat"
+
+GRIN2B_229:
+  subject_id: GRIN2B_229
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-07-28. Raw .dat: TAINI_1044_C_GRIN2B_229_Baseline-2021_07_28-0000.dat"
+
+GRIN2B_236:
+  subject_id: GRIN2B_236
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-29. Raw .dat: TAINI_1044_C_GRIN2B_236_BaselineRedone2-2021_08_29-0000.dat"
+
+GRIN2B_237:
+  subject_id: GRIN2B_237
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-16. Raw .dat: TAINI_1044_C_GRIN2B_237_Baseline-2021_08_16-0000.dat"
+
+GRIN2B_238:
+  subject_id: GRIN2B_238
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-16. Raw .dat: TAINI_1045_D_GRIN2B_238_Baseline-2021_08_16-0000.dat"
+
+GRIN2B_239:
+  subject_id: GRIN2B_239
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-16. Raw .dat: TAINI_1047_B_GRIN2B_239_Baseline-2021_08_16-0000.dat"
+
+GRIN2B_240:
+  subject_id: GRIN2B_240
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-16. Raw .dat: TAINI_1048_A_GRIN2B_240_Baseline-2021_08_16-0000.dat"
+
+GRIN2B_241:
+  subject_id: GRIN2B_241
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2021-08-20. Raw .dat: TAINI_1044_C_GRIN2B_241_Baseline-2021_08_20-0000.dat"
+
+GRIN2B_362:
+  subject_id: GRIN2B_362
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-24. Raw .dat: TAINI_1044_C_GRIN2B_362-2022_04_24-0000.dat [MISSING from share]"
+
+GRIN2B_363:
+  subject_id: GRIN2B_363
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-20. Raw .dat: TAINI_1045_D_GRIN2B_363-2022_04_20-0000.dat [MISSING from share]"
+
+GRIN2B_364:
+  subject_id: GRIN2B_364
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-28. Raw .dat: TAINI_1048_A_GRIN2B_364_Redo-2022_04_28-0000.dat [MISSING from share]"
+
+GRIN2B_365:
+  subject_id: GRIN2B_365
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-16. Raw .dat: TAINI_1048_A_GRIN2B_365-2022_04_16-0000.dat [MISSING from share]"
+
+GRIN2B_366:
+  subject_id: GRIN2B_366
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-12. Raw .dat: TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat [MISSING from share]"
+
+GRIN2B_367:
+  subject_id: GRIN2B_367
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-16. Raw .dat: TAINI_1045_D_GRIN2B_367-2022_04_16-0000.dat [MISSING from share]"
+
+GRIN2B_368:
+  subject_id: GRIN2B_368
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-16. Raw .dat: TAINI_1044_C_GRIN2B_368-2022_04_16-0000.dat [MISSING from share]"
+
+GRIN2B_369:
+  subject_id: GRIN2B_369
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-20. Raw .dat: TAINI_1044_C_GRIN2B_369_Redo2-2022_04_20-0000.dat [MISSING from share]"
+
+GRIN2B_371:
+  subject_id: GRIN2B_371
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-24. Raw .dat: TAINI_1048_A_GRIN2B_371-2022_04_24-0000.dat [MISSING from share]"
+
+GRIN2B_373:
+  subject_id: GRIN2B_373
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-28. Raw .dat: TAINI_1044_C_GRIN2B_373_Redo-2022_04_28-0000.dat"
+
+GRIN2B_375:
+  subject_id: GRIN2B_375
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-05-07. Raw .dat: TAINI_1048_GRIN2B_375_Redo-2022_05_07-0000.dat"
+
+GRIN2B_378:
+  subject_id: GRIN2B_378
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-05-07. Raw .dat: TAINI_1045_GRIN2B_378_Redo-2022_05_07-0000.dat"
+
+GRIN2B_382:
+  subject_id: GRIN2B_382
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-20. Raw .dat: TAINI_1048_A_GRIN2B_382-2022_04_20-0000.dat [MISSING from share]"
+
+GRIN2B_383:
+  subject_id: GRIN2B_383
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-20. Raw .dat: TAINI_1047_B_GRIN2B_383-2022_04_20-0000.dat [MISSING from share]"
+
+GRIN2B_401:
+  subject_id: GRIN2B_401
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-05-03. Raw .dat: TAINI_1048_A_Grin2B_401-2022_05_03-0000.dat [MISSING from share]"
+
+GRIN2B_402:
+  subject_id: GRIN2B_402
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-05-03. Raw .dat: TAINI_1045_D_Grin2B_402-2022_05_03-0000.dat [MISSING from share]"
+
+GRIN2B_404:
+  subject_id: GRIN2B_404
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-04-28. Raw .dat: TAINI_1048_A_GRIN2B_404-2022_04_28-0000.dat [MISSING from share]"
+
+GRIN2B_424:
+  subject_id: GRIN2B_424
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: >
+    Raw .dat on disk: TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat.
+    WARNING: xlsx incorrectly references TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat
+    with overlapping BL windows vs animal 366. Lab must provide correct BL1/BL2
+    sample offsets for the 424_Redo file.
+
+GRIN2B_430:
+  subject_id: GRIN2B_430
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-06-04. Raw .dat: TAINI_1048_A_Grin2B_430_Redo-2022_06_04-0000.dat [MISSING from share]"
+
+GRIN2B_433:
+  subject_id: GRIN2B_433
+  species: Rattus norvegicus
+  strain: "TODO: e.g. Long-Evans or Wistar"
+  genotype: "TODO: WT or Grin2b_het"
+  sex: "TODO: M or F"
+  date_of_birth: "TODO: YYYY-MM-DD"
+  weight: "TODO: e.g. '350 g'"
+  description: "Recording date: 2022-05-31. Raw .dat: TAINI_1044_C_GRIN2B_433-2022_05_31-0000.dat [MISSING from share]"

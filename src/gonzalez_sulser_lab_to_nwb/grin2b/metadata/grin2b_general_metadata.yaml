@@ -1,0 +1,100 @@
+# General metadata for GRIN2B NWB conversion
+# Fields marked TODO require lab input (see metadata_request_email.md)
+# Session-specific fields (session_start_time, session_id) are set programmatically
+# in grin2b_convert_session.py
+
+NWBFile:
+  experiment_description: >
+    Chronic wireless EEG and EMG recordings from freely behaving rats carrying a
+    heterozygous loss-of-function mutation in Grin2b (GluN2B), a high-confidence
+    SFARI autism risk gene. Recordings were acquired over multiple days using the
+    TainiTec wireless telemetry system with NeuroNexus EEG grids (14 EEG + 2 EMG
+    channels). Automated pipelines were used to classify sleep states (Wake, NREM, REM)
+    in 5-second epochs and to detect seizure events. Data contribute to the SFARI
+    Autism Rat Models Consortium (ARC).
+    # TODO: replace with abstract from published GRIN2B paper (DOI pending)
+
+  institution: University of Edinburgh
+  lab: Gonzalez-Sulser Lab
+  experimenter:
+    - Hung, Natalie
+    - Gonzalez-Sulser, Alfredo
+    # TODO: add all contributing experimenters
+
+  keywords:
+    - EEG
+    - EMG
+    - chronic recording
+    - sleep
+    - seizure
+    - circadian rhythm
+    - GRIN2B
+    - GluN2B
+    - NMDA receptor
+    - autism
+    - SFARI
+    - rat
+    - wireless telemetry
+
+  related_publications:
+    # TODO: populate with DOI once provided by lab
+    # Format: "doi:10.xxxx/xxxxx"
+    - doi:PENDING
+
+Device:
+  - name: TainiTecWirelessEEG
+    description: >
+      TainiTec wireless EEG/EMG telemetry system. Single-animal headstage with
+      16-channel recording (14 EEG + 2 EMG). Data acquired at 250.4 Hz, 12-bit ADC,
+      stored as int16 little-endian with no file header.
+    manufacturer: TainiTec
+
+  - name: NeuroNexusEEGGrid
+    description: >
+      NeuroNexus chronic EEG electrode grid.
+      # TODO: add model number, channel count, electrode material
+      # TODO: add anatomical target description per channel
+    manufacturer: NeuroNexus
+
+ElectrodeGroup:
+  - name: EEGArray
+    description: >
+      14-channel EEG electrode array (NeuroNexus chronic grid). Electrodes
+      target cortical and subcortical sites.
+      # TODO: confirm anatomical targets from lab
+    location: cortex  # TODO: refine from lab — e.g. "frontal cortex, parietal cortex, hippocampus"
+    device: NeuroNexusEEGGrid
+
+  - name: EMGArray
+    description: >
+      2-channel electromyogram (EMG) electrodes.
+      # TODO: confirm placement — neck? trapezius? bilateral?
+    location: muscle  # TODO: refine from lab
+    device: TainiTecWirelessEEG
+
+# Electrode channel mapping — populated programmatically from lab-confirmed channel order
+# TODO: once lab confirms which ch00..ch15 indices = EEG_1..EEG_14 vs EMG_1, EMG_2
+# and which (if any) are reference/ground, add explicit mapping here.
+# Placeholder:
+Electrodes:
+  # ch00..ch13: EEG channels (assumed order — MUST CONFIRM)
+  # ch14..ch15: EMG channels (assumed order — MUST CONFIRM)
+  channel_conversion: 1.0  # TODO: replace with ADC gain (volts per int16 count)
+  # e.g. if full-scale = ±0.5 mV mapped to 0-4095: conversion = 1e-3 / 4096
+
+# Light cycle / circadian
+LightCycle:
+  protocol: 12:12 LD  # TODO: confirm with lab
+  lights_on_time: "07:00"  # TODO: confirm Edinburgh facility lights-on time
+  timezone: Europe/London   # Edinburgh (UTC+0 / BST UTC+1)
+
+# Sleep scoring
+SleepScoring:
+  epoch_duration_s: 5.0
+  scorer: automated pipeline (lab)
+  # Assumed state code mapping — MUST CONFIRM:
+  state_labels:
+    0: Wake
+    1: NREM
+    2: REM
+    # 4: unknown (referenced in pw_spectrum.csv column s_4 — ask lab)

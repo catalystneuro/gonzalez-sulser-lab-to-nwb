@@ -194,6 +194,94 @@ src/gonzalez_sulser_lab_to_nwb/
 
 Lines 2–5 (other SFARI lines) get sibling subpackages once GRIN2B is solid.
 
+## Phase 3 — Metadata Collection
+
+Metadata YAMLs created at `src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/`:
+- [`grin2b_general_metadata.yaml`](src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/grin2b_general_metadata.yaml) — NWBFile-level, Device, ElectrodeGroup, LightCycle, SleepScoring
+- [`grin2b_subjects_metadata.yaml`](src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/grin2b_subjects_metadata.yaml) — all 37 animals with stubs for lab-provided fields
+
+### Known / auto-derivable metadata
+
+| Field | Value | Source |
+|---|---|---|
+| institution | University of Edinburgh | SoW |
+| lab | Gonzalez-Sulser Lab | SoW |
+| experimenter | Hung, Natalie; Gonzalez-Sulser, Alfredo | SoW |
+| species | Rattus norvegicus | SoW ("SFARI Autism Rat Models Consortium") |
+| session n_channels | 16 (14 EEG + 2 EMG) | SoW + inspection |
+| sampling_frequency | 250.4 Hz | inspection |
+| timezone | Europe/London | institution (Edinburgh) |
+| session_date | parsed from .dat filename (YYYY_MM_DD) | filename |
+| BL start/end samples | per-animal from xlsx | Sample_start_end_GRIN2B.xlsx |
+| keywords | EEG, EMG, sleep, seizure, circadian, GRIN2B, SFARI, rat | SoW |
+
+### Still needed from lab (all 37 animals)
+
+- sex, date_of_birth, weight, strain, genotype (WT vs het)
+- DOI of GRIN2B publication → `related_publications`
+- Session time-of-day → combined with filename date → `session_start_time`
+- Channel order (which indices = EEG / EMG) → electrode table
+- ADC → volts gain → `conversion` parameter
+- NeuroNexus model + anatomical targets → `ElectrodeGroup.description` + electrode `location`
+- Sleep state label mapping (0/1/2 → Wake/NREM/REM; meaning of state 4)
+- Light-cycle lights-on time
+
+### Data integrity issues found
+
+1. **Animal 424 / xlsx mismatch**: The xlsx maps GRIN2B_424 to `TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat`
+   with BL windows that *overlap* with GRIN2B_366's windows in the same file. This is a data management error.
+   The actual file on disk is `TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat` (present but not in xlsx).
+   **Lab must provide correct BL1/BL2 sample offsets for the 424_Redo file.**
+
+2. **16 `.dat` files missing from share**: Referenced in xlsx but not present on `H:/Gonzalez-Sulser-CN-data-share/`:
+   Animals 362, 363, 364, 365, 366, 367, 368, 369, 371, 382, 383, 401, 402, 404, 430, 433.
+   These are the spring 2022 cohort. Lab needs to provide path or transfer the files.
+
+## Phase 4 — Synchronization Analysis
+
+### Conclusion: single-clock — no cross-system sync required
+
+All data streams in this dataset derive from a **single TainiTec `.dat` file per animal per recording**.
+There is no multi-clock problem. Alignment is purely arithmetic:
+
+```text
+Reference clock:  TainiTec .dat sample index (at fs = 250.4 Hz)
+
+Sleep CSVs:       t_sleep [s] = epoch_index × 5.0
+                  t_dat  [s] = BL_start_sample / 250.4 + t_sleep
+                  t_abs       = session_start_time + timedelta(seconds=t_dat)
+
+Seizure CSVs:     t_seiz [s] = sec_start (already from BL window start)
+                  t_dat  [s] = BL_start_sample / 250.4 + t_seiz
+                  t_abs       = session_start_time + timedelta(seconds=t_dat)
+
+DGE_SWDs.csv:     same epoch grid as sleep CSVs (17,280 × 5 s)
+
+Raw EEG/EMG:      starting_time = BL_start_sample / 250.4
+                  (relative to session_start_time, set via set_aligned_starting_time())
+```
+
+No `temporally_align_data_interfaces()` override needed beyond applying the BL offset.
+
+### Session start time
+
+`session_start_time` = date from `.dat` filename (YYYY_MM_DD) + time-of-day from lab
+(pending from Natalie) + `Europe/London` timezone.
+
+Until time-of-day is confirmed, we default to `T00:00:00+00:00` with a warning logged.
+The BL windows (starting ≈20 h into the file) are then indexed from that origin.
+
+### NWB epoch table (BL1 / BL2)
+
+We will populate `nwbfile.add_epoch()` for BL1 and BL2 per session using the
+sample-index windows from the xlsx, converted to seconds:
+
+```python
+bl1_start_s = bl1_start_sample / 250.4
+bl1_stop_s  = bl1_stop_sample  / 250.4
+nwbfile.add_epoch(start_time=bl1_start_s, stop_time=bl1_stop_s, tags=["BL1"])
+```
+
 ## Spyglass Compatibility (Aim 2)
 
 Spyglass requires:
