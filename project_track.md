@@ -8,13 +8,18 @@
 
 ## Pre-Conversion
 
-- Repo Setup (PR TBD)
-- Initial Inspection and Notes: Delineation of *Projects (SFARI lines)*, *Experiments (Baseline 24h windows)* and *Data Streams* — see [`conversion_notes.md`](conversion_notes.md)
-- Identify and request missing data / metadata / READMEs — see [`metadata_request_email.md`](metadata_request_email.md)
-- Acquire **all** raw `.dat` files (only 21 of ~37 animals' raw recordings are currently in the share)
-- Confirm TainiTec `.dat` binary spec (dtype, sample rate, channel order, gain)
-- Obtain subject metadata table for all GRIN2B animals
-- Obtain reader / scoring code from the lab
+- [x] Repo Setup (local; remote pending API approval)
+- [x] Initial Inspection and Notes: Delineation of *Projects (SFARI lines)*, *Experiments (Baseline 24h windows)* and *Data Streams* — see [`conversion_notes.md`](conversion_notes.md)
+- [x] Phase 2 byte-level inspection of `.dat` and CSV streams ([`inspect_data.py`](inspect_data.py), [`inspection_report.json`](inspection_report.json))
+- [x] Confirm TainiTec `.dat` binary layout: int16 LE, 16ch interleaved, fs = 250.4 Hz, no header
+- [x] Confirm BL1/BL2 sample-window semantics from `Sample_start_end_GRIN2B.xlsx`
+- [x] Confirm seizure-CSV time origin (seconds from BL window start)
+- [x] Confirm `Channels.csv` is a derived feature (not raw) → will not be republished
+- [x] Identify and draft all missing data / metadata requests — see `metadata_request_email.md`
+- [ ] **Pending lab reply** — channel order, ADC→volts gain, sleep code legend, NeuroNexus model, subject table, time-of-day & timezone, GRIN2B DOI, location of missing raw `.dat` files (~16 animals)
+- [ ] Acquire **all** raw `.dat` files (only 21 of ~37 GRIN2B animals' raw recordings are in the share)
+- [ ] Obtain subject metadata table for all GRIN2B animals
+- [ ] Obtain lab reader / scoring code (URL)
 
 ---
 

@@ -1,0 +1,1977 @@
+{
+  "dat_layout_probe": {
+    "n_files": 21,
+    "files": [
+      {
+        "name": "TAINI_1044_C_Grin2B_131_Baseline-2021_03_26-0000.dat",
+        "size_bytes": 2220102816,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69378213,
+            "dur_days": 3.212
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69378213,
+            "dur_days": 3.207
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69378213,
+            "dur_days": 3.137
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69378213,
+            "dur_days": 1.606
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69378213,
+            "dur_days": 0.803
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_Grin2B_140_Baseline_Attempt2-2021_03_31-0000.dat",
+        "size_bytes": 2121275936,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 66289873,
+            "dur_days": 3.069
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 66289873,
+            "dur_days": 3.064
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 66289873,
+            "dur_days": 2.997
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 66289873,
+            "dur_days": 1.534
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 66289873,
+            "dur_days": 0.767
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_GRIN2B_229_Baseline-2021_07_28-0000.dat",
+        "size_bytes": 2870154656,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 89692333,
+            "dur_days": 4.152
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 89692333,
+            "dur_days": 4.146
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 89692333,
+            "dur_days": 4.055
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 89692333,
+            "dur_days": 2.076
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 89692333,
+            "dur_days": 1.038
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_GRIN2B_236_BaselineRedone2-2021_08_29-0000.dat",
+        "size_bytes": 2222653440,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69457920,
+            "dur_days": 3.216
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69457920,
+            "dur_days": 3.211
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69457920,
+            "dur_days": 3.14
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69457920,
+            "dur_days": 1.608
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69457920,
+            "dur_days": 0.804
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34728960,
+            "dur_days": 1.608
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34728960,
+            "dur_days": 1.605
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34728960,
+            "dur_days": 1.57
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_GRIN2B_237_Baseline-2021_08_16-0000.dat",
+        "size_bytes": 2193521920,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 68547560,
+            "dur_days": 3.173
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 68547560,
+            "dur_days": 3.168
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 68547560,
+            "dur_days": 3.099
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 68547560,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 68547560,
+            "dur_days": 0.793
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34273780,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34273780,
+            "dur_days": 1.584
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34273780,
+            "dur_days": 1.55
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_GRIN2B_241_Baseline-2021_08_20-0000.dat",
+        "size_bytes": 2162262016,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 67570688,
+            "dur_days": 3.128
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 67570688,
+            "dur_days": 3.123
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 67570688,
+            "dur_days": 3.055
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 67570688,
+            "dur_days": 1.564
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 67570688,
+            "dur_days": 0.782
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 33785344,
+            "dur_days": 1.564
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 33785344,
+            "dur_days": 1.562
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 33785344,
+            "dur_days": 1.527
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_GRIN2B_373_Redo-2022_04_28-0000.dat",
+        "size_bytes": 2679145056,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 83723283,
+            "dur_days": 3.876
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 83723283,
+            "dur_days": 3.87
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 83723283,
+            "dur_days": 3.785
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 83723283,
+            "dur_days": 1.938
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 83723283,
+            "dur_days": 0.969
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 95683752,
+            "dur_days": 4.43
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 95683752,
+            "dur_days": 4.423
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 95683752,
+            "dur_days": 4.326
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat",
+        "size_bytes": 2119815936,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 66244248,
+            "dur_days": 3.067
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 66244248,
+            "dur_days": 3.062
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 66244248,
+            "dur_days": 2.995
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 66244248,
+            "dur_days": 1.533
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 66244248,
+            "dur_days": 0.767
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 33122124,
+            "dur_days": 1.533
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 33122124,
+            "dur_days": 1.531
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 33122124,
+            "dur_days": 1.497
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1045_D_Grin2B_132_Baseline-2021_03_26-0000.dat",
+        "size_bytes": 2224362656,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69511333,
+            "dur_days": 3.218
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69511333,
+            "dur_days": 3.213
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69511333,
+            "dur_days": 3.143
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69511333,
+            "dur_days": 1.609
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69511333,
+            "dur_days": 0.805
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1045_D_Grin2B_138_Baseline_Attempt2-2021_03_31-0000.dat",
+        "size_bytes": 2121407008,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 66293969,
+            "dur_days": 3.069
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 66293969,
+            "dur_days": 3.064
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 66293969,
+            "dur_days": 2.997
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 66293969,
+            "dur_days": 1.535
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 66293969,
+            "dur_days": 0.767
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 75764536,
+            "dur_days": 3.508
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 75764536,
+            "dur_days": 3.502
+          },
+          {
+            "n_ch": 14,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 75764536,
+            "dur_days": 3.425
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1045_D_GRIN2B_228_Baseline-2021_07_28-0000.dat",
+        "size_bytes": 2869958048,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 89686189,
+            "dur_days": 4.152
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 89686189,
+            "dur_days": 4.146
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 89686189,
+            "dur_days": 4.055
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 89686189,
+            "dur_days": 2.076
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 89686189,
+            "dur_days": 1.038
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1045_D_GRIN2B_238_Baseline-2021_08_16-0000.dat",
+        "size_bytes": 2193849600,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 68557800,
+            "dur_days": 3.174
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 68557800,
+            "dur_days": 3.169
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 68557800,
+            "dur_days": 3.1
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 68557800,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 68557800,
+            "dur_days": 0.793
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34278900,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34278900,
+            "dur_days": 1.584
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34278900,
+            "dur_days": 1.55
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1045_GRIN2B_378_Redo-2022_05_07-0000.dat",
+        "size_bytes": 2234985504,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69843297,
+            "dur_days": 3.233
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69843297,
+            "dur_days": 3.228
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69843297,
+            "dur_days": 3.158
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69843297,
+            "dur_days": 1.617
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69843297,
+            "dur_days": 0.808
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1047_B_Grin2B_129_Baseline-2021_03_26-0000.dat",
+        "size_bytes": 2220529088,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69391534,
+            "dur_days": 3.213
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69391534,
+            "dur_days": 3.207
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69391534,
+            "dur_days": 3.137
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69391534,
+            "dur_days": 1.606
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69391534,
+            "dur_days": 0.803
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34695767,
+            "dur_days": 1.606
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34695767,
+            "dur_days": 1.604
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34695767,
+            "dur_days": 1.569
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1047_B_Grin2B_137_Baseline_Attempt2-2021_03_31-0000.dat",
+        "size_bytes": 2121374336,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 66292948,
+            "dur_days": 3.069
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 66292948,
+            "dur_days": 3.064
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 66292948,
+            "dur_days": 2.997
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 66292948,
+            "dur_days": 1.535
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 66292948,
+            "dur_days": 0.767
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 33146474,
+            "dur_days": 1.535
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 33146474,
+            "dur_days": 1.532
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 33146474,
+            "dur_days": 1.499
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1047_B_GRIN2B_239_Baseline-2021_08_16-0000.dat",
+        "size_bytes": 2193718528,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 68553704,
+            "dur_days": 3.174
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 68553704,
+            "dur_days": 3.169
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 68553704,
+            "dur_days": 3.099
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 68553704,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 68553704,
+            "dur_days": 0.793
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34276852,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34276852,
+            "dur_days": 1.584
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34276852,
+            "dur_days": 1.55
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1048_A_Grin2B_130_Baseline-2021_03_26-0000.dat",
+        "size_bytes": 2220070336,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69377198,
+            "dur_days": 3.212
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69377198,
+            "dur_days": 3.207
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69377198,
+            "dur_days": 3.137
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69377198,
+            "dur_days": 1.606
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69377198,
+            "dur_days": 0.803
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34688599,
+            "dur_days": 1.606
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34688599,
+            "dur_days": 1.603
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34688599,
+            "dur_days": 1.568
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1048_A_Grin2B_139_Baseline_Attempt2-2021_03_31-0000.dat",
+        "size_bytes": 2121505408,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 66297044,
+            "dur_days": 3.069
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 66297044,
+            "dur_days": 3.064
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 66297044,
+            "dur_days": 2.997
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 66297044,
+            "dur_days": 1.535
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 66297044,
+            "dur_days": 0.767
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 33148522,
+            "dur_days": 1.535
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 33148522,
+            "dur_days": 1.532
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 33148522,
+            "dur_days": 1.499
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1048_A_GRIN2B_240_Baseline-2021_08_16-0000.dat",
+        "size_bytes": 2193685760,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 68552680,
+            "dur_days": 3.174
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 68552680,
+            "dur_days": 3.169
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 68552680,
+            "dur_days": 3.099
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 68552680,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 68552680,
+            "dur_days": 0.793
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34276340,
+            "dur_days": 1.587
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34276340,
+            "dur_days": 1.584
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34276340,
+            "dur_days": 1.55
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1048_B_GRIN2B_227_Baseline-2021_07_28-0000.dat",
+        "size_bytes": 2870154656,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 89692333,
+            "dur_days": 4.152
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 89692333,
+            "dur_days": 4.146
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 89692333,
+            "dur_days": 4.055
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 89692333,
+            "dur_days": 2.076
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 89692333,
+            "dur_days": 1.038
+          }
+        ]
+      },
+      {
+        "name": "TAINI_1048_GRIN2B_375_Redo-2022_05_07-0000.dat",
+        "size_bytes": 2234985792,
+        "candidates": [
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.0,
+            "n_samples": 69843306,
+            "dur_days": 3.233
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 250.4,
+            "n_samples": 69843306,
+            "dur_days": 3.228
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 256.0,
+            "n_samples": 69843306,
+            "dur_days": 3.158
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 500.0,
+            "n_samples": 69843306,
+            "dur_days": 1.617
+          },
+          {
+            "n_ch": 16,
+            "dtype": "int16",
+            "fs": 1000.0,
+            "n_samples": 69843306,
+            "dur_days": 0.808
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.0,
+            "n_samples": 34921653,
+            "dur_days": 1.617
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 250.4,
+            "n_samples": 34921653,
+            "dur_days": 1.614
+          },
+          {
+            "n_ch": 16,
+            "dtype": "float32",
+            "fs": 256.0,
+            "n_samples": 34921653,
+            "dur_days": 1.579
+          }
+        ]
+      }
+    ]
+  },
+  "dat_first_chunk_stats": {
+    "file": "TAINI_1044_C_Grin2B_131_Baseline-2021_03_26-0000.dat",
+    "n_samples_read": 100000,
+    "stats": [
+      {
+        "ch": 0,
+        "min": -2,
+        "max": 2702,
+        "mean": 2595.01,
+        "std": 22.252,
+        "n_unique": 170
+      },
+      {
+        "ch": 1,
+        "min": -2,
+        "max": 2638,
+        "mean": 2596.543,
+        "std": 15.575,
+        "n_unique": 92
+      },
+      {
+        "ch": 2,
+        "min": -2,
+        "max": 2878,
+        "mean": 2604.794,
+        "std": 37.186,
+        "n_unique": 318
+      },
+      {
+        "ch": 3,
+        "min": -3,
+        "max": 3015,
+        "mean": 2614.848,
+        "std": 41.894,
+        "n_unique": 370
+      },
+      {
+        "ch": 4,
+        "min": -3,
+        "max": 2884,
+        "mean": 2598.934,
+        "std": 34.032,
+        "n_unique": 304
+      },
+      {
+        "ch": 5,
+        "min": -2,
+        "max": 2703,
+        "mean": 2596.851,
+        "std": 22.093,
+        "n_unique": 151
+      },
+      {
+        "ch": 6,
+        "min": -2,
+        "max": 2670,
+        "mean": 2591.332,
+        "std": 18.777,
+        "n_unique": 121
+      },
+      {
+        "ch": 7,
+        "min": -2,
+        "max": 2784,
+        "mean": 2598.028,
+        "std": 28.487,
+        "n_unique": 240
+      },
+      {
+        "ch": 8,
+        "min": -2,
+        "max": 2660,
+        "mean": 2558.656,
+        "std": 19.543,
+        "n_unique": 130
+      },
+      {
+        "ch": 9,
+        "min": -2,
+        "max": 2727,
+        "mean": 2571.303,
+        "std": 29.35,
+        "n_unique": 214
+      },
+      {
+        "ch": 10,
+        "min": -2,
+        "max": 2613,
+        "mean": 2574.814,
+        "std": 12.804,
+        "n_unique": 84
+      },
+      {
+        "ch": 11,
+        "min": -2,
+        "max": 2821,
+        "mean": 2582.282,
+        "std": 38.581,
+        "n_unique": 313
+      },
+      {
+        "ch": 12,
+        "min": -2,
+        "max": 4095,
+        "mean": 2600.797,
+        "std": 96.92,
+        "n_unique": 1502
+      },
+      {
+        "ch": 13,
+        "min": -2,
+        "max": 2903,
+        "mean": 2580.967,
+        "std": 36.856,
+        "n_unique": 336
+      },
+      {
+        "ch": 14,
+        "min": -2,
+        "max": 2652,
+        "mean": 2563.669,
+        "std": 17.691,
+        "n_unique": 121
+      },
+      {
+        "ch": 15,
+        "min": -2,
+        "max": 2700,
+        "mean": 2558.777,
+        "std": 23.742,
+        "n_unique": 187
+      }
+    ]
+  },
+  "sleep_csvs": {
+    "dge_ok": {
+      "path": "H:\\Gonzalez-Sulser-CN-data-share\\Sleep state classifications\\GRIN2B_129\\GRIN2B_129_BL1-dge_ok.csv",
+      "rows": 17280,
+      "columns": [
+        "sleep.score"
+      ],
+      "head": [
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        },
+        {
+          "sleep.score": 0
+        }
+      ],
+      "unique_values": {
+        "0": 10539,
+        "1": 6443,
+        "2": 298
+      }
+    },
+    "pw_spectrum": {
+      "path": "H:\\Gonzalez-Sulser-CN-data-share\\Sleep state classifications\\GRIN2B_129\\GRIN2B_129_BL1-pw_spectrum.csv",
+      "rows": 628,
+      "columns": [
+        "hz",
+        "s_0",
+        "s_1",
+        "s_2",
+        "s_4"
+      ],
+      "head": [
+        {
+          "hz": "BL1",
+          "s_0": "BL1",
+          "s_1": "BL1",
+          "s_2": "BL1",
+          "s_4": "BL1"
+        },
+        {
+          "hz": "0",
+          "s_0": "0.519808940651542",
+          "s_1": "0.539313565076752",
+          "s_2": "0.123515154783457",
+          "s_4": "0.634967333094417"
+        },
+        {
+          "hz": "0.2",
+          "s_0": "0.497687205129414",
+          "s_1": "0.535483129941906",
+          "s_2": "0.108808164874065",
+          "s_4": "0.614226237708448"
+        },
+        {
+          "hz": "0.4",
+          "s_0": "0.48344180307272",
+          "s_1": "0.558114490136279",
+          "s_2": "0.0930007620258059",
+          "s_4": "0.598746335009549"
+        },
+        {
+          "hz": "0.6",
+          "s_0": "0.453522070166974",
+          "s_1": "0.574945563119397",
+          "s_2": "0.0708130912727367",
+          "s_4": "0.5544260170722"
+        }
+      ],
+      "tail": [
+        {
+          "hz": "124.8",
+          "s_0": "0.0425969640145919",
+          "s_1": "0.00432804066197617",
+          "s_2": "0.00541808732920684",
+          "s_4": "0.0705678377200629"
+        },
+        {
+          "hz": "125",
+          "s_0": "0.0423888395552288",
+          "s_1": "0.0045360063219113",
+          "s_2": "0.00575196271935382",
+          "s_4": "0.0693447114669355"
+        },
+        {
+          "hz": "125.2",
+          "s_0": "0.0424508197512789",
+          "s_1": "0.00483066766122088",
+          "s_2": "0.00609850471480985",
+          "s_4": "0.068894079936108"
+        }
+      ],
+      "first_col_unique_top": {
+        "BL1": 1,
+        "0": 1,
+        "0.2": 1,
+        "0.4": 1,
+        "0.6": 1,
+        "0.8": 1,
+        "1": 1,
+        "1.2": 1,
+        "1.4": 1,
+        "1.6": 1
+      }
+    },
+    "channels_head": {
+      "path": "H:\\Gonzalez-Sulser-CN-data-share\\Sleep state classifications\\GRIN2B_129\\GRIN2B_129_BL1_Channels.csv",
+      "columns": [
+        "Chanls1",
+        "Chanls2"
+      ],
+      "head": [
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 0.0,
+          "Chanls2": 0.0
+        },
+        {
+          "Chanls1": 8.29523809523809,
+          "Chanls2": 8.76507936507937
+        },
+        {
+          "Chanls1": 8.35555555555556,
+          "Chanls2": 8.79365079365079
+        },
+        {
+          "Chanls1": 8.35555555555556,
+          "Chanls2": 8.79047619047619
+        },
+        {
+          "Chanls1": 8.31428571428571,
+          "Chanls2": 8.77460317460318
+        },
+        {
+          "Chanls1": 8.26031746031746,
+          "Chanls2": 8.7968253968254
+        },
+        {
+          "Chanls1": 8.24444444444444,
+          "Chanls2": 8.77142857142857
+        },
+        {
+          "Chanls1": 8.23492063492063,
+          "Chanls2": 8.78095238095238
+        },
+        {
+          "Chanls1": 8.24761904761905,
+          "Chanls2": 8.77460317460318
+        },
+        {
+          "Chanls1": 8.29523809523809,
+          "Chanls2": 8.73015873015873
+        }
+      ]
+    },
+    "channels_stats": {
+      "n_rows": 21634560,
+      "n_rows_eq_24h_at_250p4": 86400.0,
+      "per_col": [
+        {
+          "col": 0,
+          "min": 0.0,
+          "max": 98.2857142857143,
+          "mean": 7.866,
+          "std": 1.821,
+          "n_nonzero": 20538721,
+          "first_nonzero_row": 11
+        },
+        {
+          "col": 1,
+          "min": 0.0,
+          "max": 85.1809523809524,
+          "mean": 8.068,
+          "std": 1.866,
+          "n_nonzero": 20538721,
+          "first_nonzero_row": 11
+        }
+      ]
+    }
+  },
+  "seizure_csvs": {
+    "n_files": 73,
+    "samples": [
+      {
+        "file": "GRIN2B_129_BL1_Seizures.csv",
+        "rows": 753,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 1110.3,
+            "sec_end": 1113.5,
+            "dur": 3.2
+          },
+          {
+            "sec_start": 1116.7,
+            "sec_end": 1123.9,
+            "dur": 7.2
+          },
+          {
+            "sec_start": 1141.3,
+            "sec_end": 1146.1,
+            "dur": 4.8
+          }
+        ],
+        "max_sec_end": 86129.3
+      },
+      {
+        "file": "GRIN2B_129_BL2_Seizures.csv",
+        "rows": 816,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 252.7,
+            "sec_end": 254.1,
+            "dur": 1.4
+          },
+          {
+            "sec_start": 1384.9,
+            "sec_end": 1402.5,
+            "dur": 17.6
+          },
+          {
+            "sec_start": 1469.5,
+            "sec_end": 1476.3,
+            "dur": 6.8
+          }
+        ],
+        "max_sec_end": 86158.5
+      },
+      {
+        "file": "GRIN2B_130_BL1_Seizures.csv",
+        "rows": 483,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 101.7,
+            "sec_end": 105.1,
+            "dur": 3.4
+          },
+          {
+            "sec_start": 114.3,
+            "sec_end": 117.1,
+            "dur": 2.8
+          },
+          {
+            "sec_start": 291.9,
+            "sec_end": 294.1,
+            "dur": 2.2
+          }
+        ],
+        "max_sec_end": 86258.9
+      },
+      {
+        "file": "GRIN2B_130_BL2_Seizures.csv",
+        "rows": 531,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 1102.1,
+            "sec_end": 1104.1,
+            "dur": 2.0
+          },
+          {
+            "sec_start": 1113.5,
+            "sec_end": 1114.9,
+            "dur": 1.4
+          },
+          {
+            "sec_start": 1149.7,
+            "sec_end": 1153.7,
+            "dur": 4.0
+          }
+        ],
+        "max_sec_end": 86390.7
+      },
+      {
+        "file": "GRIN2B_131_BL1_Seizures.csv",
+        "rows": 769,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 110.9,
+            "sec_end": 111.9,
+            "dur": 1.0
+          },
+          {
+            "sec_start": 115.9,
+            "sec_end": 123.3,
+            "dur": 7.4
+          },
+          {
+            "sec_start": 148.9,
+            "sec_end": 154.1,
+            "dur": 5.2
+          }
+        ],
+        "max_sec_end": 85579.1
+      }
+    ]
+  },
+  "seiz_subfolder": {
+    "files": [
+      {
+        "name": "GRIN2B_129_BL1_DGE_SWDs.csv",
+        "rows": 17280,
+        "cols": [
+          "DGE_SWDs"
+        ],
+        "head": [
+          {
+            "DGE_SWDs": 4
+          },
+          {
+            "DGE_SWDs": 4
+          },
+          {
+            "DGE_SWDs": 4
+          }
+        ]
+      },
+      {
+        "name": "GRIN2B_129_BL1_Seiz_Totals.csv",
+        "rows": 24,
+        "cols": [
+          "N_event",
+          "mean_dur",
+          "ZT",
+          "SWDs",
+          "Day"
+        ],
+        "head": [
+          {
+            "N_event": 753,
+            "mean_dur": 4.40717131474112,
+            "ZT": 0,
+            "SWDs": 40,
+            "Day": 753
+          },
+          {
+            "N_event": 0,
+            "mean_dur": 0.0,
+            "ZT": 1,
+            "SWDs": 18,
+            "Day": 0
+          },
+          {
+            "N_event": 0,
+            "mean_dur": 0.0,
+            "ZT": 2,
+            "SWDs": 8,
+            "Day": 0
+          }
+        ]
+      },
+      {
+        "name": "GRIN2B_129_BL1_Seizures.csv",
+        "rows": 753,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 1110.3,
+            "sec_end": 1113.5,
+            "dur": 3.2
+          },
+          {
+            "sec_start": 1116.7,
+            "sec_end": 1123.9,
+            "dur": 7.2
+          },
+          {
+            "sec_start": 1141.3,
+            "sec_end": 1146.1,
+            "dur": 4.8
+          }
+        ]
+      },
+      {
+        "name": "GRIN2B_129_BL2_DGE_SWDs.csv",
+        "rows": 17280,
+        "cols": [
+          "DGE_SWDs"
+        ],
+        "head": [
+          {
+            "DGE_SWDs": 4
+          },
+          {
+            "DGE_SWDs": 4
+          },
+          {
+            "DGE_SWDs": 4
+          }
+        ]
+      },
+      {
+        "name": "GRIN2B_129_BL2_Seiz_Totals.csv",
+        "rows": 24,
+        "cols": [
+          "N_event",
+          "mean_dur",
+          "ZT",
+          "SWDs",
+          "Day"
+        ],
+        "head": [
+          {
+            "N_event": 816,
+            "mean_dur": 4.9899509803923,
+            "ZT": 0,
+            "SWDs": 48,
+            "Day": 816
+          },
+          {
+            "N_event": 0,
+            "mean_dur": 0.0,
+            "ZT": 1,
+            "SWDs": 11,
+            "Day": 0
+          },
+          {
+            "N_event": 0,
+            "mean_dur": 0.0,
+            "ZT": 2,
+            "SWDs": 13,
+            "Day": 0
+          }
+        ]
+      },
+      {
+        "name": "GRIN2B_129_BL2_Seizures.csv",
+        "rows": 816,
+        "cols": [
+          "sec_start",
+          "sec_end",
+          "dur"
+        ],
+        "head": [
+          {
+            "sec_start": 252.7,
+            "sec_end": 254.1,
+            "dur": 1.4
+          },
+          {
+            "sec_start": 1384.9,
+            "sec_end": 1402.5,
+            "dur": 17.6
+          },
+          {
+            "sec_start": 1469.5,
+            "sec_end": 1476.3,
+            "dur": 6.8
+          }
+        ]
+      }
+    ],
+    "dup_check": {
+      "top_shape": [
+        753,
+        3
+      ],
+      "inner_shape": [
+        753,
+        3
+      ],
+      "equal": true
+    }
+  },
+  "light_cycle_xlsx": {
+    "path": "H:\\Gonzalez-Sulser-CN-data-share\\Light cycle timing metadata\\Sample_start_end_GRIN2B.xlsx",
+    "sheets": [
+      {
+        "name": "Sheet1",
+        "n_rows": 75,
+        "n_cols": 6,
+        "first_10": [
+          [
+            "Animal ID",
+            "Line",
+            "File",
+            "Baseline",
+            "Start",
+            "End"
+          ],
+          [
+            129,
+            "GRIN2B",
+            "TAINI_1047_B_Grin2B_129_Baseline-2021_03_26-0000.dat",
+            "BL1",
+            18088897,
+            39723456
+          ],
+          [
+            129,
+            "GRIN2B",
+            "TAINI_1047_B_Grin2B_129_Baseline-2021_03_26-0000.dat",
+            "BL2",
+            39723457,
+            61358016
+          ],
+          [
+            130,
+            "GRIN2B",
+            "TAINI_1048_A_Grin2B_130_Baseline-2021_03_26-0000.dat",
+            "BL1",
+            18088897,
+            39723456
+          ],
+          [
+            130,
+            "GRIN2B",
+            "TAINI_1048_A_Grin2B_130_Baseline-2021_03_26-0000.dat",
+            "BL2",
+            39723457,
+            61358016
+          ],
+          [
+            131,
+            "GRIN2B",
+            "TAINI_1044_C_Grin2B_131_Baseline-2021_03_26-0000.dat",
+            "BL1",
+            18088897,
+            39723456
+          ],
+          [
+            131,
+            "GRIN2B",
+            "TAINI_1044_C_Grin2B_131_Baseline-2021_03_26-0000.dat",
+            "BL2",
+            39723457,
+            61358016
+          ],
+          [
+            132,
+            "GRIN2B",
+            "TAINI_1045_D_Grin2B_132_Baseline-2021_03_26-0000.dat",
+            "BL1",
+            18088897,
+            39723456
+          ],
+          [
+            132,
+            "GRIN2B",
+            "TAINI_1045_D_Grin2B_132_Baseline-2021_03_26-0000.dat",
+            "BL2",
+            39723457,
+            61358016
+          ],
+          [
+            137,
+            "GRIN2B",
+            "TAINI_1047_B_Grin2B_137_Baseline_Attempt2-2021_03_31-0000.dat",
+            "BL1",
+            18599713,
+            40234272
+          ]
+        ],
+        "last_3": [
+          [
+            430,
+            "GRIN2B",
+            "TAINI_1048_A_Grin2B_430_Redo-2022_06_04-0000.dat",
+            "BL2",
+            39407953,
+            61042512
+          ],
+          [
+            433,
+            "GRIN2B",
+            "TAINI_1044_C_GRIN2B_433-2022_05_31-0000.dat",
+            "BL1",
+            14543233,
+            36177792
+          ],
+          [
+            433,
+            "GRIN2B",
+            "TAINI_1044_C_GRIN2B_433-2022_05_31-0000.dat",
+            "BL2",
+            36177793,
+            57812352
+          ]
+        ]
+      }
+    ]
+  },
+  "alignment": {
+    "channels_csv_rows": 21634560
+  },
+  "cross_check": {
+    "target_stats": {
+      "min": 7.82222222222222,
+      "max": 9.08888888888889
+    },
+    "matches": []
+  }
+}
