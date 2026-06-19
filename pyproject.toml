@@ -1,0 +1,31 @@
+[project]
+name = "gonzalez-sulser-lab-to-nwb"
+version = "0.0.1"
+description = "NWB conversion scripts for the Gonzalez-Sulser Lab (University of Edinburgh)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "CatalystNeuro", email = "ben.dichter@catalystneuro.com" }]
+dependencies = ["neuroconv", "nwbinspector"]
+
+[project.optional-dependencies]
+grin2b = [
+    "neuroconv",
+    "spikeinterface>=0.100",
+    "pynwb>=2.8",
+    "ndx-events>=0.2.2",
+    "pandas",
+    "openpyxl",
+    "pyyaml",
+    "hdmf",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["*.yaml", "*.yml", "*.json"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gonzalez_sulser_lab_to_nwb"]

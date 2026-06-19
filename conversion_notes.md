@@ -116,9 +116,63 @@ ch12: std=97  ch13: std=37  ch14: std=18  ch15: std=24
 
 `ch12` looks like the cleanest live EEG. `ch01`, `ch10` look like inactive/reference. Without lab confirmation we **cannot map specific indices to {EEG_1..EEG_14, EMG_1, EMG_2}** — see open question 3 below.
 
+## 2026-06-19 Updates
+
+### New data files received
+
+Two new files were added to the share and incorporated:
+
+**`H:/Gonzalez-Sulser-CN-data-share/Chronic EEG recordings/grin2b_eeg_channels.csv`**
+Confirmed channel layout (Python 0-based index → electrode label, hemisphere):
+
+| Python idx | Electrode | Hemisphere | Group |
+|---|---|---|---|
+| 0 | S1_Tr | R | EEGArray |
+| 1 | EMG | R | **EMGArray** ← was assumed at idx 14 |
+| 2 | M2_Fra | R | EEGArray |
+| 3 | M2_anterior | R | EEGArray |
+| 4 | M1_anterior | R | EEGArray |
+| 5 | V2_ML | R | EEGArray |
+| 6 | V1_M | R | EEGArray |
+| 7 | S1Hl_S1Fl | R | EEGArray |
+| 8 | V1_M | L | EEGArray |
+| 9 | V2_ML | L | EEGArray |
+| 10 | S1Hl_S1Fl | L | EEGArray |
+| 11 | M1_anterior | L | EEGArray |
+| 12 | M2_anterior | L | EEGArray |
+| 13 | M2_Fra | L | EEGArray |
+| 14 | EMG | L | **EMGArray** ← was assumed at idx 15 |
+| 15 | S1_Tr | L | EEGArray |
+
+**Key correction:** EMG channels are at indices **1 and 14** (interleaved), not 14–15 as previously assumed.
+`TainiRecordingInterface._CHANNEL_MAP` has been updated accordingly.
+
+**`H:/Gonzalez-Sulser-CN-data-share/Subject metadata/GRIN2B_CDKL5_Seizures_Overall.csv`**
+Provides per-subject seizure summary statistics and, crucially, **sex and genotype** for 29 GRIN2B animals:
+`grin2b_subjects_metadata.yaml` updated with `sex` (M/F) and `genotype` (Het/Wt) for:
+129, 130, 131, 137, 138, 139, 140, 227, 228, 229, 236, 237, 238, 239, 240, 241,
+362, 363, 364, 365, 366, 367, 368, 369, 371, 373, 375, 378, 382.
+Animals 132, 383, 401, 402, 404, 424, 430, 433 not in CSV — still TODO.
+
+### Code changes (2026-06-19)
+
+1. **`TainiRecordingInterface`** — now inherits from `BaseRecordingExtractorInterface`
+   (wraps `spikeinterface.core.BinaryRecordingExtractor`). Uses `frame_slice` to restrict
+   to the BL window (lazy, no full-file load), sets `t_start` annotation so neuroconv
+   writes the correct `starting_time` in the `ElectricalSeries`.
+   Channel map updated to confirmed layout from `grin2b_eeg_channels.csv`.
+
+2. **`SeizureInterface`** — `add_to_nwbfile` now uses `ndx_events.AnnotatedEventsTable`
+   (ndx-events ≥ 0.2.2) instead of `pynwb.epoch.TimeIntervals`.
+   `stop_time` and `duration` stored as ragged (VectorIndex) columns on a single
+   "seizure" event-type row.
+
+3. **`pyproject.toml`** — added `ndx-events>=0.2.2` to `[grin2b]` optional dependencies.
+
 ## Remaining Assumptions (still to validate)
 
-1. **Channel order in `.dat`:** assumed `[EEG_1..EEG_14, EMG_1, EMG_2]` per SoW phrasing, but TainiTec's wire order may put EMG first or interleave them. Must be confirmed by lab.
+1. **Channel order in `.dat`:** ~~assumed~~ **CONFIRMED** from `grin2b_eeg_channels.csv`.
+   EMG at indices 1 (Right) and 14 (Left); EEG at all other indices.
 2. **NeuroNexus EEG grid model number** and per-channel anatomical targets — required for `ElectrodeGroup.location` and an electrodes-table column.
 3. **ADC → volts gain** — the `.dat` values are dimensionless 12-bit; we need the TainiTec full-scale range (e.g. ±0.5 mV → conversion = 0.5e-3 / 2048).
 4. **Sleep code legend** — `0/1/2` ⇄ `Wake/NREM/REM` is our best guess from rodent sleep distributions; **needs explicit confirmation**. The pw_spectrum file uses `s_0, s_1, s_2, s_4` (skipping `s_3`) — possibly an additional artifact/seizure state ID we haven't seen in `dge_ok.csv`. To confirm.
@@ -281,6 +335,17 @@ bl1_start_s = bl1_start_sample / 250.4
 bl1_stop_s  = bl1_stop_sample  / 250.4
 nwbfile.add_epoch(start_time=bl1_start_s, stop_time=bl1_stop_s, tags=["BL1"])
 ```
+
+## Phase 6 — NWBInspector Validation
+
+Ran `nwbinspector` on the stub NWB file (`GRIN2B_129_BL1.nwb`, stub_test=True). Two messages:
+
+| Severity | Check | Message | Status |
+|---|---|---|---|
+| BEST_PRACTICE_VIOLATION (LOW) | `check_electrical_series_unscaled_data` | `ElectricalSeries` has `dtype=int16`, `conversion=1.0` — data not in Volts | **Pending lab**: ADC gain unknown; `conversion` will be set once lab confirms the TainiTec full-scale range (item 1 of metadata request) |
+| CRITICAL (LOW) | `check_subject_age` | Subject missing `age` and `date_of_birth` | **Pending lab**: per-animal DOB/age not yet provided; see item 5 of metadata request |
+
+No structural or schema errors. The two warnings are unresolvable without lab-provided metadata and are documented as TODOs.
 
 ## Spyglass Compatibility (Aim 2)
 

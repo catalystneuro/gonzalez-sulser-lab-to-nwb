@@ -1,0 +1,14 @@
+name: gonzalez_sulser_demo
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - jupyter
+    - matplotlib
+    - numpy
+    - pandas
+    - pynwb>=2.8
+    - ndx-events>=0.2.2
+    - h5py

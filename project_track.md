@@ -11,15 +11,22 @@
 - [x] Repo Setup (local; remote pending API approval)
 - [x] Initial Inspection and Notes: Delineation of *Projects (SFARI lines)*, *Experiments (Baseline 24h windows)* and *Data Streams* — see [`conversion_notes.md`](conversion_notes.md)
 - [x] Phase 2 byte-level inspection of `.dat` and CSV streams ([`inspect_data.py`](inspect_data.py), [`inspection_report.json`](inspection_report.json))
+- [x] Phase 3: all metadata YAMLs drafted ([`grin2b_general_metadata.yaml`](src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/grin2b_general_metadata.yaml), [`grin2b_subjects_metadata.yaml`](src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/grin2b_subjects_metadata.yaml))
+- [x] Phase 4: synchronization analysis — single-clock, BL-offset arithmetic confirmed
+- [x] Phase 5: all 5 conversion interfaces written and stub tested (GRIN2B_129 BL1 — all streams pass)
+- [x] Phase 6: NWBInspector run on stub — 2 pending-lab warnings, no structural errors
 - [x] Confirm TainiTec `.dat` binary layout: int16 LE, 16ch interleaved, fs = 250.4 Hz, no header
 - [x] Confirm BL1/BL2 sample-window semantics from `Sample_start_end_GRIN2B.xlsx`
 - [x] Confirm seizure-CSV time origin (seconds from BL window start)
 - [x] Confirm `Channels.csv` is a derived feature (not raw) → will not be republished
 - [x] Identify and draft all missing data / metadata requests — see `metadata_request_email.md`
-- [ ] **Pending lab reply** — channel order, ADC→volts gain, sleep code legend, NeuroNexus model, subject table, time-of-day & timezone, GRIN2B DOI, location of missing raw `.dat` files (~16 animals)
+- [x] **Channel order confirmed** from `grin2b_eeg_channels.csv` (2026-06-19): EMG at indices 1 (R) and 14 (L); EEG at all other indices
+- [x] **Sex and genotype populated** for 29/37 animals from `GRIN2B_CDKL5_Seizures_Overall.csv` (2026-06-19)
+- [x] `SeizureInterface` updated to use `ndx_events.AnnotatedEventsTable` (ndx-events ≥ 0.2.2)
+- [ ] **Pending lab reply** — ADC→volts gain, sleep code legend, NeuroNexus model, sex/genotype/strain for animals 132/383/401/402/404/424/430/433, time-of-day & timezone, GRIN2B DOI, location of missing raw `.dat` files (~16 animals)
 - [ ] Acquire **all** raw `.dat` files (only 21 of ~37 GRIN2B animals' raw recordings are in the share)
-- [ ] Obtain subject metadata table for all GRIN2B animals
 - [ ] Obtain lab reader / scoring code (URL)
+- [ ] Re-run NWBInspector stub test after ndx-events + BaseRecordingExtractorInterface refactor
 
 ---
 
@@ -83,10 +90,9 @@
 
 ### Post-Conversion
 
-- Setup Dandiset (public — line is published)
-- NWB Inspector validation
-- README / Documentation
-- Example Notebooks (streaming + Spyglass query demo)
+- [x] NWB Inspector validation (stub) — 2 pending-lab warnings only (ADC gain → conversion; subject age/DOB)
+- [ ] Setup Dandiset (public — line is published)
+- [ ] Example Notebooks (streaming + Spyglass query demo)
 
 ---
 
