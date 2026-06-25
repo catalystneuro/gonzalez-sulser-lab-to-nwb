@@ -22,12 +22,13 @@ from neuroconv.utils import DeepDict
 from pynwb import NWBFile
 
 # State column name → human-readable label mapping
-# TODO: confirm state 4 meaning with lab.
+# States 0/1/2 confirmed by Hristova et al. 2025 (doi:10.1111/epi.18606).
+# State 4 present in pw_spectrum.csv but not mentioned in paper — ask lab.
 _STATE_COLS = {
     "s_0": "Wake",
     "s_1": "NREM",
     "s_2": "REM",
-    "s_4": "Unknown_state_4",  # TODO: ask lab
+    "s_4": "Unknown_state_4",  # TODO: confirm with lab; not reported in paper
 }
 
 

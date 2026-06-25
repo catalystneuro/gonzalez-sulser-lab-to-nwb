@@ -175,11 +175,11 @@ Animals 132, 383, 401, 402, 404, 424, 430, 433 not in CSV — still TODO.
    EMG at indices 1 (Right) and 14 (Left); EEG at all other indices.
 2. **NeuroNexus EEG grid model number** and per-channel anatomical targets — required for `ElectrodeGroup.location` and an electrodes-table column.
 3. **ADC → volts gain** — the `.dat` values are dimensionless 12-bit; we need the TainiTec full-scale range (e.g. ±0.5 mV → conversion = 0.5e-3 / 2048).
-4. **Sleep code legend** — `0/1/2` ⇄ `Wake/NREM/REM` is our best guess from rodent sleep distributions; **needs explicit confirmation**. The pw_spectrum file uses `s_0, s_1, s_2, s_4` (skipping `s_3`) — possibly an additional artifact/seizure state ID we haven't seen in `dge_ok.csv`. To confirm.
+4. **Sleep code legend** — `0=Wake, 1=NREM, 2=REM` **confirmed by paper** (3 states reported). The pw_spectrum file uses `s_0, s_1, s_2, s_4` (skipping `s_3`) — state 4 origin still unknown; not mentioned in paper. Ask lab.
 5. **`Channels.csv` exact derivation** — likely RMS envelope of one EEG and one EMG channel; would be useful to know which raw channels were chosen and the smoothing window so we can either reproduce or, ideally, omit.
 6. **BL window start time-of-day** — the BL1 start (sample 18,088,897 ≈ 20 h into recording) is consistent across animals on the same date, suggesting a fixed offset (probably to skip a 20 h acclimation window, with BL1 then aligning to ZT0 / lights-on).
 7. **Slot letter (A/B/C/D)** → animal position in transmitter grid (cosmetic only).
-8. **Species & strain** — rat per SoW; strain not yet provided.
+8. **Species & strain** — **Long-Evans** (confirmed from paper, 2026-06-25).
 9. **One file = one animal** — confirmed by xlsx (one row pair per `<File, Animal ID>`).
 
 ## Open Questions (also see metadata_request_email.md)
@@ -194,14 +194,18 @@ Resolved by Phase 2 inspection:
 
 Still open (asked in `metadata_request_email.md`):
 
-- [ ] DOI of the GRIN2B publication and full author list
-- [ ] **Channel order** in `.dat`: which indices = EEG_1..EEG_14 vs EMG_1, EMG_2 (which `chN` are reference/ground if any)
+- [x] DOI of the GRIN2B publication and full author list — **doi:10.1111/epi.18606** (Hristova et al. 2025)
+- [x] **Channel order** in `.dat` — confirmed from `grin2b_eeg_channels.csv` (2026-06-19)
+- [x] EMG placement — **neck muscles** (confirmed from paper)
+- [x] Strain — **Long-Evans** (confirmed from paper)
+- [x] Sleep states Wake/NREM/REM confirmed from paper (3 states; state 4 still unknown)
+- [x] Analysis code repos — confirmed from paper Data Availability statement
 - [ ] **ADC → volts gain** (TainiTec full-scale; e.g. ±0.5 mV → `conversion = 0.5e-3 / 2048`)
-- [ ] NeuroNexus EEG grid model and electrode positions (anatomical targets per channel)
-- [ ] EMG placement (neck? trapezius?)
-- [ ] Surgery / implantation protocol details for `ElectrodeGroup` description
-- [ ] **Sleep-state label encoding**: confirm `0=Wake, 1=NREM, 2=REM`; what is state `4` referenced by `pw_spectrum.csv` columns?
-- [ ] Subject metadata table (DOB, sex, weight, genotype WT vs HET, treatment group, surgery date, sacrifice date)
+- [ ] NeuroNexus EEG grid model number and per-channel stereotaxic coordinates
+- [ ] **State 4** (`s_4` in `pw_spectrum.csv`) — 3 sleep states in paper; origin of column 4 unclear
+- [ ] **Lights-on clock time** at Edinburgh facility (12:12 L:D confirmed; ZT0 time not stated)
+- [ ] Subject DOB / age at recording, weight per animal
+- [ ] Sex/genotype for animals 132, 383, 401, 402, 404, 424, 430, 433
 - [ ] Light-cycle protocol (12:12? lights-on Zeitgeber time, time-of-day) and whether BL1 starts at ZT0
 - [ ] Per-session **time-of-day** start (filename only encodes the date) with timezone (Edinburgh, Europe/London)
 - [ ] Why ~37 animals' processed data but only 21 raw `.dat` files in the share — where are the other raw recordings?
@@ -356,3 +360,55 @@ Spyglass requires:
 - Subject metadata fields populated
 
 Will revisit after Phase 6 testing.
+
+## 2026-06-25 — Paper Findings (Hristova et al., Epilepsia 2025)
+
+The lab shared the published GRIN2B paper. Key metadata extracted and applied:
+
+**Full citation:**
+> Hristova K, Fasol MCM, McLaughlin N, Nawaz MS, Taskiran M, Buller-Peralta I,
+> Harris AP, Sutherland A, Bassi A, Ocampo-Garces A, Escudero J, Kind PC,
+> Gonzalez-Sulser A. Absence seizures and sleep–wake abnormalities in a rat model
+> of GRIN2B neurodevelopmental disorder. *Epilepsia.* 2025;66:4996–5013.
+> doi:10.1111/epi.18606
+
+### Confirmed by paper
+
+| Question | Answer | Notes |
+|---|---|---|
+| **Strain** | **Long-Evans** | "Long-Evans Grin2b heterozygous knockout rats" |
+| **RRID** | RGD_14394515 | Model ID: LE-Grin2bem1Mcwi (Medical College of Wisconsin Gene Editing Rat Resource Center) |
+| **Genotypes** | Grin2b+/− (Het) and Grin2b+/+ (WT littermates) | SFARI Autism Research Initiative support |
+| **Sex** | Both male and female | Sexes compared in paper; no significant sex × genotype interactions |
+| **EMG placement** | **Neck muscles** | "electromyography electrodes in the neck muscles" |
+| **EEG channels** | **14-channel skull-surface electrode grid** | Confirms 14 EEG + 2 EMG = 16 channels total |
+| **All electrodes independent** | Yes | "All electrodes are independent of one another and are not interconnected" (no reference/ground grid) |
+| **Recording system** | TaiNi wireless multichannel (Tainitec, UK), 250.4 Hz | Reference: Jiang et al. 2017, Sci Rep 7:8086 |
+| **Recording duration** | 72–96 h per session; 24-h windows analyzed | "recorded for 72 to 96 h (for 24-h sleep and seizure analysis)" |
+| **Recovery / acclimation** | ≥1 week post-surgery recovery + ≥24 h room habituation | Briefly anesthetized with isoflurane to connect implants before recording |
+| **Light cycle** | 12-h light / 12-h dark | "12-h light and dark phases" (exact lights-on time not stated in paper) |
+| **Sleep states** | Wake, NREM, REM — 3 states only | State 4 in pw_spectrum.csv not mentioned in paper; still ask lab |
+| **Sleep scorer code** | [AUTOMATIC-SLEEP-SCORER](https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER) | Same pipeline as Buller-Peralta et al. 2022 (SYNGAP1 paper) |
+| **SWD detector code** | [SWD-Automatic-Identification](https://github.com/Gonzalez-Sulser-Team/SWD-Automatic-Identification) | Also: [zenodo:12700972](https://zenodo.org/records/12700972) |
+| **SWD detection criterion** | Harmonic peaks at 5–10 Hz in power spectra | "periodic high-amplitude oscillations between 5 and 10 Hz" |
+| **EEG targets (from Figure 2A)** | S1-Tr, M2-FrA, M2-Ant, M1-Ant, V2-ML, V1-M, S1Hl/Fl — bilateral | Labels match `grin2b_eeg_channels.csv` exactly |
+| **DOI** | 10.1111/epi.18606 | Updated in `grin2b_general_metadata.yaml` `related_publications` |
+
+### Updated in this session
+
+1. **`grin2b_general_metadata.yaml`**: `related_publications` set to `doi:10.1111/epi.18606`;
+   `experiment_description` rewritten from paper abstract; full experimenter list added;
+   `EMGArray` description updated to "neck muscles"; `EEGArray` location/description updated
+   with confirmed cortical targets; `SleepScoring` scorer field updated with GitHub URLs.
+
+2. **`grin2b_subjects_metadata.yaml`**: `strain` updated to `"Long-Evans"` for all 37 animals.
+
+### Still open after paper
+
+- [ ] **ADC → volts gain** — not in paper; still need TainiTec full-scale range from lab
+- [ ] **NeuroNexus model number** and stereotaxic coordinates per channel
+- [ ] **State 4** (`s_4` column in `pw_spectrum.csv`) — paper only mentions Wake/NREM/REM; ask lab
+- [ ] **Lights-on clock time** at Edinburgh facility — paper confirms 12:12 L:D but not exact ZT0 time
+- [ ] **Per-animal DOB / age at recording** — paper tracks adults but no per-animal dates
+- [ ] **Sex/genotype** for animals 132, 383, 401, 402, 404, 424, 430, 433 — still not in any source
+- [ ] **Missing raw `.dat` files** for ~16 animals — paper does not resolve

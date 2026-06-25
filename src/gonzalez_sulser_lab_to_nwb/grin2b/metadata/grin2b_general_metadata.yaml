@@ -5,21 +5,36 @@
 
 NWBFile:
   experiment_description: >
-    Chronic wireless EEG and EMG recordings from freely behaving rats carrying a
-    heterozygous loss-of-function mutation in Grin2b (GluN2B), a high-confidence
-    SFARI autism risk gene. Recordings were acquired over multiple days using the
-    TainiTec wireless telemetry system with NeuroNexus EEG grids (14 EEG + 2 EMG
-    channels). Automated pipelines were used to classify sleep states (Wake, NREM, REM)
-    in 5-second epochs and to detect seizure events. Data contribute to the SFARI
-    Autism Rat Models Consortium (ARC).
-    # TODO: replace with abstract from published GRIN2B paper (DOI pending)
+    Chronic wireless EEG and EMG recordings from freely behaving Long-Evans rats
+    carrying a heterozygous knockout of Grin2b (Grin2b+/-), the gene encoding the
+    GluN2B subunit of N-methyl-D-aspartate receptors (NMDARs). Grin2b+/- rats
+    display spontaneous spike-and-wave discharges (SWDs, the electrographic
+    correlate of absence seizures) at higher incidence and duration than wild-type
+    littermates, alongside reduced REM sleep and altered NREM/wake distributions.
+    Recordings were acquired over 72-96 h using the TaiNi wireless multichannel
+    recording system (Tainitec, UK) with 14-channel skull-surface EEG electrode
+    grids and bilateral neck EMG electrodes, at 250.4 Hz. Two consecutive 24-h
+    baseline windows (BL1, BL2) were extracted per animal. Automated pipelines
+    classified sleep states (Wake, NREM, REM) in 5-s epochs and detected SWD
+    seizure events. Data contribute to the SFARI Autism Rat Models Consortium (ARC).
+    See Hristova et al., Epilepsia 2025 (doi:10.1111/epi.18606).
 
   institution: University of Edinburgh
   lab: Gonzalez-Sulser Lab
   experimenter:
-    - Hung, Natalie
+    - Hristova, Katerina
+    - Fasol, Melissa C. M.
+    - McLaughlin, Niamh
+    - Nawaz, Mohammad Sarfaraz
+    - Taskiran, Mehmet
+    - Buller-Peralta, Ingrid
+    - Harris, Anjanette P.
+    - Sutherland, Andrew
+    - Bassi, Alejandro
+    - Ocampo-Garces, Adrian
+    - Escudero, Javier
+    - Kind, Peter C.
     - Gonzalez-Sulser, Alfredo
-    # TODO: add all contributing experimenters
 
   keywords:
     - EEG
@@ -27,19 +42,20 @@ NWBFile:
     - chronic recording
     - sleep
     - seizure
+    - spike-wave discharge
+    - absence epilepsy
     - circadian rhythm
     - GRIN2B
     - GluN2B
     - NMDA receptor
     - autism
     - SFARI
-    - rat
+    - Long-Evans rat
     - wireless telemetry
+    - sleep scoring
 
   related_publications:
-    # TODO: populate with DOI once provided by lab
-    # Format: "doi:10.xxxx/xxxxx"
-    - doi:PENDING
+    - doi:10.1111/epi.18606
 
 Device:
   - name: TainiTecWirelessEEG
@@ -51,25 +67,33 @@ Device:
 
   - name: NeuroNexusEEGGrid
     description: >
-      NeuroNexus chronic EEG electrode grid.
-      # TODO: add model number, channel count, electrode material
-      # TODO: add anatomical target description per channel
+      NeuroNexus chronic skull-surface EEG electrode grid. 14 channels arranged
+      bilaterally over somatosensory and motor cortex (targets include S1-Tr,
+      M2-FrA, M2-Ant, M1-Ant, V2-ML, V1-M, S1Hl/Fl). All electrodes are
+      independent of one another and are not interconnected.
+      # TODO: add NeuroNexus model number and per-channel stereotaxic coordinates
     manufacturer: NeuroNexus
 
 ElectrodeGroup:
   - name: EEGArray
     description: >
-      14-channel EEG electrode array (NeuroNexus chronic grid). Electrodes
-      target cortical and subcortical sites.
-      # TODO: confirm anatomical targets from lab
-    location: cortex  # TODO: refine from lab — e.g. "frontal cortex, parietal cortex, hippocampus"
+      14-channel skull-surface EEG electrode array (NeuroNexus chronic grid).
+      Electrodes target bilateral somatosensory and motor cortical sites:
+      S1-Tr (Primary somatosensory cortex, trunk region), M2-FrA (Secondary
+      motor cortex, frontal association area), M2-Ant (Secondary motor cortex,
+      anterior), M1-Ant (Primary motor cortex, anterior), V2-ML (Secondary
+      visual cortex, mediolateral), V1-M (Primary visual cortex, monocular),
+      S1Hl/Fl (Primary somatosensory cortex, hindlimb/forelimb). 7 electrodes
+      per hemisphere.
+    location: somatosensory cortex, motor cortex, visual cortex  # bilateral
     device: NeuroNexusEEGGrid
 
   - name: EMGArray
     description: >
-      2-channel electromyogram (EMG) electrodes.
-      # TODO: confirm placement — neck? trapezius? bilateral?
-    location: muscle  # TODO: refine from lab
+      2-channel electromyogram (EMG) electrodes implanted in the neck muscles
+      (bilateral). Used for sleep-state scoring (muscle tone indicator for REM
+      vs. wake discrimination).
+    location: neck muscle
     device: TainiTecWirelessEEG
 
 # Electrode channel mapping — populated programmatically from lab-confirmed channel order
@@ -84,17 +108,24 @@ Electrodes:
 
 # Light cycle / circadian
 LightCycle:
-  protocol: 12:12 LD  # TODO: confirm with lab
-  lights_on_time: "07:00"  # TODO: confirm Edinburgh facility lights-on time
+  protocol: 12:12 LD  # Confirmed: paper states "12-h light and dark phases"
+  lights_on_time: "TODO: confirm Edinburgh facility lights-on time"  # exact time not in paper
   timezone: Europe/London   # Edinburgh (UTC+0 / BST UTC+1)
 
 # Sleep scoring
 SleepScoring:
   epoch_duration_s: 5.0
-  scorer: automated pipeline (lab)
-  # Assumed state code mapping — MUST CONFIRM:
+  scorer: >
+    Automated sleep-scoring algorithm developed by the Gonzalez-Sulser lab.
+    Source code: https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER
+    (see also Buller-Peralta et al., Brain Commun 2022, doi:10.1093/braincomms/fcac263)
+  swd_detector: >
+    Automatic SWD detection algorithm: identifies harmonic peaks at 5-10 Hz in power spectra.
+    Source code: https://github.com/Gonzalez-Sulser-Team/SWD-Automatic-Identification
+    Zenodo: https://zenodo.org/records/12700972
+  # Confirmed state code mapping (paper reports REM, NREM, Wake — 3 states):
   state_labels:
     0: Wake
     1: NREM
     2: REM
-    # 4: unknown (referenced in pw_spectrum.csv column s_4 — ask lab)
+    # 4: unknown — present in pw_spectrum.csv column s_4 but not mentioned in paper; ask lab

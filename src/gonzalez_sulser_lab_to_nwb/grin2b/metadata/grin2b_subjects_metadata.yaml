@@ -7,12 +7,14 @@
 # for animal 424 with overlapping windows vs animal 366. The actual file on disk is
 # TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat. Lab must confirm correct .dat and BL windows.
 #
-# Still needed from lab for all animals: strain, date_of_birth, weight, DOI
+# strain: confirmed Long-Evans from Hristova et al. 2025, doi:10.1111/epi.18606
+# Still needed from lab for all animals: date_of_birth, weight
+# RRID for the line: RGD_14394515 (LE-Grin2bem1Mcwi, Medical College of Wisconsin)
 
 GRIN2B_129:
   subject_id: GRIN2B_129
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -22,7 +24,7 @@ GRIN2B_129:
 GRIN2B_130:
   subject_id: GRIN2B_130
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -32,7 +34,7 @@ GRIN2B_130:
 GRIN2B_131:
   subject_id: GRIN2B_131
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -42,7 +44,7 @@ GRIN2B_131:
 GRIN2B_132:
   subject_id: GRIN2B_132
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -52,7 +54,7 @@ GRIN2B_132:
 GRIN2B_137:
   subject_id: GRIN2B_137
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -62,7 +64,7 @@ GRIN2B_137:
 GRIN2B_138:
   subject_id: GRIN2B_138
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -72,7 +74,7 @@ GRIN2B_138:
 GRIN2B_139:
   subject_id: GRIN2B_139
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -82,7 +84,7 @@ GRIN2B_139:
 GRIN2B_140:
   subject_id: GRIN2B_140
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -92,7 +94,7 @@ GRIN2B_140:
 GRIN2B_227:
   subject_id: GRIN2B_227
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -102,7 +104,7 @@ GRIN2B_227:
 GRIN2B_228:
   subject_id: GRIN2B_228
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -112,7 +114,7 @@ GRIN2B_228:
 GRIN2B_229:
   subject_id: GRIN2B_229
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -122,7 +124,7 @@ GRIN2B_229:
 GRIN2B_236:
   subject_id: GRIN2B_236
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -132,7 +134,7 @@ GRIN2B_236:
 GRIN2B_237:
   subject_id: GRIN2B_237
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -142,7 +144,7 @@ GRIN2B_237:
 GRIN2B_238:
   subject_id: GRIN2B_238
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -152,7 +154,7 @@ GRIN2B_238:
 GRIN2B_239:
   subject_id: GRIN2B_239
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -162,7 +164,7 @@ GRIN2B_239:
 GRIN2B_240:
   subject_id: GRIN2B_240
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -172,7 +174,7 @@ GRIN2B_240:
 GRIN2B_241:
   subject_id: GRIN2B_241
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -182,7 +184,7 @@ GRIN2B_241:
 GRIN2B_362:
   subject_id: GRIN2B_362
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -192,7 +194,7 @@ GRIN2B_362:
 GRIN2B_363:
   subject_id: GRIN2B_363
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -202,7 +204,7 @@ GRIN2B_363:
 GRIN2B_364:
   subject_id: GRIN2B_364
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -212,7 +214,7 @@ GRIN2B_364:
 GRIN2B_365:
   subject_id: GRIN2B_365
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -222,7 +224,7 @@ GRIN2B_365:
 GRIN2B_366:
   subject_id: GRIN2B_366
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -232,7 +234,7 @@ GRIN2B_366:
 GRIN2B_367:
   subject_id: GRIN2B_367
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -242,7 +244,7 @@ GRIN2B_367:
 GRIN2B_368:
   subject_id: GRIN2B_368
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -252,7 +254,7 @@ GRIN2B_368:
 GRIN2B_369:
   subject_id: GRIN2B_369
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -262,7 +264,7 @@ GRIN2B_369:
 GRIN2B_371:
   subject_id: GRIN2B_371
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -272,7 +274,7 @@ GRIN2B_371:
 GRIN2B_373:
   subject_id: GRIN2B_373
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Het"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -282,7 +284,7 @@ GRIN2B_373:
 GRIN2B_375:
   subject_id: GRIN2B_375
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -292,7 +294,7 @@ GRIN2B_375:
 GRIN2B_378:
   subject_id: GRIN2B_378
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -302,7 +304,7 @@ GRIN2B_378:
 GRIN2B_382:
   subject_id: GRIN2B_382
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "Wt"
   sex: "M"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -312,7 +314,7 @@ GRIN2B_382:
 GRIN2B_383:
   subject_id: GRIN2B_383
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -322,7 +324,7 @@ GRIN2B_383:
 GRIN2B_401:
   subject_id: GRIN2B_401
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -332,7 +334,7 @@ GRIN2B_401:
 GRIN2B_402:
   subject_id: GRIN2B_402
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -342,7 +344,7 @@ GRIN2B_402:
 GRIN2B_404:
   subject_id: GRIN2B_404
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -352,7 +354,7 @@ GRIN2B_404:
 GRIN2B_424:
   subject_id: GRIN2B_424
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -366,7 +368,7 @@ GRIN2B_424:
 GRIN2B_430:
   subject_id: GRIN2B_430
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
@@ -376,7 +378,7 @@ GRIN2B_430:
 GRIN2B_433:
   subject_id: GRIN2B_433
   species: Rattus norvegicus
-  strain: "TODO: e.g. Long-Evans or Wistar"
+  strain: "Long-Evans"  # confirmed: Hristova et al. 2025, doi:10.1111/epi.18606
   genotype: "TODO: WT or Grin2b_het"
   sex: "TODO: M or F"
   date_of_birth: "TODO: YYYY-MM-DD"
