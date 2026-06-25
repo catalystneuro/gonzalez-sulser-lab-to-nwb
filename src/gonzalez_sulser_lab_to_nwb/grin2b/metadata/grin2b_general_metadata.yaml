@@ -67,11 +67,14 @@ Device:
 
   - name: NeuroNexusEEGGrid
     description: >
-      NeuroNexus chronic skull-surface EEG electrode grid. 14 channels arranged
-      bilaterally over somatosensory and motor cortex (targets include S1-Tr,
-      M2-FrA, M2-Ant, M1-Ant, V2-ML, V1-M, S1Hl/Fl). All electrodes are
-      independent of one another and are not interconnected.
-      # TODO: add NeuroNexus model number and per-channel stereotaxic coordinates
+      NeuroNexus Custom H16-Rat EEG16_Functional chronic skull-surface EEG electrode
+      grid. 14 EEG channels plus 2 integrated EMG leads (16-channel headstage total).
+      Electrodes arranged bilaterally over somatosensory and motor cortex. The grid
+      plus-symbol reference point was aligned over bregma during implantation.
+      All EEG electrodes are independent of one another and are not interconnected.
+      A separate cerebellar ground screw (-11.5 mm AP, 0.5 mm ML from bregma) was
+      connected to the grid via silver paint.
+      # TODO: add per-channel stereotaxic coordinates (AP/ML from bregma)
     manufacturer: NeuroNexus
 
 ElectrodeGroup:
@@ -108,8 +111,8 @@ Electrodes:
 
 # Light cycle / circadian
 LightCycle:
-  protocol: 12:12 LD  # Confirmed: paper states "12-h light and dark phases"
-  lights_on_time: "TODO: confirm Edinburgh facility lights-on time"  # exact time not in paper
+  protocol: 12:12 LD  # Confirmed: paper and supplementary methods
+  lights_on_time: "07:00"  # Confirmed from supplementary: "zeitgeber time 07:00 am"
   timezone: Europe/London   # Edinburgh (UTC+0 / BST UTC+1)
 
 # Sleep scoring
@@ -123,9 +126,10 @@ SleepScoring:
     Automatic SWD detection algorithm: identifies harmonic peaks at 5-10 Hz in power spectra.
     Source code: https://github.com/Gonzalez-Sulser-Team/SWD-Automatic-Identification
     Zenodo: https://zenodo.org/records/12700972
-  # Confirmed state code mapping (paper reports REM, NREM, Wake — 3 states):
+  # Confirmed state code mapping (supplementary methods):
   state_labels:
     0: Wake
     1: NREM
     2: REM
-    # 4: unknown — present in pw_spectrum.csv column s_4 but not mentioned in paper; ask lab
+    4: SWD  # Confirmed: "All epochs identified to contain SWDs were classed separately from the other three brain states"
+            # s_4 in pw_spectrum.csv = average PSD during spike-wave discharge epochs

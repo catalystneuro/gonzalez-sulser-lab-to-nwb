@@ -412,3 +412,38 @@ The lab shared the published GRIN2B paper. Key metadata extracted and applied:
 - [ ] **Per-animal DOB / age at recording** — paper tracks adults but no per-animal dates
 - [ ] **Sex/genotype** for animals 132, 383, 401, 402, 404, 424, 430, 433 — still not in any source
 - [ ] **Missing raw `.dat` files** for ~16 animals — paper does not resolve
+
+## 2026-06-25 — Supplementary Methods Findings
+
+The supplementary information file resolved several more open questions:
+
+| Question | Answer | Source |
+|---|---|---|
+| **ZT0 / lights-on time** | **07:00** | "SWDs and brain state data was analysed over 48 hours starting at zeitgeber time 07:00 am of the day after connection" |
+| **BL1 start = ZT0** | **Confirmed** — BL1 starts at 07:00 the day after connection | Same sentence above |
+| **NeuroNexus model** | **Custom H16-Rat EEG16_Functional** (NeuroNexus, United States) | Surgery section |
+| **State 4 = SWD** | **Confirmed** — "All epochs identified to contain SWDs were classed separately from the other three brain states" → `s_4` = average PSD during seizure epochs | Sleep scoring section |
+| **Ground electrode** | Separate cerebellar screw (-11.5 mm AP, ±0.5 mm ML), connected to grid via silver paint | Surgery section |
+| **Reference** | Grid plus-symbol reference point aligned over bregma (plus structural holding screws at +4 mm AP, ±0.5 mm lateral) | Surgery section |
+| **Surgery age** | 9–16 weeks at implantation | Surgery section |
+| **Housing** | Mixed genotype cages before surgery; single-housed after surgery | Animals section |
+| **SWD detection electrode** | Right hemisphere primary somatosensory cortex, AP -3.0 mm, ML 2.8 mm from bregma | Sleep scoring section |
+| **Sleep scoring channel** | EEG channel over primary somatosensory cortex (either hemisphere) + one EMG channel, selected per-animal based on artefact level | Sleep scoring section |
+| **Sleep scoring window** | 5-s non-overlapping epochs, 0.2–125 Hz, multitaper spectral analysis in R | Sleep scoring section |
+| **SWD-in-sleep assignment** | SWDs occurring during wake: first 5 s epoch prior; SWDs in NREM/wake-NREM transitions: first 30 s (6 epochs) prior used for context | Sleep scoring section |
+| **Spectral normalisation** | Baseline-corrected: normalized to average spectral power across REM+NREM+Wake per animal | Sleep scoring section |
+| **Validation** | 90.8% overall agreement with visual scoring (17 animals, 4 h each, 10:00–14:00); κ = 0.83 | Sleep scoring section |
+| **Software** | R + RStudio; ggplot2, car, lmerTest; SciPy welch for PSD; NumPy polyfit for spectral slope | Statistical Analysis / Sleep scoring |
+
+### Updated in this session (supplementary)
+
+1. **`grin2b_general_metadata.yaml`**: `lights_on_time` set to `"07:00"` (confirmed); NeuroNexus model name and ground screw details added to device description; state 4 updated to `SWD`.
+2. **`state_power_spectrum_interface.py`**: `s_4` label changed from `Unknown_state_4` to `SWD`; module docstring, table description, and column descriptions updated.
+
+### Still open after supplementary
+
+- [ ] **ADC → volts gain** — not in paper or supplementary; ask lab
+- [ ] **Per-channel stereotaxic coordinates** — SWD detection channel known (AP -3.0, ML 2.8); full grid layout not provided
+- [ ] **Power spectrum units** — normalised to within-animal average; absolute units (µV²/Hz?) still unclear
+- [ ] **Sex/genotype** for animals 132, 383, 401, 402, 404, 424, 430, 433
+- [ ] **Missing raw `.dat` files** for ~16 animals
