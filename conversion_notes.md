@@ -169,6 +169,12 @@ Animals 132, 383, 401, 402, 404, 424, 430, 433 not in CSV — still TODO.
 
 3. **`pyproject.toml`** — added `ndx-events>=0.2.2` to `[grin2b]` optional dependencies.
 
+### Code changes (2026-07-07)
+
+1. **`SeizureInterface`** — reverted to `pynwb.epoch.TimeIntervals` (one row per seizure,
+   `start_time`/`stop_time`/`duration` columns), matching the pattern used by
+   `SleepStateInterface`. `ndx-events` dependency removed from `pyproject.toml`.
+
 ## Remaining Assumptions (still to validate)
 
 1. **Channel order in `.dat`:** ~~assumed~~ **CONFIRMED** from `grin2b_eeg_channels.csv`.

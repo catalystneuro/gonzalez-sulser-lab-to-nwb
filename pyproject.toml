@@ -13,7 +13,6 @@ grin2b = [
     "neuroconv",
     "spikeinterface>=0.100",
     "pynwb>=2.8",
-    "ndx-events>=0.2.2",
     "pandas",
     "openpyxl",
     "pyyaml",

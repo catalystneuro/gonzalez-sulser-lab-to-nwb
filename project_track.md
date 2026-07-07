@@ -22,11 +22,11 @@
 - [x] Identify and draft all missing data / metadata requests — see `metadata_request_email.md`
 - [x] **Channel order confirmed** from `grin2b_eeg_channels.csv` (2026-06-19): EMG at indices 1 (R) and 14 (L); EEG at all other indices
 - [x] **Sex and genotype populated** for 29/37 animals from `GRIN2B_CDKL5_Seizures_Overall.csv` (2026-06-19)
-- [x] `SeizureInterface` updated to use `ndx_events.AnnotatedEventsTable` (ndx-events ≥ 0.2.2)
+- [x] `SeizureInterface` reverted to `pynwb.epoch.TimeIntervals` (2026-07-07), matching `SleepStateInterface`; `ndx-events` dependency removed
 - [ ] **Pending lab reply** — ADC→volts gain, sleep code legend, NeuroNexus model, sex/genotype/strain for animals 132/383/401/402/404/424/430/433, time-of-day & timezone, GRIN2B DOI, location of missing raw `.dat` files (~16 animals)
 - [ ] Acquire **all** raw `.dat` files (only 21 of ~37 GRIN2B animals' raw recordings are in the share)
 - [ ] Obtain lab reader / scoring code (URL)
-- [ ] Re-run NWBInspector stub test after ndx-events + BaseRecordingExtractorInterface refactor
+- [ ] Re-run NWBInspector stub test after TimeIntervals + BaseRecordingExtractorInterface refactor
 
 ---
 

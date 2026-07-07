@@ -5,7 +5,7 @@ Three seizure-related data streams, all aligned to the same BL window origin:
 1. SeizureInterface
    Source: `Seizure timestamps/<subject_id>_BL{N}_Seizures.csv`
    Columns: sec_start, sec_end, dur
-   → ndx_events.AnnotatedEventsTable in processing["behavior"] (seizure_events)
+   → pynwb.epoch.TimeIntervals in processing["behavior"] (seizure_events)
 
 2. SwdCountsInterface
    Source: `<subject_dir>/seiz/<subject_id>_BL{N}_DGE_SWDs.csv`
@@ -27,11 +27,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from hdmf.common import DynamicTable
-from ndx_events import AnnotatedEventsTable
 from neuroconv.basedatainterface import BaseDataInterface
 from neuroconv.tools.nwb_helpers import get_module
 from neuroconv.utils import DeepDict
 from pynwb import NWBFile
+from pynwb.epoch import TimeIntervals
 from pynwb.misc import TimeSeries
 
 _FS: float = 250.4
@@ -80,37 +80,28 @@ class SeizureInterface(BaseDataInterface):
         if stub_test:
             df = df.head(20)
 
-        start_times = (df["sec_start"].to_numpy(dtype=float) + bl_offset_s).tolist()
-        stop_times  = (df["sec_end"].to_numpy(dtype=float)   + bl_offset_s).tolist()
-        durations   = df["dur"].to_numpy(dtype=float).tolist()
+        start_times = df["sec_start"].to_numpy(dtype=float) + bl_offset_s
+        stop_times  = df["sec_end"].to_numpy(dtype=float)   + bl_offset_s
+        durations   = df["dur"].to_numpy(dtype=float)
 
-        seizure_table = AnnotatedEventsTable(
+        seizure_table = TimeIntervals(
             name="seizure_events",
             description=(
                 "Seizure events detected by the Gonzalez-Sulser lab automated scoring pipeline. "
-                "event_times are start times in seconds relative to session_start_time."
+                "start_time/stop_time are in seconds relative to session_start_time."
             ),
-            resolution=1.0 / self.sampling_frequency,
-        )
-        seizure_table.add_column(
-            name="stop_time",
-            description="Seizure stop time in seconds relative to session_start_time.",
-            index=True,
         )
         seizure_table.add_column(
             name="duration",
             description="Seizure duration in seconds.",
-            index=True,
         )
-        seizure_table.add_event_type(
-            label="seizure",
-            event_description=(
-                "Spike-wave discharge seizure event scored by the lab automated pipeline."
-            ),
-            event_times=start_times,
-            stop_time=stop_times,
-            duration=durations,
-        )
+
+        for start, stop, duration in zip(start_times, stop_times, durations):
+            seizure_table.add_interval(
+                start_time=float(start),
+                stop_time=float(stop),
+                duration=float(duration),
+            )
 
         behavior_module = get_module(nwbfile, "behavior", "Processed behavioral data.")
         behavior_module.add(seizure_table)
