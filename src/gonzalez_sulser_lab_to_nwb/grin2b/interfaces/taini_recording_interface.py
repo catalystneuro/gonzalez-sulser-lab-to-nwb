@@ -30,6 +30,15 @@ Only the requested baseline window (BL1 or BL2) is written to NWB.
 The window is expressed as sample indices into the .dat file and comes
 from Sample_start_end_GRIN2B.xlsx.
 
+The 16 channels are written as two separate ElectricalSeries — one for the
+14 EEG channels and one for the 2 EMG channels — sharing a single electrode
+table but pointing at distinct ElectrodeGroups ("EEGArray" / "EMGArray").
+To produce both series, instantiate this interface twice per session (once
+with signal_type="EEG", once with signal_type="EMG"); both instances share
+the same underlying .dat file and BL window, and the second call to append
+electrodes reuses the table built by the first (electrodes are deduplicated
+by channel id, so the table ends up with all 16 rows exactly once).
+
 TODO (pending lab reply):
   - Confirm ADC → volts gain (gain_to_uV / channel_conversion parameter)
   - NeuroNexus EEG grid model number and per-channel anatomical targets
@@ -38,6 +47,7 @@ TODO (pending lab reply):
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 from neuroconv.datainterfaces.ecephys.baserecordingextractorinterface import (
@@ -79,14 +89,20 @@ _CHANNEL_MAP: list[tuple[int, str, str, str]] = [
 # Unique channel IDs (label + hemisphere) for use as spikeinterface channel_ids
 _CHANNEL_IDS = [f"{label}_{hemi}" for _, label, hemi, _ in _CHANNEL_MAP]
 
+# Electrode group name -> ElectricalSeries name prefix
+_SIGNAL_TYPE_TO_GROUP = {"EEG": "EEGArray", "EMG": "EMGArray"}
+
 
 class TainiRecordingInterface(BaseRecordingExtractorInterface):
     """Interface for TainiTec chronic EEG/EMG .dat recordings.
 
-    Writes a single baseline window (BL1 or BL2) as an ElectricalSeries
-    in the NWB acquisition group. Inherits the full neuroconv recording pipeline
-    (electrode table, chunked HDF5 compression, etc.) via
-    BaseRecordingExtractorInterface.
+    Writes one signal type (EEG or EMG) of a single baseline window (BL1 or
+    BL2) as an ElectricalSeries in the NWB acquisition group. Both signal
+    types share the same 16-channel .dat file and electrode table but are
+    written as separate ElectricalSeries under separate ElectrodeGroups —
+    instantiate this interface once per signal_type to get both.
+    Inherits the full neuroconv recording pipeline (electrode table, chunked
+    HDF5 compression, etc.) via BaseRecordingExtractorInterface.
     """
 
     Extractor = BinaryRecordingExtractor
@@ -108,6 +124,7 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         file_path: str | Path,
         bl_start_sample: int,
         bl_stop_sample: int,
+        signal_type: Literal["EEG", "EMG"],
         baseline_name: str = "BL1",
         verbose: bool = False,
     ):
@@ -120,14 +137,21 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             Zero-based sample index where the baseline window starts (xlsx "Start").
         bl_stop_sample : int
             Inclusive last sample index of the baseline window (xlsx "End").
+        signal_type : "EEG" or "EMG"
+            Which subset of the 16 channels this interface instance writes.
         baseline_name : str
             Label for this window, e.g. "BL1" or "BL2".
         verbose : bool
             Passed to the underlying spikeinterface extractor.
         """
+        if signal_type not in _SIGNAL_TYPE_TO_GROUP:
+            raise ValueError(f"signal_type must be one of {list(_SIGNAL_TYPE_TO_GROUP)}, got {signal_type!r}")
+
         self.bl_start_sample = bl_start_sample
         self.bl_stop_sample = bl_stop_sample
+        self.signal_type = signal_type
         self.baseline_name = baseline_name
+        self._electrode_group_name = _SIGNAL_TYPE_TO_GROUP[signal_type]
 
         super().__init__(
             file_paths=[str(file_path)],
@@ -136,6 +160,7 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             dtype=_DTYPE,
             channel_ids=_CHANNEL_IDS,
             verbose=verbose,
+            es_key=f"{signal_type}ElectricalSeries",
         )
 
         # Slice to BL window — lazy, no data read at construction time
@@ -165,6 +190,18 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         self.recording_extractor.set_property("hemisphere",  np.array(hemispheres))
         self.recording_extractor.set_property("filtering",   np.array(filterings))
         self.recording_extractor.set_property("location",    xy_placeholder)
+
+        # Restrict to only the channels belonging to this signal type. Properties
+        # set above are carried over by select_channels, and the electrode table
+        # rows for the other signal type's channels are added by that other
+        # interface instance (same shared electrode table, deduplicated by
+        # channel id).
+        channel_ids_for_type = [
+            channel_id
+            for channel_id, (_, _, _, grp) in zip(_CHANNEL_IDS, _CHANNEL_MAP)
+            if grp == self._electrode_group_name
+        ]
+        self.recording_extractor = self.recording_extractor.select_channels(channel_ids=channel_ids_for_type)
 
     def get_metadata(self) -> DeepDict:
         metadata = super().get_metadata()
@@ -200,13 +237,13 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 grp["location"] = "muscle"
 
         n_samples = self.bl_stop_sample - self.bl_start_sample + 1
-        metadata["Ecephys"]["ElectricalSeries"] = {
-            "name": f"ElectricalSeries_{self.baseline_name}",
+        duration_hours = n_samples / _FS / 3600
+        metadata["Ecephys"][self.es_key] = {
+            "name": f"{self.signal_type}ElectricalSeries{self.baseline_name}",
             "description": (
-                f"Chronic EEG/EMG recording, {self.baseline_name} window "
-                f"({n_samples / _FS / 3600:.1f} h). "
-                f"Channel layout confirmed from grin2b_eeg_channels.csv: "
-                f"14 EEG channels (indices 0,2-13,15) and 2 EMG channels (indices 1,14). "
+                f"Chronic {self.signal_type} recording, {self.baseline_name} window "
+                f"({duration_hours:.1f} h). "
+                f"Channel layout confirmed from grin2b_eeg_channels.csv. "
                 f"ADC gain (conversion) is a placeholder — TODO: confirm with lab."
             ),
         }
