@@ -453,3 +453,49 @@ The supplementary information file resolved several more open questions:
 - [ ] **Power spectrum units** — normalised to within-animal average; absolute units (µV²/Hz?) still unclear
 - [ ] **Sex/genotype** for animals 132, 383, 401, 402, 404, 424, 430, 433
 - [ ] **Missing raw `.dat` files** for ~16 animals
+
+## 2026-07-09 — Split TainiRecordingInterface into separate EEG/EMG ElectricalSeries
+
+Previously `TainiRecordingInterface` wrote all 16 channels (14 EEG + 2 EMG) as a single
+`ElectricalSeries_{baseline_name}`, spanning two `ElectrodeGroup`s (EEGArray/EMGArray) in
+one series. Rewrote it to write **two** `ElectricalSeries` instead, one per signal type,
+while keeping a single shared electrode table (16 rows total, same as before) — only the
+series and their `ElectrodeGroup` linkage are now separated.
+
+### Changes
+
+1. **`taini_recording_interface.py`** — constructor now takes a required `signal_type:
+   Literal["EEG", "EMG"]` argument instead of writing all channels. Internally:
+   - `es_key` is set to `f"{signal_type}ElectricalSeries"` (passed to
+     `BaseRecordingExtractorInterface.__init__`), so each instance's `get_metadata()`
+     populates its own `metadata["Ecephys"][es_key]`.
+   - After the existing BL-window `frame_slice` and per-channel property assignment
+     (`group_name`, `brain_area`, `hemisphere`, `filtering`, `location`), the recording is
+     further restricted via `recording_extractor.select_channels(channel_ids=...)` to only
+     the channels belonging to that signal type's `ElectrodeGroup` ("EEGArray" for EEG,
+     "EMGArray" for EMG). Note: this spikeinterface version (0.104.3) uses
+     `select_channels`, not the older `channel_slice` method.
+   - `get_metadata()` names the series `f"{signal_type}ElectricalSeries{baseline_name}"`
+     (e.g. `EEGElectricalSeriesBL1`, `EMGElectricalSeriesBL1`).
+   - Two instances (one per signal_type) must be created per session, both pointed at the
+     same `.dat` file and BL window. `neuroconv.tools.spikeinterface.add_electrodes_to_nwbfile`
+     deduplicates electrode rows by `channel_id`, so the second instance's call appends only
+     its own (new) channels to the electrode table built by the first — the table ends up
+     with all 16 rows, written once, shared by both `ElectricalSeries`.
+
+2. **`grin2bnwbconverter.py`** — `data_interface_classes["Recording"]` replaced with two
+   entries, `EEGRecording` and `EMGRecording`, both mapped to `TainiRecordingInterface`.
+
+3. **`convert_session.py`** — `source_data`/`conversion_options` now populate both
+   `EEGRecording` and `EMGRecording` (same `file_path`, `bl_start_sample`, `bl_stop_sample`,
+   `baseline_name`; differing only in `signal_type`).
+
+Verified end-to-end with a `stub_test=True` run for GRIN2B_129 BL1: NWB file now contains
+`acquisition/EEGElectricalSeriesBL1` (14 channels) and `acquisition/EMGElectricalSeriesBL1`
+(2 channels), both referencing a single 16-row electrode table with `group` correctly set to
+`EEGArray`/`EMGArray` per row.
+
+### TODO
+
+- [ ] Update `notebooks/read_grin2b_nwb.ipynb` visualization code, which still assumes a
+  single combined `ElectricalSeries_{baseline}`.
