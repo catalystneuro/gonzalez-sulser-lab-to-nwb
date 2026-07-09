@@ -106,14 +106,17 @@ def session_to_nwb(
     Path
         Path to the written NWB file.
     """
+
+    subject_id = f"GRIN2B_{animal_id}"
+    session_id = f"{baseline}"
+
     data_dir = Path(data_dir)
     output_dir = Path(output_dir)
     if stub_test:
         output_dir = output_dir / "nwb_stub"
+    output_dir = output_dir / subject_id
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    subject_id = f"GRIN2B_{animal_id}"
-    session_id = f"{subject_id}_{baseline}"
     nwbfile_path = output_dir / f"{session_id}.nwb"
 
     # ---- Look up BL window ----
@@ -261,5 +264,13 @@ if __name__ == "__main__":
         output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
         animal_id=129,  # args.animal_id,
         baseline="BL1",
+        stub_test=False,
+    )
+
+    session_to_nwb(
+        data_dir="H:/Gonzalez-Sulser-CN-data-share",  # args.data_dir,
+        output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
+        animal_id=129,  # args.animal_id,
+        baseline="BL2",
         stub_test=False,
     )

@@ -11,6 +11,7 @@ Usage
         [--max-workers 4] \\
         [--stub-test]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -19,7 +20,10 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Literal
 
-from .convert_session import _load_bl_windows, session_to_nwb
+from gonzalez_sulser_lab_to_nwb.grin2b.convert_session import (
+    _load_bl_windows,
+    session_to_nwb,
+)
 
 _EEG_DIR = "Chronic EEG recordings"
 
@@ -102,6 +106,7 @@ def dataset_to_nwb(
 
 
 if __name__ == "__main__":
+    """
     parser = argparse.ArgumentParser(description="Convert all GRIN2B sessions to NWB.")
     parser.add_argument("--data-dir", required=True)
     parser.add_argument("--output-dir", required=True)
@@ -114,4 +119,12 @@ if __name__ == "__main__":
         output_dir=args.output_dir,
         max_workers=args.max_workers,
         stub_test=args.stub_test,
+    )
+    """
+
+    dataset_to_nwb(
+        data_dir="H:/Gonzalez-Sulser-CN-data-share",
+        output_dir="H:/gonzalez-nwbfiles",
+        max_workers=1,
+        stub_test=False,
     )
