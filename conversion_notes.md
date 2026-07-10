@@ -497,7 +497,6 @@ Verified end-to-end with a `stub_test=True` run for GRIN2B_129 BL1: NWB file now
 
 ### TODO
 
-- [x] Update `notebooks/read_grin2b_nwb.ipynb` visualization code — now loads
-  `EEGElectricalSeriesBL1` and `EMGElectricalSeriesBL1` separately (with updated
-  per-series channel index maps for the raw-trace plots) instead of a single combined
-  `ElectricalSeries_{baseline}`.
+- [ ] Update `notebooks/read_grin2b_nwb.ipynb` to stream from DANDI
+- [ ] Add notebook for one subject to sessions (BL1 and BL2) comparison
+- [ ] Add notebook for multiple subjects --> reproducing some figures from the paper
