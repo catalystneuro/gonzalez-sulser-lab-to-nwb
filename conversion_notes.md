@@ -497,6 +497,7 @@ Verified end-to-end with a `stub_test=True` run for GRIN2B_129 BL1: NWB file now
 
 ### TODO
 
+- [x] Update `notebooks/read_grin2b_nwb.ipynb` to reproduce shared figures 
 - [ ] Update `notebooks/read_grin2b_nwb.ipynb` to stream from DANDI
 - [ ] Add notebook for one subject to sessions (BL1 and BL2) comparison
 - [ ] Add notebook for multiple subjects --> reproducing some figures from the paper
