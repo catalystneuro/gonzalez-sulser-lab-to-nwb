@@ -17,7 +17,7 @@ Or call session_to_nwb() directly from Python.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal
 from zoneinfo import ZoneInfo
@@ -63,11 +63,27 @@ def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
     return windows
 
 
-def _parse_recording_date(dat_filename: str) -> datetime:
-    """Extract date from .dat filename and return datetime at midnight Edinburgh time.
+_LIGHTS_ON_HOUR = 7  # Zeitgeber time 07:00 ("lights-on"), confirmed by the lab.
 
-    Filename pattern: TAINI_<dev>_<slot>_<line>_<id>_<cond>-<YYYY_MM_DD>-0000.dat
-    TODO: replace midnight with actual time-of-day once lab provides it.
+
+def _compute_session_start_time(
+    dat_filename: str, windows: dict[tuple[int, str], dict], animal_id: int
+) -> datetime:
+    """Compute the absolute timestamp of sample 0 of the .dat file.
+
+    Filename pattern: TAINI_<dev>_<band>_<line>_<id>_<cond>-<YYYY_MM_DD>-0000.dat
+    The filename date is the recording start date.
+    BL1 always starts at Zeitgeber time 07:00 (lights-on)
+    the day after the animal was connected — i.e. the day after the filename
+    date. session_start_time (sample 0) is therefore back-computed from that
+    anchor using BL1's sample offset for this animal:
+
+        session_start_time = (filename_date + 1 day, 07:00) - bl1_start_sample / fs
+
+    Any other baseline window (e.g. BL2) for the same animal shares this same
+    session_start_time, since it is the same .dat file / same clock — its own
+    BL sample offset (added elsewhere via starting_time / t_start annotations)
+    lands on the correct absolute time automatically.
     """
     import re
 
@@ -75,8 +91,20 @@ def _parse_recording_date(dat_filename: str) -> datetime:
     if not m:
         raise ValueError(f"Cannot parse date from filename: {dat_filename}")
     y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
-    # TODO: replace hour=0 with actual recording start time from lab.
-    return datetime(y, mo, d, 0, 0, 0, tzinfo=_TZ)
+    recording_date = datetime(y, mo, d, tzinfo=_TZ)
+
+    bl1_window = windows.get((animal_id, "BL1"))
+    if bl1_window is None:
+        # No BL1 window for this animal (single-baseline session) — the 07:00
+        # anchor can't be back-computed, so fall back to midnight of the
+        # recording date (time-of-day unknown for this animal).
+        return recording_date
+
+    lights_on = (recording_date + timedelta(days=1)).replace(
+        hour=_LIGHTS_ON_HOUR, minute=0, second=0
+    )
+    bl1_start_s = bl1_window["start"] / _FS
+    return lights_on - timedelta(seconds=bl1_start_s)
 
 
 def session_to_nwb(
@@ -210,7 +238,7 @@ def session_to_nwb(
     metadata = dict_deep_update(metadata, editable_metadata)
 
     # Session-specific fields
-    session_start_time = _parse_recording_date(dat_filename)
+    session_start_time = _compute_session_start_time(dat_filename, windows, animal_id)
     metadata["NWBFile"]["session_start_time"] = session_start_time
     metadata["NWBFile"]["session_id"] = session_id
     metadata["NWBFile"]["session_description"] = (
