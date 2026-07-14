@@ -233,8 +233,9 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         self.recording_extractor.set_property("location", xy)
 
         # 12-bit ADC over a 13 mV peak-to-peak full-scale range. Applied uniformly
-        # to all channels; no per-channel offset
+        # to all channels. Offset is set to 0 (must still be set explicitly).
         self.recording_extractor.set_channel_gains(np.full(_N_CHANNELS, _GAIN_TO_UV))
+        self.recording_extractor.set_channel_offsets(np.zeros(_N_CHANNELS))
 
         # Restrict to only the channels belonging to this signal type. Properties
         # set above are carried over by select_channels, and the electrode table
