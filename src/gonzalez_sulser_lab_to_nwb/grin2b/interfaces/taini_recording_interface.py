@@ -258,10 +258,13 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             {
                 "name": "TainiTecWirelessEEG",
                 "description": (
-                    "TainiTec wireless EEG/EMG telemetry system. "
-                    "16-channel headstage, Custom H16-Rat EEG16 grid (NeuroNexus). "
-                    "Sampling frequency 250.4 Hz, 12-bit ADC stored as int16 LE, "
-                    "13 mV peak-to-peak full-scale range."
+                    "TainiTec wireless EEG/EMG telemetry system. 16-channel headstage, "
+                    "Custom H16-Rat EEG16 grid (NeuroNexus). Sampling frequency 250.4 Hz, "
+                    "12-bit ADC stored as int16 LE, 13 mV peak-to-peak full-scale range. "
+                    "The grid's plus-symbol reference point was aligned over bregma during "
+                    "implantation; all EEG electrodes are independent of one another and are "
+                    "not interconnected. A separate cerebellar ground screw (-11.5 mm AP, "
+                    "+/-0.5 mm ML from bregma) was connected to the grid via silver paint."
                 ),
                 "manufacturer": "TainiTec",
             }
@@ -273,10 +276,15 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             if grp["name"] == "EEGArray":
                 grp["description"] = (
                     "14-channel chronic EEG electrode array, Custom H16-Rat EEG16 "
-                    "(NeuroNexus). Channels cover bilateral cortex: S1_Tr, M2_Fra, "
-                    "M2_anterior, M1_anterior, V2_ML, V1_M, S1Hl_S1Fl (right and left "
-                    "hemispheres), at stereotaxic AP/ML coordinates from bregma "
-                    "confirmed by the lab (see electrode table 'location' column)."
+                    "(NeuroNexus). Electrodes target bilateral somatosensory and motor "
+                    "cortical sites: S1-Tr (primary somatosensory cortex, trunk region), "
+                    "M2-FrA (secondary motor cortex, frontal association area), M2-Ant "
+                    "(secondary motor cortex, anterior), M1-Ant (primary motor cortex, "
+                    "anterior), V2-ML (secondary visual cortex, mediolateral), V1-M "
+                    "(primary visual cortex, monocular), S1Hl/Fl (primary somatosensory "
+                    "cortex, hindlimb/forelimb) - 7 electrodes per hemisphere, at "
+                    "stereotaxic AP/ML coordinates from bregma confirmed by the lab "
+                    "(see electrode table 'location' column)."
                 )
                 grp["location"] = "cortex"
             elif grp["name"] == "EMGArray":

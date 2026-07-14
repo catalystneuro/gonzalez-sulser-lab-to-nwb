@@ -5,11 +5,13 @@ Reads the per-epoch sleep state labels produced by the lab's automated scorer.
 Source file: `<subject_dir>/<subject_id>_BL{1,2}-dge_ok.csv`
   - Single column: `sleep.score`
   - One row per 5-second epoch, covering 24 h (17,280 epochs)
-  - State codes (assumed — TODO: confirm with lab):
+  - State codes confirmed (Hristova et al. 2025 Epilepsia, doi:10.1111/epi.18606,
+    and its supplementary methods):
       0 = Wake
       1 = NREM
       2 = REM
-      (state 4 referenced in pw_spectrum.csv — may appear in other animals)
+      4 = SWD (spike-wave discharge epochs, classed separately from the three
+          sleep states; state 3 is not used by the lab's scoring pipeline)
 
 Writes a TimeIntervals table to nwbfile with columns:
   start_time, stop_time, sleep_score (int), sleep_state (str label)
@@ -28,12 +30,13 @@ from neuroconv.utils import DeepDict
 from pynwb import NWBFile
 from pynwb.epoch import TimeIntervals
 
-# TODO: confirm label mapping with lab.
+# State code mapping confirmed from Hristova et al. 2025 supplementary methods
+# (same mapping used by StatePowerSpectrumInterface).
 _STATE_LABELS: dict[int, str] = {
     0: "Wake",
     1: "NREM",
     2: "REM",
-    4: "Unknown",  # referenced in pw_spectrum.csv; meaning TBD
+    4: "SWD",
 }
 _EPOCH_DURATION_S: float = 5.0
 _FS: float = 250.4
@@ -97,14 +100,15 @@ class SleepStateInterface(BaseDataInterface):
             name="sleep_states",
             description=(
                 "Automated sleep state classifications in 5-second epochs "
-                "produced by the Gonzalez-Sulser lab scoring pipeline. "
-                "State codes: 0=Wake, 1=NREM, 2=REM "
-                "(TODO: confirm mapping with lab; state 4 meaning TBD)."
+                "produced by the Gonzalez-Sulser lab scoring pipeline "
+                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). "
+                "State codes: 0=Wake, 1=NREM, 2=REM, 4=SWD (spike-wave discharge "
+                "epochs, classed separately from the three sleep states)."
             ),
         )
         sleep_table.add_column(
             name="sleep_score",
-            description="Integer sleep state code (0=Wake, 1=NREM, 2=REM; TODO confirm).",
+            description="Integer sleep state code (0=Wake, 1=NREM, 2=REM, 4=SWD).",
         )
         sleep_table.add_column(
             name="sleep_state",
