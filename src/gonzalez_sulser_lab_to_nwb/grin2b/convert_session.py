@@ -152,13 +152,23 @@ def session_to_nwb(
     source_data: dict = {}
     conversion_options: dict = {}
 
-    source_data["Recording"] = dict(
+    source_data["EEGRecording"] = dict(
         file_path=str(dat_path),
         bl_start_sample=bl_start_sample,
         bl_stop_sample=bl_stop_sample,
+        signal_type="EEG",
         baseline_name=baseline,
     )
-    conversion_options["Recording"] = dict(stub_test=stub_test)
+    conversion_options["EEGRecording"] = dict(stub_test=stub_test)
+
+    source_data["EMGRecording"] = dict(
+        file_path=str(dat_path),
+        bl_start_sample=bl_start_sample,
+        bl_stop_sample=bl_stop_sample,
+        signal_type="EMG",
+        baseline_name=baseline,
+    )
+    conversion_options["EMGRecording"] = dict(stub_test=stub_test)
 
     if sleep_csv.exists():
         source_data["SleepStates"] = dict(
