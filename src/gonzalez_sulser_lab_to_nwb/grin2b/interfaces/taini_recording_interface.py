@@ -243,7 +243,6 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             "description": (
                 f"Chronic {self.signal_type} recording, {self.baseline_name} window "
                 f"({duration_hours:.1f} h). "
-                f"Channel layout confirmed from grin2b_eeg_channels.csv. "
                 f"ADC gain (conversion) is a placeholder — TODO: confirm with lab."
             ),
         }
