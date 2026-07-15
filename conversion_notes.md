@@ -501,3 +501,108 @@ Verified end-to-end with a `stub_test=True` run for GRIN2B_129 BL1: NWB file now
   `EEGElectricalSeriesBL1` and `EMGElectricalSeriesBL1` separately (with updated
   per-series channel index maps for the raw-trace plots) instead of a single combined
   `ElectricalSeries_{baseline}`.
+
+## 2026-07-14 — Email Exchange with Alfredo Gonzalez-Sulser (TainiTec + electrode + subject questions)
+
+### Resolved by this email
+
+| Question | Answer | Notes |
+|---|---|---|
+| **ADC bit depth** | 12-bit (0–4095) | Confirms earlier inspection finding that raw int16 values sit in `[0, 4095]` |
+| **ADC full-scale range** | **13 mV peak-to-peak (±6.5 mV)** | From TainiTec support. `conversion = 6.5e-3 / 2048` (volts per bit, referenced to mid-scale ADC zero ≈2048/2560). **Resolves long-standing open question #1 (ADC → volts gain).** To be applied as the `conversion` parameter on both `EEGElectricalSeries*` and `EMGElectricalSeries*`. |
+| **TainiTec reference reader code** | Python snippet provided (see below) | Confirms our de-interlacing approach (`dat_raw[c::16]` per channel) matches TainiTec's own `parse_dat()`. **Discrepancy noted:** their snippet sets `sample_rate = 256.4`, but our Phase 2 inspection derived **250.4 Hz** exactly from `Channels.csv` row counts (21,634,560 rows = 250.4 × 86,400 s) and from BL windows in the xlsx. We keep 250.4 Hz — it is corroborated by two independent lab-provided artifacts, while 256.4 appears to be a stale/generic value left in TainiTec's example script (also visible in their own docstring — they don't derive it from data). Flagged as a discrepancy to mention if lab pushes back. |
+| **Filename convention — `1044`** | Confirmed = TainiTec transmitter/device ID | matches assumption |
+| **Filename convention — `C`** | Confirmed = TainiTec **receiver slot**, tied to a specific radio-frequency band. Bands are **A, B, C, D**; all transmitters on the same band share slot letter `C` etc. | Refines earlier "slot/animal position" guess — it's a frequency-band identifier, not a physical position |
+| **Filename convention — date** | Confirmed = recording start date, local Edinburgh time | matches assumption |
+| **Filename convention — `0000` suffix** | Confirmed = always `0000` (no multi-file index observed) | matches assumption |
+| **Recording start time-of-day** | No per-session start-time log exists. Recordings were started in the afternoon/evening; all analysis begins the next day at **07:00** (lights-on). The BL1 start sample (given in `Sample_start_end_GRIN2B.xlsx`) marks 07:00; actual `.dat` recording start = `session_start_time(BL1) − BL1_start_sample / 250.4 s`. | This is the only per-session timing source that exists — confirms our Phase 4 sync plan of deriving `session_start_time` from the BL1 xlsx offset rather than a filename time-of-day. No separate "sleep analysis start time file" exists beyond the xlsx (confirmed by Alessandra in her reply). |
+| **NeuroNexus EEG grid model** | **Custom H16-Rat EEG16** — customization is 2 of the 16 channels repurposed for EMG leads | Slightly different wording from the supplementary methods ("Custom H16-Rat EEG16_Functional") — likely the same part, informal vs. formal name. Keep both in metadata description for traceability. |
+| **Per-channel stereotaxic coordinates** | **Full AP/ML coordinate table provided** for all 16 channels (see below) | **Resolves open question — electrode table `x`/`y` (or `rel_x`/`rel_y`) can now be populated per channel.** |
+| **EMG electrode placement** | **Trapezius** muscle | More specific than paper's "neck muscles" (trapezius is a neck/shoulder muscle) — update `EMGArray` description accordingly |
+| **Reference/ground strategy** | Not explicitly re-answered in this email (already known from supplementary methods: cerebellar screw ground at AP −11.5, ML ±0.5, silver-paint connected; grid reference aligned over bregma) | Still nothing new beyond supplementary methods; treat as resolved from that source |
+| **Implant photos** | 6-panel surgery photo attached (expose skull → drill holes → insert holding screws → insert ground screw → affix EEG array → cement) | Useful for `Device`/`ElectrodeGroup` description context; not directly machine-readable metadata |
+| **Strain** | **Long Evans: Autism Research Initiative (LE-Grin2bem1Mcwi, RRID:RGD_14394515)** | Matches what was already recorded from the paper (2026-06-25) — now double-confirmed directly by the lab |
+| **Date of birth** | Not available per-animal. Animals were **16–19 weeks old** at time of recording. Lab (Natalie) may be able to get exact DOBs from records, or may need to go back to a postdoc no longer in the lab — **will take time**. | **Decision (Alessandra, 2026-07-14): use age range (16–19 weeks) instead of exact DOB.** Confirmed this complies with DANDI best practices (`Subject.age` as an ISO 8601 duration/range is an accepted alternative to `date_of_birth`). Do not block conversion on exact DOBs. |
+| **Weight at recording** | **Not available** — lab does not have this data | Optional field; omit from `Subject` metadata |
+| **BL1/BL2 windowing** | **Confirmed**: two consecutive 24-h windows, 21,634,560 samples each at 250.4 Hz. BL1 starts at 07:00 UK time at the sample given in the recording-start (xlsx) spreadsheet, runs 24 h; BL2 starts immediately after BL1. Sleep/seizure numbers are **averaged across BL1+BL2** where both are usable. **Caveat: for a few animals only one baseline (BL1 or BL2) may have been used**, due to recording quality — this is not flagged per-animal anywhere yet. | Matches/confirms Phase 2 findings. New info: BL1+BL2 averaging for published numbers, and the single-baseline caveat — worth a `notes` field on affected sessions if/when identified. |
+| **Light cycle** | Confirmed 12 h:12 h L:D, lights-on **07:00 AM**, same protocol across all GRIN2B sessions **and the other 4 SFARI lines** | Matches supplementary methods; now also confirmed as consistent across all 5 SFARI lines |
+| **Sleep-state encoding** | Confirmed 0=Wake, 1=NREM, 2=REM; **state 4 = Spike-and-Wave Discharges (SWDs)**, i.e. absence-seizure EEG correlate. Lab is unsure why state 3 was skipped by the postdoc who wrote the original pipeline — likely a legacy artifact code no longer in use. | Matches supplementary methods finding (already applied to `state_power_spectrum_interface.py`) |
+| **Publication DOI** | **10.1111/epi.18606** | Reconfirms value already in `grin2b_general_metadata.yaml` |
+| **Scoring/analysis code repos** | Seizure code: `Gonzalez-Sulser-Team/SWD-Automatic-Identification-2025`. Sleep code: `Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER` (Dr. Ingrid Buller & Dr. Alejandro Bassi). | Repo name for seizure code has a `-2025` suffix not previously recorded (earlier note just said `SWD-Automatic-Identification`) — **update citation/URL in metadata to the `-2025` repo name.** |
+| **Other 4 SFARI lines** | **SCN2A** (next priority; recording config differs — see below; this is the line to hand off to the Bender team), **SYNGAP-GAP Deletion**, **NLGN3**, **16p11.2**, **CDKL5** | First full confirmation of all 5 SFARI line names and priority order |
+| **SCN2A recording differences** | Uses **screw electrodes through an electrode interface board** instead of the NeuroNexus EEG grid; otherwise same recording and analysis pipeline/config | Important for planning the SCN2A sub-package — the custom `TainiRecordingInterface` channel/electrode-group logic will need a screw-electrode variant; Niamh to discuss further in the scheduled call |
+
+### Per-channel stereotaxic coordinates (NeuroNexus pinout → AP/ML, bregma-referenced, mm)
+
+Provided by Alfredo, cross-referenced against TAINI 2nd-design connector pinout. Matches
+the electrode labels already confirmed in `grin2b_eeg_channels.csv`.
+
+| TAINI pin | NNX pin | AP | ML | Label | Hemisphere |
+|---|---|---|---|---|---|
+| 7 | 1 | −7.0 | 3.0 | V1M | L |
+| 6 | 2 | −5.0 | 3.0 | V2ML | L |
+| 1 | 4 | −3.0 | 2.8 | S1Tr | L |
+| 8 | 5 | −1.0 | 2.8 | S1HL_S1FL | L |
+| 5 | 6 | 1.5 | 2.8 | M1_ant | L |
+| 4 | 7 | 1.5 | 1.2 | M2_ant | L |
+| 3 | 8 | 3.6 | 1.2 | M2_FrA | L |
+| 14 | 9 | 3.6 | 1.2 | M2_FrA | R |
+| 13 | 10 | 1.5 | 1.2 | M2_ant | R |
+| 12 | 11 | 1.5 | 2.8 | M1_ant | R |
+| 11 | 12 | −1.0 | 2.8 | S1HL_S1FL | R |
+| 16 | 13 | −3.0 | 2.8 | S1Tr | R |
+| 10 | 15 | −5.0 | 3.0 | V2ML | R |
+| 9 | 16 | −7.0 | 3.0 | V1M | R |
+| 2 | 3 | – | – | EMG | L |
+| 15 | 14 | – | – | EMG | R |
+
+**Mapping note:** this table is keyed by *TAINI/NNX pin*, not by the 0-based Python
+channel index used in `grin2b_eeg_channels.csv`. Before writing `x`/`y` (or `rel_x`/`rel_y`)
+columns to the electrodes table, we need to cross-walk TAINI pin → Python channel index —
+the two tables agree on labels/hemisphere (spot-checked: e.g. `S1Tr`/L appears at TAINI
+pin 1 here and at Python idx 15 in `grin2b_eeg_channels.csv`), so the join key is
+`(label, hemisphere)`, not position. **Action item for Phase 5 code update**: build this
+join programmatically rather than assuming index order matches.
+
+### TainiTec reference reader code (for cross-validation only, not for reuse)
+
+```python
+number_of_channels = 16
+sample_rate = 256.4          # NOTE: inconsistent with our confirmed 250.4 Hz — see discrepancy note above
+sample_datatype = 'int16'
+display_decimation = 1
+
+def parse_dat(fn):
+    dat_raw = np.fromfile(fn, dtype=sample_datatype)
+    step = number_of_channels * display_decimation
+    dat_chans = [dat_raw[c::step] for c in range(number_of_channels)]
+    t = np.arange(len(dat_chans[0]), dtype=float) / sample_rate
+    return dat_chans, t
+```
+
+De-interlacing logic (`dat_raw[c::16]`) matches our `TainiRecordingInterface` /
+`BinaryRecordingExtractor` approach — good independent confirmation of the raw parsing.
+
+### Still open after this email (owned by Natalie Hung / Niamh McLaughlin, per Alfredo)
+
+- [ ] **Sleep state classifications folder README** (per-file documentation for e.g. `GRIN2B_129`: what `*-dge_ok.csv`, `*-pw_spectrum.csv`, `*_Channels.csv`, `sbh_*.png`, `spec_*.png`, `seiz/*` each contain and how they were generated)
+- [ ] **`pw_spectrum.csv` `s_*` column semantics** — confirm these are per-sleep-state averaged PSD across the BL window, and their units (µV²/Hz? normalised?)
+- [ ] **16 missing raw `.dat` files** (animals 362–369, 371, 382, 383, 401, 402, 404, 430, 433) — Alfredo: "we have most of these, I think they just need to be uploaded" — Natalie/Niamh to upload
+- [ ] **GRIN2B_424 correct BL1/BL2 sample offsets** for the actual on-disk file `TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat` (xlsx currently wrongly maps 424 to the `..._366-2022_04_12-0000.dat` file with overlapping BL windows) — Natalie/Niamh to provide
+- [ ] **Sex/genotype** for animals 132, 383, 401, 402, 404, 424, 430, 433 — still not in any source
+- [ ] Confirm whether any GRIN2B animals used only one baseline (BL1 or BL2) instead of both, due to recording quality — needed to avoid silently NaN-filling or mis-averaging in downstream sleep/seizure summaries
+
+### Decisions made in this session
+
+1. **ADC gain resolved** → `conversion = 6.5e-3 V / 2048` to be added to `EEGRecording`/`EMGRecording`
+   conversion options in `convert_session.py` (or as a fixed constant in
+   `taini_recording_interface.py`) once implemented. **Not yet applied to code — next step.**
+2. **DOB → age range**: `Subject.age` will be set to a DANDI-compliant ISO 8601 duration
+   range (`P16W/P19W`) rather than blocking on exact per-animal DOBs.
+3. **Weight**: omitted from `Subject` metadata (lab confirmed unavailable).
+4. **Electrode coordinates**: full AP/ML table now available; electrodes table `x`/`y`
+   columns can be populated once the TAINI-pin → Python-channel-index join is implemented (see mapping note above).
+5. **EMG description**: update from generic "neck muscles" to specific "trapezius muscle".
+6. **SCN2A flagged as next line**, with a known structural difference (screw electrodes via
+   interface board, no NeuroNexus grid) — will need its own recording-interface variant
+   when that sub-package is started; discussion pending scheduled call with Niamh.
