@@ -18,6 +18,12 @@ Writes a TimeIntervals table to nwbfile with columns:
 
 Timestamps are in seconds relative to session_start_time.
 The epoch grid origin is bl_start_sample / sampling_frequency.
+
+Since one NWB file now covers a subject's full recording (BL1 and BL2 both),
+this interface is instantiated once per baseline window and takes a
+`baseline_label` (e.g. "baseline_window_1" / "baseline_window_2") used to
+suffix the table name so both baselines' tables coexist in
+processing["behavior"].
 """
 from __future__ import annotations
 
@@ -51,6 +57,7 @@ class SleepStateInterface(BaseDataInterface):
         self,
         file_path: str | Path,
         bl_start_sample: int,
+        baseline_label: str,
         sampling_frequency: float = _FS,
         epoch_duration_s: float = _EPOCH_DURATION_S,
     ):
@@ -62,6 +69,9 @@ class SleepStateInterface(BaseDataInterface):
         bl_start_sample : int
             Sample index in the .dat file where the baseline window starts.
             Used to compute epoch start times relative to session_start_time.
+        baseline_label : str
+            Suffix identifying the baseline window (e.g. "baseline_window_1"),
+            used to name the resulting NWB TimeIntervals table.
         sampling_frequency : float
             Sampling frequency of the raw recording (default 250.4 Hz).
         epoch_duration_s : float
@@ -70,9 +80,11 @@ class SleepStateInterface(BaseDataInterface):
         super().__init__(
             file_path=str(file_path),
             bl_start_sample=bl_start_sample,
+            baseline_label=baseline_label,
         )
         self.file_path = Path(file_path)
         self.bl_start_sample = bl_start_sample
+        self.baseline_label = baseline_label
         self.sampling_frequency = sampling_frequency
         self.epoch_duration_s = epoch_duration_s
 
@@ -97,7 +109,7 @@ class SleepStateInterface(BaseDataInterface):
         stop_times = start_times + self.epoch_duration_s
 
         sleep_table = TimeIntervals(
-            name="sleep_states",
+            name=f"sleep_states_{self.baseline_label}",
             description=(
                 "Automated sleep state classifications in 5-second epochs "
                 "produced by the Gonzalez-Sulser lab scoring pipeline "
