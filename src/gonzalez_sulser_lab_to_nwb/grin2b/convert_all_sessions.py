@@ -1,7 +1,9 @@
-"""Convert all GRIN2B baseline sessions to NWB.
+"""Convert all sessions to NWB.
 
-Discovers all (animal_id, baseline) pairs from Sample_start_end_GRIN2B.xlsx
-whose raw .dat file is present on disk, then runs the conversion in parallel.
+Discovers all animal_ids from Sample_start_end_GRIN2B.xlsx whose raw .dat
+file is present on disk, then runs one session_to_nwb() conversion per animal
+(covering that animal's full recording plus any available BL1/BL2 windows)
+in parallel.
 
 Usage
 -----
@@ -18,7 +20,6 @@ import argparse
 import traceback
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import Literal
 
 from gonzalez_sulser_lab_to_nwb.grin2b.convert_session import (
     _load_bl_windows,
@@ -28,42 +29,42 @@ from gonzalez_sulser_lab_to_nwb.grin2b.convert_session import (
 _EEG_DIR = "Chronic EEG recordings"
 
 
-def _get_all_sessions(data_dir: Path) -> list[dict]:
-    """Return kwargs for every session whose .dat file is on disk."""
+def _get_all_subjects(data_dir: Path) -> list[int]:
+    """Return the animal_id for every subject with at least one BL window whose .dat file is on disk."""
     windows = _load_bl_windows(data_dir)
     eeg_dir = data_dir / _EEG_DIR
     on_disk = {f.name for f in eeg_dir.glob("*.dat")}
 
-    sessions = []
+    animal_ids: dict[int, bool] = {}
     skipped = []
     for (animal_id, baseline), win in windows.items():
         if win["file"] not in on_disk:
             skipped.append((animal_id, baseline, win["file"]))
             continue
-        sessions.append(dict(animal_id=animal_id, baseline=baseline))
+        animal_ids[animal_id] = True
 
     if skipped:
         print(
-            f"Skipping {len(skipped)} sessions — raw .dat not in share:\n"
+            f"Skipping {len(skipped)} baseline windows — raw .dat not in share:\n"
             + "\n".join(f"  GRIN2B_{a} {bl}: {f}" for a, bl, f in skipped)
         )
-    print(f"Found {len(sessions)} convertible sessions.")
-    return sessions
+    subjects = sorted(animal_ids)
+    print(f"Found {len(subjects)} convertible subjects.")
+    return subjects
 
 
-def _safe_convert(data_dir, output_dir, animal_id, baseline, stub_test, exception_dir):
+def _safe_convert(data_dir, output_dir, animal_id, stub_test, exception_dir):
     try:
         session_to_nwb(
             data_dir=data_dir,
             output_dir=output_dir,
             animal_id=animal_id,
-            baseline=baseline,
             stub_test=stub_test,
         )
     except Exception:
-        exc_path = Path(exception_dir) / f"GRIN2B_{animal_id}_{baseline}.txt"
+        exc_path = Path(exception_dir) / f"GRIN2B_{animal_id}.txt"
         exc_path.write_text(traceback.format_exc())
-        print(f"ERROR GRIN2B_{animal_id} {baseline} — see {exc_path}")
+        print(f"ERROR GRIN2B_{animal_id} — see {exc_path}")
 
 
 def dataset_to_nwb(
@@ -90,16 +91,15 @@ def dataset_to_nwb(
     exception_dir = output_dir / "exceptions"
     exception_dir.mkdir(parents=True, exist_ok=True)
 
-    sessions = _get_all_sessions(data_dir)
+    animal_ids = _get_all_subjects(data_dir)
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        for s in sessions:
+        for animal_id in animal_ids:
             executor.submit(
                 _safe_convert,
                 data_dir=str(data_dir),
                 output_dir=str(output_dir),
-                animal_id=s["animal_id"],
-                baseline=s["baseline"],
+                animal_id=animal_id,
                 stub_test=stub_test,
                 exception_dir=str(exception_dir),
             )
@@ -107,7 +107,7 @@ def dataset_to_nwb(
 
 if __name__ == "__main__":
     """
-    parser = argparse.ArgumentParser(description="Convert all GRIN2B sessions to NWB.")
+    parser = argparse.ArgumentParser(description="Convert all GRIN2B subjects to NWB.")
     parser.add_argument("--data-dir", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--max-workers", type=int, default=1)

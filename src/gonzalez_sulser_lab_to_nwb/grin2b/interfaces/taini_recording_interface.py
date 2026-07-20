@@ -26,9 +26,12 @@ Channel layout confirmed from grin2b_eeg_channels.csv (2026-06-19):
   idx 14: EMG,           Left,  EMG
   idx 15: S1_Tr,         Left,  EEG
 
-Only the requested baseline window (BL1 or BL2) is written to NWB.
-The window is expressed as sample indices into the .dat file and comes
-from Sample_start_end_GRIN2B.xlsx.
+The full raw recording is written to NWB, one
+ElectricalSeries per signal type, starting at t=0 (session_start_time). The
+BL1/BL2 windows within this recording are represented separately as rows in
+the NWB epochs table (see BaselineEpochsInterface) and drive the timestamps
+of the derived sleep/seizure streams — they do not restrict what raw data is
+written here.
 
 The 16 channels are written as two separate ElectricalSeries — one for the
 14 EEG channels and one for the 2 EMG channels — sharing a single electrode
@@ -132,13 +135,13 @@ _SIGNAL_TYPE_TO_GROUP = {"EEG": "EEGArray", "EMG": "EMGArray"}
 class TainiRecordingInterface(BaseRecordingExtractorInterface):
     """Interface for TainiTec chronic EEG/EMG .dat recordings.
 
-    Writes one signal type (EEG or EMG) of a single baseline window (BL1 or
-    BL2) as an ElectricalSeries in the NWB acquisition group. Both signal
-    types share the same 16-channel .dat file and electrode table but are
-    written as separate ElectricalSeries under separate ElectrodeGroups —
-    instantiate this interface once per signal_type to get both.
-    Inherits the full neuroconv recording pipeline (electrode table, chunked
-    HDF5 compression, etc.) via BaseRecordingExtractorInterface.
+    Writes one signal type (EEG or EMG) of the full raw recording as an
+    ElectricalSeries in the NWB acquisition group. Both signal types share
+    the same 16-channel .dat file and electrode table but are written as
+    separate ElectricalSeries under separate ElectrodeGroups — instantiate
+    this interface once per signal_type to get both. Inherits the full
+    neuroconv recording pipeline (electrode table, chunked HDF5 compression,
+    etc.) via BaseRecordingExtractorInterface.
     """
 
     Extractor = BinaryRecordingExtractor
@@ -158,25 +161,17 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
     def __init__(
         self,
         file_path: str | Path,
-        bl_start_sample: int,
-        bl_stop_sample: int,
         signal_type: Literal["EEG", "EMG"],
-        baseline_name: str = "BL1",
         verbose: bool = False,
     ):
         """
         Parameters
         ----------
         file_path : str or Path
-            Path to the TainiTec .dat binary file.
-        bl_start_sample : int
-            Zero-based sample index where the baseline window starts (xlsx "Start").
-        bl_stop_sample : int
-            Inclusive last sample index of the baseline window (xlsx "End").
+            Path to the TainiTec .dat binary file. The full file is written
+            (starting_time=0, i.e. session_start_time).
         signal_type : "EEG" or "EMG"
             Which subset of the 16 channels this interface instance writes.
-        baseline_name : str
-            Label for this window, e.g. "BL1" or "BL2".
         verbose : bool
             Passed to the underlying spikeinterface extractor.
         """
@@ -185,10 +180,7 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 f"signal_type must be one of {list(_SIGNAL_TYPE_TO_GROUP)}, got {signal_type!r}"
             )
 
-        self.bl_start_sample = bl_start_sample
-        self.bl_stop_sample = bl_stop_sample
         self.signal_type = signal_type
-        self.baseline_name = baseline_name
         self._electrode_group_name = _SIGNAL_TYPE_TO_GROUP[signal_type]
 
         super().__init__(
@@ -200,15 +192,6 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             verbose=verbose,
             es_key=f"{signal_type}ElectricalSeries",
         )
-
-        # Slice to BL window — lazy, no data read at construction time
-        self.recording_extractor = self.recording_extractor.frame_slice(
-            start_frame=bl_start_sample,
-            end_frame=bl_stop_sample + 1,
-        )
-
-        # Annotate t_start so neuroconv sets ElectricalSeries.starting_time correctly
-        self.recording_extractor.annotate(t_start=bl_start_sample / _FS)
 
         # Set per-channel properties (become columns in the NWB electrodes table).
         # NOTE: "location" in spikeinterface means 2D XY electrode coordinates (float,
@@ -258,10 +241,13 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             {
                 "name": "TainiTecWirelessEEG",
                 "description": (
-                    "TainiTec wireless EEG/EMG telemetry system. "
-                    "16-channel headstage, Custom H16-Rat EEG16 grid (NeuroNexus). "
-                    "Sampling frequency 250.4 Hz, 12-bit ADC stored as int16 LE, "
-                    "13 mV peak-to-peak full-scale range."
+                    "TainiTec wireless EEG/EMG telemetry system. 16-channel headstage, "
+                    "Custom H16-Rat EEG16 grid (NeuroNexus). Sampling frequency 250.4 Hz, "
+                    "12-bit ADC stored as int16 LE, 13 mV peak-to-peak full-scale range. "
+                    "The grid's plus-symbol reference point was aligned over bregma during "
+                    "implantation; all EEG electrodes are independent of one another and are "
+                    "not interconnected. A separate cerebellar ground screw (-11.5 mm AP, "
+                    "+/-0.5 mm ML from bregma) was connected to the grid via silver paint."
                 ),
                 "manufacturer": "TainiTec",
             }
@@ -273,10 +259,15 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             if grp["name"] == "EEGArray":
                 grp["description"] = (
                     "14-channel chronic EEG electrode array, Custom H16-Rat EEG16 "
-                    "(NeuroNexus). Channels cover bilateral cortex: S1_Tr, M2_Fra, "
-                    "M2_anterior, M1_anterior, V2_ML, V1_M, S1Hl_S1Fl (right and left "
-                    "hemispheres), at stereotaxic AP/ML coordinates from bregma "
-                    "confirmed by the lab (see electrode table 'location' column)."
+                    "(NeuroNexus). Electrodes target bilateral somatosensory and motor "
+                    "cortical sites: S1-Tr (primary somatosensory cortex, trunk region), "
+                    "M2-FrA (secondary motor cortex, frontal association area), M2-Ant "
+                    "(secondary motor cortex, anterior), M1-Ant (primary motor cortex, "
+                    "anterior), V2-ML (secondary visual cortex, mediolateral), V1-M "
+                    "(primary visual cortex, monocular), S1Hl/Fl (primary somatosensory "
+                    "cortex, hindlimb/forelimb) - 7 electrodes per hemisphere, at "
+                    "stereotaxic AP/ML coordinates from bregma confirmed by the lab "
+                    "(see electrode table 'location' column)."
                 )
                 grp["location"] = "cortex"
             elif grp["name"] == "EMGArray":
@@ -286,15 +277,15 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 )
                 grp["location"] = "trapezius muscle"
 
-        n_samples = self.bl_stop_sample - self.bl_start_sample + 1
+        n_samples = self.recording_extractor.get_num_frames()
         duration_hours = n_samples / _FS / 3600
         metadata["Ecephys"][self.es_key] = {
-            "name": f"{self.signal_type}ElectricalSeries{self.baseline_name}",
+            "name": f"{self.signal_type}ElectricalSeries",
             "description": (
-                f"Chronic {self.signal_type} recording, {self.baseline_name} window "
-                f"({duration_hours:.1f} h). Values converted to volts using a "
-                f"TainiTec 12-bit ADC over a 13 mV peak-to-peak full-scale range "
-                f"({_GAIN_TO_UV:.4f} uV/code)."
+                f"Full chronic {self.signal_type} recording ({duration_hours:.1f} h). "
+                f"BL1/BL2 baseline windows within this recording are marked in the NWB "
+                f"epochs table. Values converted to volts using a TainiTec 12-bit ADC "
+                f"over a 13 mV peak-to-peak full-scale range ({_GAIN_TO_UV:.4f} uV/code)."
             ),
         }
 
