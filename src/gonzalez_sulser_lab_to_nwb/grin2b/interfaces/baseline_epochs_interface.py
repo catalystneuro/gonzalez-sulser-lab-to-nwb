@@ -1,8 +1,8 @@
-"""Baseline (BL1/BL2) epochs interface.
+"""Baseline (BL1/BL2/...) epochs interface.
 
 Under the one-NWB-file-per-subject design, the raw recording written by
 TainiRecordingInterface spans the full multi-day session rather than a single
-BL window. This interface adds the BL1 and BL2 windows to the NWB epochs
+BL window. This interface adds each baseline window to the NWB epochs
 table instead, so downstream users can slice the full recording back down to
 the analyzed baseline windows.
 
@@ -27,35 +27,29 @@ class BaselineEpochsInterface(BaseDataInterface):
 
     def __init__(
         self,
-        bl1_start_sample: int | None = None,
-        bl1_stop_sample: int | None = None,
-        bl2_start_sample: int | None = None,
-        bl2_stop_sample: int | None = None,
+        baseline_windows: list[dict[str, dict[str, int]]],
         sampling_frequency: float = _FS,
     ):
         """
         Parameters
         ----------
-        bl1_start_sample, bl1_stop_sample : int, optional
-            Inclusive sample-index window for BL1 in the .dat file. Omit both
-            if this animal has no BL1 window.
-        bl2_start_sample, bl2_stop_sample : int, optional
-            Inclusive sample-index window for BL2 in the .dat file. Omit both
-            if this animal has no BL2 window.
+        baseline_windows : list of dict
+            One entry per baseline window, in chronological order. Each entry
+            has the form ``{baseline_label: {"start_sample": int, "stop_sample": int}}``,
+            e.g. ``[{"baseline_window_1": {"start_sample": 0, "stop_sample": 100}}]``.
+            ``start_sample``/``stop_sample`` are the inclusive sample-index window
+            for that baseline in the .dat file. ``baseline_label`` is used as the
+            NWB epoch's tag, and as the join key for other interfaces (e.g.
+            SeizureInterface, SleepStateInterface) that align their data to
+            these epochs.
         sampling_frequency : float
             Sampling frequency of the raw recording (default 250.4 Hz).
         """
         super().__init__(
-            bl1_start_sample=bl1_start_sample,
-            bl1_stop_sample=bl1_stop_sample,
-            bl2_start_sample=bl2_start_sample,
-            bl2_stop_sample=bl2_stop_sample,
+            baseline_windows=baseline_windows,
             sampling_frequency=sampling_frequency,
         )
-        self.bl1_start_sample = bl1_start_sample
-        self.bl1_stop_sample = bl1_stop_sample
-        self.bl2_start_sample = bl2_start_sample
-        self.bl2_stop_sample = bl2_stop_sample
+        self.baseline_windows = baseline_windows
         self.sampling_frequency = sampling_frequency
 
     def get_metadata(self) -> DeepDict:
@@ -67,15 +61,10 @@ class BaselineEpochsInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        if self.bl1_start_sample is not None:
-            nwbfile.add_epoch(
-                start_time=self.bl1_start_sample / self.sampling_frequency,
-                stop_time=(self.bl1_stop_sample + 1) / self.sampling_frequency,
-                tags=["baseline_window_1"],
-            )
-        if self.bl2_start_sample is not None:
-            nwbfile.add_epoch(
-                start_time=self.bl2_start_sample / self.sampling_frequency,
-                stop_time=(self.bl2_stop_sample + 1) / self.sampling_frequency,
-                tags=["baseline_window_2"],
-            )
+        for window in self.baseline_windows:
+            for baseline_label, bounds in window.items():
+                nwbfile.add_epoch(
+                    start_time=bounds["start_sample"] / self.sampling_frequency,
+                    stop_time=(bounds["stop_sample"] + 1) / self.sampling_frequency,
+                    tags=[baseline_label],
+                )

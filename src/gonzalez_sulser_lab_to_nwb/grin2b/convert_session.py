@@ -181,19 +181,31 @@ def session_to_nwb(
     source_data["EMGRecording"] = dict(file_path=str(dat_path), signal_type="EMG")
     conversion_options["EMGRecording"] = dict(stub_test=stub_test)
 
+    baseline_windows_arg = [
+        {
+            baseline_label: {
+                "start_sample": baseline_windows[baseline_key]["start"],
+                "stop_sample": baseline_windows[baseline_key]["end"],
+            }
+        }
+        for baseline_key, baseline_label in _BASELINE_LABELS.items()
+        if baseline_windows[baseline_key] is not None
+    ]
     source_data["BaselineEpochs"] = dict(
-        bl1_start_sample=bl1_window["start"] if bl1_window else None,
-        bl1_stop_sample=bl1_window["end"] if bl1_window else None,
-        bl2_start_sample=bl2_window["start"] if bl2_window else None,
-        bl2_stop_sample=bl2_window["end"] if bl2_window else None,
+        baseline_windows=baseline_windows_arg, sampling_frequency=_FS
     )
     conversion_options["BaselineEpochs"] = dict(stub_test=stub_test)
+
+    sleep_csvs: list[str] = []
+    seizure_csvs: list[str] = []
+    swd_csvs: list[str] = []
+    totals_csvs: list[str] = []
+    psd_csvs: list[str] = []
 
     for baseline_key, baseline_label in _BASELINE_LABELS.items():
         win = baseline_windows[baseline_key]
         if win is None:
             continue
-        bl_start_sample = win["start"]
 
         sleep_csv = subject_dir / f"{animal_key}_{baseline_key}-dge_ok.csv"
         seizure_csv = (
@@ -206,45 +218,39 @@ def session_to_nwb(
         psd_csv = subject_dir / f"{animal_key}_{baseline_key}-pw_spectrum.csv"
 
         if sleep_csv.exists():
-            key = f"SleepStates_{baseline_key}"
-            source_data[key] = dict(
-                file_path=str(sleep_csv),
-                bl_start_sample=bl_start_sample,
-                baseline_label=baseline_label,
-            )
-            conversion_options[key] = dict(stub_test=stub_test)
+            sleep_csvs.append(str(sleep_csv))
 
         if seizure_csv.exists():
-            key = f"Seizures_{baseline_key}"
-            source_data[key] = dict(
-                file_path=str(seizure_csv),
-                bl_start_sample=bl_start_sample,
-                baseline_label=baseline_label,
-            )
-            conversion_options[key] = dict(stub_test=stub_test)
+            seizure_csvs.append(str(seizure_csv))
 
         if swd_csv.exists():
-            key = f"SwdCounts_{baseline_key}"
-            source_data[key] = dict(
-                file_path=str(swd_csv),
-                bl_start_sample=bl_start_sample,
-                baseline_label=baseline_label,
-            )
-            conversion_options[key] = dict(stub_test=stub_test)
+            swd_csvs.append(str(swd_csv))
 
         if totals_csv.exists():
-            key = f"SeizureTotals_{baseline_key}"
-            source_data[key] = dict(
-                file_path=str(totals_csv), baseline_label=baseline_label
-            )
-            conversion_options[key] = dict(stub_test=stub_test)
+            totals_csvs.append(str(totals_csv))
 
         if psd_csv.exists():
-            key = f"StatePowerSpectrum_{baseline_key}"
-            source_data[key] = dict(
-                file_path=str(psd_csv), baseline_label=baseline_label
-            )
-            conversion_options[key] = dict(stub_test=stub_test)
+            psd_csvs.append(str(psd_csv))
+
+    if sleep_csvs:
+        source_data["SleepStates"] = dict(file_paths=sleep_csvs)
+        conversion_options["SleepStates"] = dict(stub_test=stub_test)
+
+    if seizure_csvs:
+        source_data["Seizures"] = dict(file_paths=seizure_csvs)
+        conversion_options["Seizures"] = dict(stub_test=stub_test)
+
+    if swd_csvs:
+        source_data["SwdCounts"] = dict(file_paths=swd_csvs)
+        conversion_options["SwdCounts"] = dict(stub_test=stub_test)
+
+    if totals_csvs:
+        source_data["SeizureTotals"] = dict(file_paths=totals_csvs)
+        conversion_options["SeizureTotals"] = dict(stub_test=stub_test)
+
+    if psd_csvs:
+        source_data["StatePowerSpectrum"] = dict(file_paths=psd_csvs)
+        conversion_options["StatePowerSpectrum"] = dict(stub_test=stub_test)
 
     # ---- Converter ----
     converter = Grin2bNWBConverter(source_data=source_data)
@@ -333,5 +339,5 @@ if __name__ == "__main__":
         data_dir="H:/Gonzalez-Sulser-CN-data-share",  # args.data_dir,
         output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
         animal_id=129,  # args.animal_id,
-        stub_test=False,
+        stub_test=True,
     )
