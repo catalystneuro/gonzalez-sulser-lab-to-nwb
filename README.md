@@ -17,6 +17,8 @@ pip install -e ".[grin2b]"
 
 ## Usage
 
+One NWB file is written per subject, containing the subject's full raw EEG/EMG recording plus an epochs table marking the BL1/BL2 baseline windows. Derived sleep/seizure/power-spectrum streams are written once per available baseline window into the same file.
+
 ### Single session
 
 ```python
@@ -26,7 +28,6 @@ session_to_nwb(
     data_dir="H:/Gonzalez-Sulser-CN-data-share",
     output_dir="/path/to/nwb_output",
     animal_id=129,
-    baseline="BL1",
     stub_test=False,
 )
 ```
@@ -50,7 +51,6 @@ python -m gonzalez_sulser_lab_to_nwb.grin2b.convert_session \
     --data-dir "H:/Gonzalez-Sulser-CN-data-share" \
     --output-dir "/tmp/nwb_stub" \
     --animal-id 129 \
-    --baseline BL1 \
     --stub-test
 ```
 
@@ -58,12 +58,13 @@ python -m gonzalez_sulser_lab_to_nwb.grin2b.convert_session \
 
 | Stream | Source | NWB location |
 |---|---|---|
-| Raw EEG/EMG | TainiTec `.dat` (int16, 250.4 Hz) | `acquisition/ElectricalSeries_BL{N}` |
-| Sleep states | `*-dge_ok.csv` (5-s epochs) | `processing/behavior/sleep_states` |
-| Seizure events | `*_Seizures.csv` | `processing/behavior/seizure_events` |
-| SWD epoch counts | `*_DGE_SWDs.csv` | `processing/behavior/swd_epoch_counts` |
-| Seizure ZT totals | `*_Seiz_Totals.csv` | `processing/behavior/seizure_totals_by_zt` |
-| State power spectra | `*-pw_spectrum.csv` | `processing/ecephys/sleep_state_power_spectra` |
+| Raw EEG/EMG (full recording) | TainiTec `.dat` (int16, 250.4 Hz) | `acquisition/EEGElectricalSeries`, `acquisition/EMGElectricalSeries` |
+| BL1/BL2 baseline windows | `Sample_start_end_GRIN2B.xlsx` | `epochs` (tagged `BL1`/`BL2`) |
+| Sleep states | `*-dge_ok.csv` (5-s epochs) | `processing/behavior/sleep_states_baseline_window_{1,2}` |
+| Seizure events | `*_Seizures.csv` | `processing/behavior/seizure_events_baseline_window_{1,2}` |
+| SWD epoch counts | `*_DGE_SWDs.csv` | `processing/behavior/swd_epoch_counts_baseline_window_{1,2}` |
+| Seizure ZT totals | `*_Seiz_Totals.csv` | `processing/behavior/seizure_totals_by_zt_baseline_window_{1,2}` |
+| State power spectra | `*-pw_spectrum.csv` | `processing/ecephys/sleep_state_power_spectra_baseline_window_{1,2}` |
 
 ## Project tracking
 

@@ -1,7 +1,6 @@
 # General metadata for GRIN2B NWB conversion
-# Fields marked TODO require lab input (see metadata_request_email.md)
 # Session-specific fields (session_start_time, session_id) are set programmatically
-# in grin2b_convert_session.py
+# in convert_session.py
 
 NWBFile:
   experiment_description: >
@@ -57,63 +56,11 @@ NWBFile:
   related_publications:
     - doi:10.1111/epi.18606
 
-Device:
-  - name: TainiTecWirelessEEG
-    description: >
-      TainiTec wireless EEG/EMG telemetry system. Single-animal headstage with
-      16-channel recording (14 EEG + 2 EMG). Data acquired at 250.4 Hz, 12-bit ADC,
-      stored as int16 little-endian with no file header.
-    manufacturer: TainiTec
-
-  - name: NeuroNexusEEGGrid
-    description: >
-      NeuroNexus Custom H16-Rat EEG16_Functional chronic skull-surface EEG electrode
-      grid. 14 EEG channels plus 2 integrated EMG leads (16-channel headstage total).
-      Electrodes arranged bilaterally over somatosensory and motor cortex. The grid
-      plus-symbol reference point was aligned over bregma during implantation.
-      All EEG electrodes are independent of one another and are not interconnected.
-      A separate cerebellar ground screw (-11.5 mm AP, 0.5 mm ML from bregma) was
-      connected to the grid via silver paint.
-      # TODO: add per-channel stereotaxic coordinates (AP/ML from bregma)
-    manufacturer: NeuroNexus
-
-ElectrodeGroup:
-  - name: EEGArray
-    description: >
-      14-channel skull-surface EEG electrode array (NeuroNexus chronic grid).
-      Electrodes target bilateral somatosensory and motor cortical sites:
-      S1-Tr (Primary somatosensory cortex, trunk region), M2-FrA (Secondary
-      motor cortex, frontal association area), M2-Ant (Secondary motor cortex,
-      anterior), M1-Ant (Primary motor cortex, anterior), V2-ML (Secondary
-      visual cortex, mediolateral), V1-M (Primary visual cortex, monocular),
-      S1Hl/Fl (Primary somatosensory cortex, hindlimb/forelimb). 7 electrodes
-      per hemisphere.
-    location: somatosensory cortex, motor cortex, visual cortex  # bilateral
-    device: NeuroNexusEEGGrid
-
-  - name: EMGArray
-    description: >
-      2-channel electromyogram (EMG) electrodes implanted in the neck muscles
-      (bilateral). Used for sleep-state scoring (muscle tone indicator for REM
-      vs. wake discrimination).
-    location: neck muscle
-    device: TainiTecWirelessEEG
-
-# Electrode channel mapping — populated programmatically from lab-confirmed channel order
-# TODO: once lab confirms which ch00..ch15 indices = EEG_1..EEG_14 vs EMG_1, EMG_2
-# and which (if any) are reference/ground, add explicit mapping here.
-# Placeholder:
-Electrodes:
-  # ch00..ch13: EEG channels (assumed order — MUST CONFIRM)
-  # ch14..ch15: EMG channels (assumed order — MUST CONFIRM)
-  channel_conversion: 1.0  # TODO: replace with ADC gain (volts per int16 count)
-  # e.g. if full-scale = ±0.5 mV mapped to 0-4095: conversion = 1e-3 / 4096
-
 # Light cycle / circadian
 LightCycle:
-  protocol: 12:12 LD  # Confirmed: paper and supplementary methods
-  lights_on_time: "07:00"  # Confirmed from supplementary: "zeitgeber time 07:00 am"
-  timezone: Europe/London   # Edinburgh (UTC+0 / BST UTC+1)
+  protocol: 12:12 LD # Confirmed: paper and supplementary methods
+  lights_on_time: "07:00" # Confirmed from supplementary: "zeitgeber time 07:00 am"
+  timezone: Europe/London # Edinburgh (UTC+0 / BST UTC+1)
 
 # Sleep scoring
 SleepScoring:
@@ -131,5 +78,6 @@ SleepScoring:
     0: Wake
     1: NREM
     2: REM
-    4: SWD  # Confirmed: "All epochs identified to contain SWDs were classed separately from the other three brain states"
-            # s_4 in pw_spectrum.csv = average PSD during spike-wave discharge epochs
+    4:
+      SWD # Confirmed: "All epochs identified to contain SWDs were classed separately from the other three brain states"
+      # s_4 in pw_spectrum.csv = average PSD during spike-wave discharge epochs

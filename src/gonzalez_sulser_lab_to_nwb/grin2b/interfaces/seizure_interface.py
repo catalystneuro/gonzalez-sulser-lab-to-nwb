@@ -1,25 +1,33 @@
 """Seizure event interfaces.
 
-Three seizure-related data streams, all aligned to the same BL window origin:
+Three seizure-related data streams, all aligned to the same BL window origin.
+Since one NWB file covers a subject's full recording (BL1 and BL2 both),
+each class is instantiated once per baseline window and takes a
+`baseline_label` (e.g. "baseline_window_1" / "baseline_window_2") used to
+suffix the NWB object name so both baselines' tables/series coexist:
 
 1. SeizureInterface
    Source: `Seizure timestamps/<subject_id>_BL{N}_Seizures.csv`
    Columns: sec_start, sec_end, dur
-   → pynwb.epoch.TimeIntervals in processing["behavior"] (seizure_events)
+   → pynwb.epoch.TimeIntervals in processing["behavior"]
+     (seizure_events_<baseline_label>)
 
 2. SwdCountsInterface
    Source: `<subject_dir>/seiz/<subject_id>_BL{N}_DGE_SWDs.csv`
    Single column: DGE_SWDs (per 5-s epoch SWD count)
    → TimeSeries (rate = 0.2 Hz) in processing["behavior"]
+     (swd_epoch_counts_<baseline_label>)
 
 3. SeizureTotalsInterface
    Source: `<subject_dir>/seiz/<subject_id>_BL{N}_Seiz_Totals.csv`
    Columns: N_event, mean_dur, ZT, SWDs, Day (24 rows = per-ZT-hour)
    → DynamicTable in processing["behavior"]
+     (seizure_totals_by_zt_<baseline_label>)
 
 All timestamps are in seconds relative to session_start_time, computed as:
   t_abs = bl_start_sample / fs + t_from_bl_start
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -47,6 +55,7 @@ class SeizureInterface(BaseDataInterface):
         self,
         file_path: str | Path,
         bl_start_sample: int,
+        baseline_label: str,
         sampling_frequency: float = _FS,
     ):
         """
@@ -57,12 +66,20 @@ class SeizureInterface(BaseDataInterface):
             Times are in seconds from the start of the baseline window.
         bl_start_sample : int
             Sample index in the .dat file where the baseline window starts.
+        baseline_label : str
+            Suffix identifying the baseline window (e.g. "baseline_window_1"),
+            used to name the resulting NWB TimeIntervals table.
         sampling_frequency : float
             Sampling frequency of the raw recording (default 250.4 Hz).
         """
-        super().__init__(file_path=str(file_path), bl_start_sample=bl_start_sample)
+        super().__init__(
+            file_path=str(file_path),
+            bl_start_sample=bl_start_sample,
+            baseline_label=baseline_label,
+        )
         self.file_path = Path(file_path)
         self.bl_start_sample = bl_start_sample
+        self.baseline_label = baseline_label
         self.sampling_frequency = sampling_frequency
 
     def get_metadata(self) -> DeepDict:
@@ -81,11 +98,11 @@ class SeizureInterface(BaseDataInterface):
             df = df.head(20)
 
         start_times = df["sec_start"].to_numpy(dtype=float) + bl_offset_s
-        stop_times  = df["sec_end"].to_numpy(dtype=float)   + bl_offset_s
-        durations   = df["dur"].to_numpy(dtype=float)
+        stop_times = df["sec_end"].to_numpy(dtype=float) + bl_offset_s
+        durations = df["dur"].to_numpy(dtype=float)
 
         seizure_table = TimeIntervals(
-            name="seizure_events",
+            name=f"seizure_events_{self.baseline_label}",
             description=(
                 "Seizure events detected by the Gonzalez-Sulser lab automated scoring pipeline. "
                 "start_time/stop_time are in seconds relative to session_start_time."
@@ -116,6 +133,7 @@ class SwdCountsInterface(BaseDataInterface):
         self,
         file_path: str | Path,
         bl_start_sample: int,
+        baseline_label: str,
         sampling_frequency: float = _FS,
         epoch_duration_s: float = _EPOCH_DURATION_S,
     ):
@@ -126,14 +144,22 @@ class SwdCountsInterface(BaseDataInterface):
             Path to `*_DGE_SWDs.csv`. Single column `DGE_SWDs` (17,280 rows).
         bl_start_sample : int
             Sample index in the .dat file where the baseline window starts.
+        baseline_label : str
+            Suffix identifying the baseline window (e.g. "baseline_window_1"),
+            used to name the resulting NWB TimeSeries.
         sampling_frequency : float
             Sampling frequency of the raw recording (default 250.4 Hz).
         epoch_duration_s : float
             Duration of each scored epoch in seconds (default 5.0 s).
         """
-        super().__init__(file_path=str(file_path), bl_start_sample=bl_start_sample)
+        super().__init__(
+            file_path=str(file_path),
+            bl_start_sample=bl_start_sample,
+            baseline_label=baseline_label,
+        )
         self.file_path = Path(file_path)
         self.bl_start_sample = bl_start_sample
+        self.baseline_label = baseline_label
         self.sampling_frequency = sampling_frequency
         self.epoch_duration_s = epoch_duration_s
 
@@ -155,7 +181,7 @@ class SwdCountsInterface(BaseDataInterface):
         bl_offset_s = self.bl_start_sample / self.sampling_frequency
 
         swd_series = TimeSeries(
-            name="swd_epoch_counts",
+            name=f"swd_epoch_counts_{self.baseline_label}",
             description=(
                 "Number of spike-wave discharge (SWD) events per 5-second epoch, "
                 "computed by the Gonzalez-Sulser lab automated scoring pipeline."
@@ -176,16 +202,20 @@ class SeizureTotalsInterface(BaseDataInterface):
 
     keywords = ["seizure", "circadian", "Zeitgeber", "EEG"]
 
-    def __init__(self, file_path: str | Path):
+    def __init__(self, file_path: str | Path, baseline_label: str):
         """
         Parameters
         ----------
         file_path : str or Path
             Path to `*_Seiz_Totals.csv`.
             Columns: N_event, mean_dur, ZT, SWDs, Day (24 rows).
+        baseline_label : str
+            Suffix identifying the baseline window (e.g. "baseline_window_1"),
+            used to name the resulting NWB DynamicTable.
         """
-        super().__init__(file_path=str(file_path))
+        super().__init__(file_path=str(file_path), baseline_label=baseline_label)
         self.file_path = Path(file_path)
+        self.baseline_label = baseline_label
 
     def get_metadata(self) -> DeepDict:
         return super().get_metadata()
@@ -199,25 +229,39 @@ class SeizureTotalsInterface(BaseDataInterface):
         df = pd.read_csv(self.file_path)
 
         totals_table = DynamicTable(
-            name="seizure_totals_by_zt",
+            name=f"seizure_totals_by_zt_{self.baseline_label}",
             description=(
                 "Per-Zeitgeber-hour seizure event totals. "
                 "ZT (Zeitgeber Time) = hours since lights-on. "
                 "TODO: confirm column definitions (N_event, mean_dur, SWDs, Day) with lab."
             ),
         )
-        totals_table.add_column(name="ZT", description="Zeitgeber hour (hours since lights-on).")
-        totals_table.add_column(name="N_event", description="Number of seizure events in this ZT hour.")
-        totals_table.add_column(name="mean_dur", description="Mean seizure duration (seconds) in this ZT hour.")
-        totals_table.add_column(name="SWDs", description="Number of SWDs in this ZT hour.")
-        totals_table.add_column(name="Day", description="Day index within the baseline window (TODO: confirm encoding).")
+        totals_table.add_column(
+            name="zeitgeber_hour", description="Zeitgeber hour (hours since lights-on)."
+        )
+        totals_table.add_column(
+            name="number_of_seizure_events",
+            description="Number of seizure events in this ZT hour.",
+        )
+        totals_table.add_column(
+            name="mean_seizure_duration",
+            description="Mean seizure duration (seconds) in this ZT hour.",
+        )
+        totals_table.add_column(
+            name="spike_wave_discharge",
+            description="Number of spike-wave discharge (SWD) in this ZT hour.",
+        )
+        totals_table.add_column(
+            name="Day",
+            description="Day index within the baseline window (TODO: confirm encoding).",
+        )
 
         for _, row in df.iterrows():
             totals_table.add_row(
-                ZT=int(row["ZT"]),
-                N_event=int(row["N_event"]),
-                mean_dur=float(row["mean_dur"]),
-                SWDs=int(row["SWDs"]),
+                zeitgeber_hour=int(row["ZT"]),
+                number_of_seizure_events=int(row["N_event"]),
+                mean_seizure_duration=float(row["mean_dur"]),
+                spike_wave_discharge=int(row["SWDs"]),
                 Day=int(row["Day"]),
             )
 

@@ -1,4 +1,11 @@
-"""Convert a single GRIN2B baseline session (BL1 or BL2) to NWB.
+"""Convert one GRIN2B subject to NWB (one file per subject).
+
+The output NWB file contains the subject's *full* raw EEG/EMG recording,
+with the BL1 and BL2 baseline windows marked in the NWB epochs table rather
+than split across separate files. Sleep/seizure/SWD/power-spectrum streams
+are written once per available baseline window, each named with a
+`_baseline_window_1` / `_baseline_window_2` suffix so both baselines coexist
+in the same file's processing["behavior"] / processing["ecephys"] modules.
 
 Usage
 -----
@@ -8,7 +15,6 @@ From the command line (after installing the package):
         --data-dir "H:/Gonzalez-Sulser-CN-data-share" \\
         --output-dir "/path/to/nwb_output" \\
         --animal-id 129 \\
-        --baseline BL1 \\
         [--stub-test]
 
 Or call session_to_nwb() directly from Python.
@@ -17,9 +23,9 @@ Or call session_to_nwb() directly from Python.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Literal
 from zoneinfo import ZoneInfo
 
 import openpyxl
@@ -39,6 +45,9 @@ _SEIZURE_DIR = "Seizure timestamps"
 _WINDOWS_XLSX = "Light cycle timing metadata/Sample_start_end_GRIN2B.xlsx"
 
 _FS = 250.4  # Hz, confirmed by inspection
+
+# (baseline key in xlsx/filenames, NWB object-name suffix)
+_BASELINE_LABELS = {"BL1": "baseline_window_1", "BL2": "baseline_window_2"}
 
 
 def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
@@ -63,30 +72,61 @@ def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
     return windows
 
 
-def _parse_recording_date(dat_filename: str) -> datetime:
-    """Extract date from .dat filename and return datetime at midnight Edinburgh time.
+_LIGHTS_ON_HOUR = 7  # Zeitgeber time 07:00 ("lights-on"), confirmed by the lab.
 
-    Filename pattern: TAINI_<dev>_<slot>_<line>_<id>_<cond>-<YYYY_MM_DD>-0000.dat
-    TODO: replace midnight with actual time-of-day once lab provides it.
+
+def _parse_dat_date(dat_filename: str) -> datetime:
+    """Extract the recording start date from a .dat filename (midnight, Edinburgh time).
+
+    Filename pattern: TAINI_<dev>_<band>_<line>_<id>_<cond>-<YYYY_MM_DD>-0000.dat
     """
-    import re
-
     m = re.search(r"-(\d{4})_(\d{2})_(\d{2})-", dat_filename)
     if not m:
         raise ValueError(f"Cannot parse date from filename: {dat_filename}")
     y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
-    # TODO: replace hour=0 with actual recording start time from lab.
-    return datetime(y, mo, d, 0, 0, 0, tzinfo=_TZ)
+    return datetime(y, mo, d, tzinfo=_TZ)
+
+
+def _compute_session_start_time(
+    dat_filename: str, windows: dict[tuple[int, str], dict], animal_id: int
+) -> datetime:
+    """Compute the absolute timestamp of sample 0 of the .dat file.
+
+    The filename date is the recording start date.
+    BL1 always starts at Zeitgeber time 07:00 (lights-on)
+    the day after the animal was connected — i.e. the day after the filename
+    date. session_start_time (sample 0) is therefore back-computed from that
+    anchor using BL1's sample offset for this animal:
+
+        session_start_time = (filename_date + 1 day, 07:00) - bl1_start_sample / fs
+
+    BL2 (and the full raw recording written by TainiRecordingInterface) share
+    this same session_start_time, since it is the same .dat file / same clock
+    — BL2's own sample offset lands on the correct absolute time automatically.
+    """
+    recording_date = _parse_dat_date(dat_filename)
+
+    bl1_window = windows.get((animal_id, "BL1"))
+    if bl1_window is None:
+        # No BL1 window for this animal (single-baseline session) — the 07:00
+        # anchor can't be back-computed, so fall back to midnight of the
+        # recording date (time-of-day unknown for this animal).
+        return recording_date
+
+    lights_on = (recording_date + timedelta(days=1)).replace(
+        hour=_LIGHTS_ON_HOUR, minute=0, second=0
+    )
+    bl1_start_s = bl1_window["start"] / _FS
+    return lights_on - timedelta(seconds=bl1_start_s)
 
 
 def session_to_nwb(
     data_dir: str | Path,
     output_dir: str | Path,
     animal_id: int,
-    baseline: Literal["BL1", "BL2"],
     stub_test: bool = False,
 ) -> Path:
-    """Convert one baseline session for one animal to NWB.
+    """Convert one GRIN2B subject to NWB.
 
     Parameters
     ----------
@@ -96,8 +136,6 @@ def session_to_nwb(
         Directory where the .nwb file will be written.
     animal_id : int
         Animal ID number (e.g. 129 for GRIN2B_129).
-    baseline : "BL1" or "BL2"
-        Which 24-hour baseline window to convert.
     stub_test : bool
         If True, convert only a small data slice to validate the pipeline.
 
@@ -107,30 +145,19 @@ def session_to_nwb(
         Path to the written NWB file.
     """
 
-    subject_id = f"GRIN2B_{animal_id}"
-    session_id = f"{baseline}"
-
+    # ---- Look up BL windows (an animal may have BL1, BL2, or both) ----
     data_dir = Path(data_dir)
-    output_dir = Path(output_dir)
-    if stub_test:
-        output_dir = output_dir / "nwb_stub"
-    output_dir = output_dir / subject_id
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    nwbfile_path = output_dir / f"{session_id}.nwb"
-
-    # ---- Look up BL window ----
     windows = _load_bl_windows(data_dir)
-    key = (animal_id, baseline)
-    if key not in windows:
+    bl1_window = windows.get((animal_id, "BL1"))
+    bl2_window = windows.get((animal_id, "BL2"))
+    if bl1_window is None and bl2_window is None:
         raise KeyError(
-            f"No BL window found for animal {animal_id} {baseline} in "
+            f"No BL1 or BL2 window found for animal {animal_id} in "
             f"{_WINDOWS_XLSX}. Check xlsx for this animal."
         )
-    win = windows[key]
-    dat_filename = win["file"]
-    bl_start_sample = win["start"]
-    bl_stop_sample = win["end"]
+
+    baseline_windows = {"BL1": bl1_window, "BL2": bl2_window}
+    dat_filename = (bl1_window or bl2_window)["file"]
 
     # ---- Resolve file paths ----
     dat_path = data_dir / _EEG_DIR / dat_filename
@@ -141,63 +168,83 @@ def session_to_nwb(
             f"Contact lab to obtain missing files."
         )
 
-    subject_dir = data_dir / _SLEEP_DIR / subject_id
-    sleep_csv = subject_dir / f"{subject_id}_{baseline}-dge_ok.csv"
-    seizure_csv = data_dir / _SEIZURE_DIR / f"{subject_id}_{baseline}_Seizures.csv"
-    swd_csv = subject_dir / "seiz" / f"{subject_id}_{baseline}_DGE_SWDs.csv"
-    totals_csv = subject_dir / "seiz" / f"{subject_id}_{baseline}_Seiz_Totals.csv"
-    psd_csv = subject_dir / f"{subject_id}_{baseline}-pw_spectrum.csv"
+    animal_key = f"GRIN2B_{animal_id}"
+    subject_dir = data_dir / _SLEEP_DIR / animal_key
 
     # ---- Build source_data ----
     source_data: dict = {}
     conversion_options: dict = {}
 
-    source_data["EEGRecording"] = dict(
-        file_path=str(dat_path),
-        bl_start_sample=bl_start_sample,
-        bl_stop_sample=bl_stop_sample,
-        signal_type="EEG",
-        baseline_name=baseline,
-    )
+    source_data["EEGRecording"] = dict(file_path=str(dat_path), signal_type="EEG")
     conversion_options["EEGRecording"] = dict(stub_test=stub_test)
 
-    source_data["EMGRecording"] = dict(
-        file_path=str(dat_path),
-        bl_start_sample=bl_start_sample,
-        bl_stop_sample=bl_stop_sample,
-        signal_type="EMG",
-        baseline_name=baseline,
-    )
+    source_data["EMGRecording"] = dict(file_path=str(dat_path), signal_type="EMG")
     conversion_options["EMGRecording"] = dict(stub_test=stub_test)
 
-    if sleep_csv.exists():
-        source_data["SleepStates"] = dict(
-            file_path=str(sleep_csv),
-            bl_start_sample=bl_start_sample,
+    source_data["BaselineEpochs"] = dict(
+        bl1_start_sample=bl1_window["start"] if bl1_window else None,
+        bl1_stop_sample=bl1_window["end"] if bl1_window else None,
+        bl2_start_sample=bl2_window["start"] if bl2_window else None,
+        bl2_stop_sample=bl2_window["end"] if bl2_window else None,
+    )
+    conversion_options["BaselineEpochs"] = dict(stub_test=stub_test)
+
+    for baseline_key, baseline_label in _BASELINE_LABELS.items():
+        win = baseline_windows[baseline_key]
+        if win is None:
+            continue
+        bl_start_sample = win["start"]
+
+        sleep_csv = subject_dir / f"{animal_key}_{baseline_key}-dge_ok.csv"
+        seizure_csv = (
+            data_dir / _SEIZURE_DIR / f"{animal_key}_{baseline_key}_Seizures.csv"
         )
-        conversion_options["SleepStates"] = dict(stub_test=stub_test)
-
-    if seizure_csv.exists():
-        source_data["Seizures"] = dict(
-            file_path=str(seizure_csv),
-            bl_start_sample=bl_start_sample,
+        swd_csv = subject_dir / "seiz" / f"{animal_key}_{baseline_key}_DGE_SWDs.csv"
+        totals_csv = (
+            subject_dir / "seiz" / f"{animal_key}_{baseline_key}_Seiz_Totals.csv"
         )
-        conversion_options["Seizures"] = dict(stub_test=stub_test)
+        psd_csv = subject_dir / f"{animal_key}_{baseline_key}-pw_spectrum.csv"
 
-    if swd_csv.exists():
-        source_data["SwdCounts"] = dict(
-            file_path=str(swd_csv),
-            bl_start_sample=bl_start_sample,
-        )
-        conversion_options["SwdCounts"] = dict(stub_test=stub_test)
+        if sleep_csv.exists():
+            key = f"SleepStates_{baseline_key}"
+            source_data[key] = dict(
+                file_path=str(sleep_csv),
+                bl_start_sample=bl_start_sample,
+                baseline_label=baseline_label,
+            )
+            conversion_options[key] = dict(stub_test=stub_test)
 
-    if totals_csv.exists():
-        source_data["SeizureTotals"] = dict(file_path=str(totals_csv))
-        conversion_options["SeizureTotals"] = dict(stub_test=stub_test)
+        if seizure_csv.exists():
+            key = f"Seizures_{baseline_key}"
+            source_data[key] = dict(
+                file_path=str(seizure_csv),
+                bl_start_sample=bl_start_sample,
+                baseline_label=baseline_label,
+            )
+            conversion_options[key] = dict(stub_test=stub_test)
 
-    if psd_csv.exists():
-        source_data["StatePowerSpectrum"] = dict(file_path=str(psd_csv))
-        conversion_options["StatePowerSpectrum"] = dict(stub_test=stub_test)
+        if swd_csv.exists():
+            key = f"SwdCounts_{baseline_key}"
+            source_data[key] = dict(
+                file_path=str(swd_csv),
+                bl_start_sample=bl_start_sample,
+                baseline_label=baseline_label,
+            )
+            conversion_options[key] = dict(stub_test=stub_test)
+
+        if totals_csv.exists():
+            key = f"SeizureTotals_{baseline_key}"
+            source_data[key] = dict(
+                file_path=str(totals_csv), baseline_label=baseline_label
+            )
+            conversion_options[key] = dict(stub_test=stub_test)
+
+        if psd_csv.exists():
+            key = f"StatePowerSpectrum_{baseline_key}"
+            source_data[key] = dict(
+                file_path=str(psd_csv), baseline_label=baseline_label
+            )
+            conversion_options[key] = dict(stub_test=stub_test)
 
     # ---- Converter ----
     converter = Grin2bNWBConverter(source_data=source_data)
@@ -210,13 +257,18 @@ def session_to_nwb(
     metadata = dict_deep_update(metadata, editable_metadata)
 
     # Session-specific fields
-    session_start_time = _parse_recording_date(dat_filename)
+    session_start_time = _compute_session_start_time(dat_filename, windows, animal_id)
     metadata["NWBFile"]["session_start_time"] = session_start_time
+    # session_id is the recording start date reported in the .dat filename
+    # (YYYY_MM_DD in the source filename -> YYYY-MM-DD here).
+    session_id = _parse_dat_date(dat_filename).strftime("%Y-%m-%d")
     metadata["NWBFile"]["session_id"] = session_id
+    available_baselines = " and ".join(
+        k for k in _BASELINE_LABELS if baseline_windows[k]
+    )
     metadata["NWBFile"]["session_description"] = (
-        f"Chronic wireless EEG/EMG recording, subject {subject_id}, {baseline} window "
-        f"(24 h starting ~{bl_start_sample / _FS / 3600:.1f} h into the raw recording). "
-        f"Raw .dat file: {dat_filename}."
+        f"Chronic wireless EEG/EMG recording, subject {animal_key}, full raw recording "
+        f"with {available_baselines} 24-h baseline window(s) marked in the NWB epochs table. "
     )
 
     # Subject metadata
@@ -224,17 +276,28 @@ def session_to_nwb(
     with open(subjects_yaml) as f:
         all_subjects = yaml.safe_load(f)
 
-    subj_meta = all_subjects.get(subject_id, {})
+    subj_meta = all_subjects.get(animal_key, {})
     metadata.setdefault("Subject", {})
     metadata["Subject"].update(
         {k: v for k, v in subj_meta.items() if not str(v).startswith("TODO")}
     )
-    metadata["Subject"]["subject_id"] = subject_id
+    metadata["Subject"]["subject_id"] = animal_key.replace("_", "-")
     # Ensure required fields are always set (NWB schema requires subject_id, sex, species)
     metadata["Subject"].setdefault("species", "Rattus norvegicus")
     metadata["Subject"].setdefault(
         "sex", "U"
     )  # Unknown until lab provides per-animal table
+
+    # ---- Define output file path ----
+    output_dir = Path(output_dir)
+    if stub_test:
+        output_dir = output_dir / "nwb_stub"
+    output_dir = output_dir / f"sub-{animal_key.replace('_','-')}"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    nwbfile_path = (
+        output_dir / f"sub-{animal_key.replace('_','-')}_ses-{session_id}_ecephys.nwb"
+    )
 
     # ---- Run conversion ----
     converter.run_conversion(
@@ -254,15 +317,12 @@ def session_to_nwb(
 
 if __name__ == "__main__":
     # parser = argparse.ArgumentParser(
-    #     description="Convert one GRIN2B baseline session to NWB."
+    #     description="Convert one GRIN2B subject to NWB."
     # )
     # parser.add_argument("--data-dir", required=True, help="Root of the data share.")
     # parser.add_argument("--output-dir", required=True, help="Directory for NWB output.")
     # parser.add_argument(
     #     "--animal-id", type=int, required=True, help="Animal ID (e.g. 129)."
-    # )
-    # parser.add_argument(
-    #     "--baseline", choices=["BL1", "BL2"], required=True, help="Baseline window."
     # )
     # parser.add_argument(
     #     "--stub-test", action="store_true", help="Convert small stub only."
@@ -273,14 +333,5 @@ if __name__ == "__main__":
         data_dir="H:/Gonzalez-Sulser-CN-data-share",  # args.data_dir,
         output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
         animal_id=129,  # args.animal_id,
-        baseline="BL1",
-        stub_test=False,
-    )
-
-    session_to_nwb(
-        data_dir="H:/Gonzalez-Sulser-CN-data-share",  # args.data_dir,
-        output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
-        animal_id=129,  # args.animal_id,
-        baseline="BL2",
         stub_test=False,
     )
