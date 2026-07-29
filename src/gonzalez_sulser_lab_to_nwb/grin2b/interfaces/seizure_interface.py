@@ -35,6 +35,7 @@ start_time.
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -141,6 +142,18 @@ class SeizureInterface(BaseDataInterface):
                     duration=float(duration),
                     baseline_window=baseline_label,
                 )
+
+        if len(seizure_table) == 0:
+            # HDMF cannot infer a dtype for an empty VectorData, and an empty
+            # seizure_events table is a real outcome (animal had zero scored
+            # seizures in every available baseline) rather than an error, so
+            # skip writing the table instead of crashing the conversion.
+            warnings.warn(
+                "SeizureInterface: no seizure events found in any baseline window "
+                f"({[str(p) for p in self.file_paths]}) — skipping seizure_events table.",
+                stacklevel=2,
+            )
+            return
 
         behavior_module = get_module(nwbfile, "behavior", "Processed behavioral data.")
         behavior_module.add(seizure_table)
