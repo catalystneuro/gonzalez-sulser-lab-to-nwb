@@ -142,6 +142,18 @@ Raw EEG/EMG:      full recording, starting_time = 0 (no BL slicing — BL window
 
 `session_start_time` (sample 0 of the `.dat` file) is computed by `_compute_session_start_time()` in `convert_session.py`. The `.dat` filename only encodes the recording start *date* (no time-of-day is logged by the lab), so the timestamp is back-computed from the one confirmed anchor: BL1 always starts at Zeitgeber time **07:00** local (`Europe/London`) time the day after headstage connection. `session_start_time` is set so that `session_start_time + bl1_start_sample/250.4` equals 07:00 on `filename_date + 1 day`; BL2 (and the full raw recording) share this same `session_start_time`, so BL2's own sample offset lands on the correct absolute time automatically (verified across a UK daylight-saving transition). If an animal has no BL1 window at all, this falls back to midnight of the filename date (time-of-day unknown for that animal).
 
+## Conversion Run Log (2026-07-29)
+
+Full (non-stub) `convert_all_sessions`-equivalent run against `H:/Gonzalez-Sulser-CN-data-share` → `H:/gonzalez-nwbfiles`, using env `gonzalez-sulser-lab-to-nwb-env`. Full interactive report: see conversation artifact ["GRIN2B Conversion Report"](https://claude.ai/code/artifact/5eedb72e-7bfa-46dd-8abc-0b2750ae3533).
+
+- **37** animals total (xlsx + subjects yaml). **20** have a raw `.dat` on the share and were attempted (animal 424's on-disk file is orphaned from the xlsx — see `GRIN2B_424 xlsx error` above — so it's excluded from auto-discovery). **17/20 converted successfully.**
+- **3 failures — missing single-baseline source CSV (data gap, not code):**
+  - `GRIN2B_140`, `GRIN2B_378`: missing `..._BL1-pw_spectrum.csv` (BL2 copy exists).
+  - `GRIN2B_375`: missing `..._BL1_Seizures.csv` entirely (BL1 sleep/PSD data exist).
+- **1 failure — genuine code bug, fixed:** `GRIN2B_238` scored zero seizures in both BL1 and BL2 (header-only CSVs); `SeizureInterface` crashed trying to dtype-infer an empty `duration` VectorData column. Fixed in `interfaces/seizure_interface.py` — `add_to_nwbfile` now skips writing the `seizure_events` table when it ends up with zero rows, instead of crashing. Re-ran individually and GRIN2B_238 now converts cleanly (not yet committed).
+- **17 animals blocked — no raw `.dat` on share:** 362–369, 371, 382, 383, 401, 402, 404, 424, 430, 433 (unchanged from prior gap analysis — lab needs to upload).
+- Real per-subject conversion time is ~15–17 min (full multi-day recording, real writes); output files ~1.0–1.6 GB each.
+
 ## Open Questions
 
 Items that need input from the lab (Natalie Hung / Niamh McLaughlin / Alfredo Gonzalez-Sulser) before they can be resolved:
