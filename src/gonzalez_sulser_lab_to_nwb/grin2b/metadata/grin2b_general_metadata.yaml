@@ -81,3 +81,23 @@ SleepScoring:
     4:
       SWD # Confirmed: "All epochs identified to contain SWDs were classed separately from the other three brain states"
       # s_4 in pw_spectrum.csv = average PSD during spike-wave discharge epochs
+
+# Ontology annotation (HERD): maps electrode/electrode-group "location" strings to UBERON terms.
+# Rat has no offline Allen-atlas lookup in NeuroConv (mouse/human only), so this closes that gap
+# via the ontology-agnostic metadata["BrainRegions"] override. IDs verified against the EBI
+# Ontology Lookup Service (https://www.ebi.ac.uk/ols4), not hardcoded from memory.
+# Per-channel labels from taini_recording_interface.py's _CHANNEL_MAP docstring; S1_Tr and
+# S1Hl_S1Fl both map to the general primary somatosensory cortex term (UBERON has no rat-specific
+# trunk/hindlimb/forelimb subdivision), and M2_Fra/M2_anterior both map to the secondary motor
+# cortex term (UBERON's "premotor cortex" entry, whose synonyms include "secondary motor cortex").
+BrainRegions:
+  S1_Tr: { id: "UBERON:0008933", uri: "http://purl.obolibrary.org/obo/UBERON_0008933" } # primary somatosensory cortex
+  S1Hl_S1Fl: { id: "UBERON:0008933", uri: "http://purl.obolibrary.org/obo/UBERON_0008933" } # primary somatosensory cortex
+  M1_anterior: { id: "UBERON:0001384", uri: "http://purl.obolibrary.org/obo/UBERON_0001384" } # primary motor cortex
+  M2_Fra: { id: "UBERON:0016634", uri: "http://purl.obolibrary.org/obo/UBERON_0016634" } # secondary motor (premotor) cortex
+  M2_anterior: { id: "UBERON:0016634", uri: "http://purl.obolibrary.org/obo/UBERON_0016634" } # secondary motor (premotor) cortex
+  V1_M: { id: "UBERON:0002436", uri: "http://purl.obolibrary.org/obo/UBERON_0002436" } # primary visual cortex
+  V2_ML: { id: "UBERON:0022232", uri: "http://purl.obolibrary.org/obo/UBERON_0022232" } # secondary visual cortex
+  EMG: { id: "UBERON:0002380", uri: "http://purl.obolibrary.org/obo/UBERON_0002380" } # trapezius muscle (EMG electrode placement, not brain)
+  cortex: { id: "UBERON:0000956", uri: "http://purl.obolibrary.org/obo/UBERON_0000956" } # cerebral cortex (ElectrodeGroup.location for EEGArray)
+  trapezius muscle: { id: "UBERON:0002380", uri: "http://purl.obolibrary.org/obo/UBERON_0002380" } # ElectrodeGroup.location for EMGArray
