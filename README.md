@@ -11,8 +11,8 @@ Zeitgeber-aligned seizure totals. Data are from rats carrying SFARI autism-risk 
 ## Installation
 
 ```bash
+conda env create --file make_env.yml
 conda activate gonzalez-sulser-lab-to-nwb-env
-pip install -e ".[grin2b]"
 ```
 
 ## Usage
