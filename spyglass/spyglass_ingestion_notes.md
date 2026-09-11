@@ -162,9 +162,5 @@ needs real transformation), `notebooks/spyglass_tutorial.ipynb` (Phase 10).
 
 ## TODOs
 
-- Nothing committed to git yet (`spyglass/` is untracked, `.gitignore` modified) — decide when
-  to commit and on which branch.
-- Phase 10: `notebooks/spyglass_tutorial.ipynb` demonstrating DataJoint queries against the
-  inserted data (EEG/EMG trace plot, electrode table, session metadata).
-- Re-run `insert_session.py`/`verify_insertion.py` whenever new subjects are converted (the 16
-  currently blocked on missing raw `.dat` files) or when PR #1638 changes.
+- Find a way to insert processing/behavior, epochs in the DB
+- Discuss with spyglass team about the HERD ontologies
