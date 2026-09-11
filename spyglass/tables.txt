@@ -1,0 +1,1478 @@
+##### sub-GRIN2B-129_ses-2021-03-26_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-129 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-129 GRIN2B-129     University of  Gonzalez-Sulse 2021-03-26     Chronic wirele 2021-03-26 10: 2021-03-26 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-129 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-129 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-129 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-129 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-129 2c61b06e-6047- EMGElectricalS 250.4          EMGElectricalS Full chronic E 69391534       volts    
+sub-GRIN2B-129 c36b45b5-e13c- EEGElectricalS 250.4          EEGElectricalS Full chronic E 69391534       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-129 2c61b06e-6047- 0              EMGArray       14            
+sub-GRIN2B-129 2c61b06e-6047- 1              EMGArray       15            
+sub-GRIN2B-129 c36b45b5-e13c- 0              EEGArray       0             
+sub-GRIN2B-129 c36b45b5-e13c- 1              EEGArray       1             
+sub-GRIN2B-129 c36b45b5-e13c- 2              EEGArray       2             
+sub-GRIN2B-129 c36b45b5-e13c- 3              EEGArray       3             
+sub-GRIN2B-129 c36b45b5-e13c- 4              EEGArray       4             
+sub-GRIN2B-129 c36b45b5-e13c- 5              EEGArray       5             
+sub-GRIN2B-129 c36b45b5-e13c- 6              EEGArray       6             
+sub-GRIN2B-129 c36b45b5-e13c- 7              EEGArray       7             
+sub-GRIN2B-129 c36b45b5-e13c- 8              EEGArray       8             
+sub-GRIN2B-129 c36b45b5-e13c- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-129 baseline_windo =BLOB=                   
+sub-GRIN2B-129 baseline_windo =BLOB=                   
+sub-GRIN2B-129 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-129 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-130_ses-2021-03-26_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-130 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-130 GRIN2B-130     University of  Gonzalez-Sulse 2021-03-26     Chronic wirele 2021-03-26 10: 2021-03-26 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-130 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-130 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-130 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-130 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-130 2a36aa83-ebcc- EMGElectricalS 250.4          EMGElectricalS Full chronic E 69377198       volts    
+sub-GRIN2B-130 d6debbc9-e79e- EEGElectricalS 250.4          EEGElectricalS Full chronic E 69377198       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-130 2a36aa83-ebcc- 0              EMGArray       14            
+sub-GRIN2B-130 2a36aa83-ebcc- 1              EMGArray       15            
+sub-GRIN2B-130 d6debbc9-e79e- 0              EEGArray       0             
+sub-GRIN2B-130 d6debbc9-e79e- 1              EEGArray       1             
+sub-GRIN2B-130 d6debbc9-e79e- 2              EEGArray       2             
+sub-GRIN2B-130 d6debbc9-e79e- 3              EEGArray       3             
+sub-GRIN2B-130 d6debbc9-e79e- 4              EEGArray       4             
+sub-GRIN2B-130 d6debbc9-e79e- 5              EEGArray       5             
+sub-GRIN2B-130 d6debbc9-e79e- 6              EEGArray       6             
+sub-GRIN2B-130 d6debbc9-e79e- 7              EEGArray       7             
+sub-GRIN2B-130 d6debbc9-e79e- 8              EEGArray       8             
+sub-GRIN2B-130 d6debbc9-e79e- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-130 baseline_windo =BLOB=                   
+sub-GRIN2B-130 baseline_windo =BLOB=                   
+sub-GRIN2B-130 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-130 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-131_ses-2021-03-26_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-131 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-131 GRIN2B-131     University of  Gonzalez-Sulse 2021-03-26     Chronic wirele 2021-03-26 10: 2021-03-26 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-131 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-131 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-131 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-131 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-131 156ddd18-7430- EMGElectricalS 250.4          EMGElectricalS Full chronic E 69378213       volts    
+sub-GRIN2B-131 86a86aa6-ec11- EEGElectricalS 250.4          EEGElectricalS Full chronic E 69378213       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-131 156ddd18-7430- 0              EMGArray       14            
+sub-GRIN2B-131 156ddd18-7430- 1              EMGArray       15            
+sub-GRIN2B-131 86a86aa6-ec11- 0              EEGArray       0             
+sub-GRIN2B-131 86a86aa6-ec11- 1              EEGArray       1             
+sub-GRIN2B-131 86a86aa6-ec11- 2              EEGArray       2             
+sub-GRIN2B-131 86a86aa6-ec11- 3              EEGArray       3             
+sub-GRIN2B-131 86a86aa6-ec11- 4              EEGArray       4             
+sub-GRIN2B-131 86a86aa6-ec11- 5              EEGArray       5             
+sub-GRIN2B-131 86a86aa6-ec11- 6              EEGArray       6             
+sub-GRIN2B-131 86a86aa6-ec11- 7              EEGArray       7             
+sub-GRIN2B-131 86a86aa6-ec11- 8              EEGArray       8             
+sub-GRIN2B-131 86a86aa6-ec11- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-131 baseline_windo =BLOB=                   
+sub-GRIN2B-131 baseline_windo =BLOB=                   
+sub-GRIN2B-131 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-131 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-132_ses-2021-03-26_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-132 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-132 GRIN2B-132     University of  Gonzalez-Sulse 2021-03-26     Chronic wirele 2021-03-26 10: 2021-03-26 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-132 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-132 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-132 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-132 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-132 c550780c-854c- EMGElectricalS 250.4          EMGElectricalS Full chronic E 69511333       volts    
+sub-GRIN2B-132 e5db2101-d4db- EEGElectricalS 250.4          EEGElectricalS Full chronic E 69511333       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-132 c550780c-854c- 0              EMGArray       14            
+sub-GRIN2B-132 c550780c-854c- 1              EMGArray       15            
+sub-GRIN2B-132 e5db2101-d4db- 0              EEGArray       0             
+sub-GRIN2B-132 e5db2101-d4db- 1              EEGArray       1             
+sub-GRIN2B-132 e5db2101-d4db- 2              EEGArray       2             
+sub-GRIN2B-132 e5db2101-d4db- 3              EEGArray       3             
+sub-GRIN2B-132 e5db2101-d4db- 4              EEGArray       4             
+sub-GRIN2B-132 e5db2101-d4db- 5              EEGArray       5             
+sub-GRIN2B-132 e5db2101-d4db- 6              EEGArray       6             
+sub-GRIN2B-132 e5db2101-d4db- 7              EEGArray       7             
+sub-GRIN2B-132 e5db2101-d4db- 8              EEGArray       8             
+sub-GRIN2B-132 e5db2101-d4db- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-132 baseline_windo =BLOB=                   
+sub-GRIN2B-132 baseline_windo =BLOB=                   
+sub-GRIN2B-132 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-132 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-137_ses-2021-03-31_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-137 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-137 GRIN2B-137     University of  Gonzalez-Sulse 2021-03-31     Chronic wirele 2021-03-31 10: 2021-03-31 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-137 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-137 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-137 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-137 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-137 2ffa3e39-b5c0- EEGElectricalS 250.4          EEGElectricalS Full chronic E 66292948       volts    
+sub-GRIN2B-137 6e8398ea-4577- EMGElectricalS 250.4          EMGElectricalS Full chronic E 66292948       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-137 2ffa3e39-b5c0- 0              EEGArray       0             
+sub-GRIN2B-137 2ffa3e39-b5c0- 1              EEGArray       1             
+sub-GRIN2B-137 2ffa3e39-b5c0- 2              EEGArray       2             
+sub-GRIN2B-137 2ffa3e39-b5c0- 3              EEGArray       3             
+sub-GRIN2B-137 2ffa3e39-b5c0- 4              EEGArray       4             
+sub-GRIN2B-137 2ffa3e39-b5c0- 5              EEGArray       5             
+sub-GRIN2B-137 2ffa3e39-b5c0- 6              EEGArray       6             
+sub-GRIN2B-137 2ffa3e39-b5c0- 7              EEGArray       7             
+sub-GRIN2B-137 2ffa3e39-b5c0- 8              EEGArray       8             
+sub-GRIN2B-137 2ffa3e39-b5c0- 9              EEGArray       9             
+sub-GRIN2B-137 2ffa3e39-b5c0- 10             EEGArray       10            
+sub-GRIN2B-137 2ffa3e39-b5c0- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-137 baseline_windo =BLOB=                   
+sub-GRIN2B-137 baseline_windo =BLOB=                   
+sub-GRIN2B-137 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-137 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-138_ses-2021-03-31_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-138 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-138 GRIN2B-138     University of  Gonzalez-Sulse 2021-03-31     Chronic wirele 2021-03-31 10: 2021-03-31 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-138 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-138 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-138 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-138 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-138 1fc889e3-bd3c- EEGElectricalS 250.4          EEGElectricalS Full chronic E 66293969       volts    
+sub-GRIN2B-138 233456df-ee3a- EMGElectricalS 250.4          EMGElectricalS Full chronic E 66293969       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-138 1fc889e3-bd3c- 0              EEGArray       0             
+sub-GRIN2B-138 1fc889e3-bd3c- 1              EEGArray       1             
+sub-GRIN2B-138 1fc889e3-bd3c- 2              EEGArray       2             
+sub-GRIN2B-138 1fc889e3-bd3c- 3              EEGArray       3             
+sub-GRIN2B-138 1fc889e3-bd3c- 4              EEGArray       4             
+sub-GRIN2B-138 1fc889e3-bd3c- 5              EEGArray       5             
+sub-GRIN2B-138 1fc889e3-bd3c- 6              EEGArray       6             
+sub-GRIN2B-138 1fc889e3-bd3c- 7              EEGArray       7             
+sub-GRIN2B-138 1fc889e3-bd3c- 8              EEGArray       8             
+sub-GRIN2B-138 1fc889e3-bd3c- 9              EEGArray       9             
+sub-GRIN2B-138 1fc889e3-bd3c- 10             EEGArray       10            
+sub-GRIN2B-138 1fc889e3-bd3c- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-138 baseline_windo =BLOB=                   
+sub-GRIN2B-138 baseline_windo =BLOB=                   
+sub-GRIN2B-138 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-138 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-139_ses-2021-03-31_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-139 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-139 GRIN2B-139     University of  Gonzalez-Sulse 2021-03-31     Chronic wirele 2021-03-31 10: 2021-03-31 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-139 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-139 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-139 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-139 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-139 1176caf3-0930- EMGElectricalS 250.4          EMGElectricalS Full chronic E 66297044       volts    
+sub-GRIN2B-139 16ef577e-cc19- EEGElectricalS 250.4          EEGElectricalS Full chronic E 66297044       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-139 1176caf3-0930- 0              EMGArray       14            
+sub-GRIN2B-139 1176caf3-0930- 1              EMGArray       15            
+sub-GRIN2B-139 16ef577e-cc19- 0              EEGArray       0             
+sub-GRIN2B-139 16ef577e-cc19- 1              EEGArray       1             
+sub-GRIN2B-139 16ef577e-cc19- 2              EEGArray       2             
+sub-GRIN2B-139 16ef577e-cc19- 3              EEGArray       3             
+sub-GRIN2B-139 16ef577e-cc19- 4              EEGArray       4             
+sub-GRIN2B-139 16ef577e-cc19- 5              EEGArray       5             
+sub-GRIN2B-139 16ef577e-cc19- 6              EEGArray       6             
+sub-GRIN2B-139 16ef577e-cc19- 7              EEGArray       7             
+sub-GRIN2B-139 16ef577e-cc19- 8              EEGArray       8             
+sub-GRIN2B-139 16ef577e-cc19- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-139 baseline_windo =BLOB=                   
+sub-GRIN2B-139 baseline_windo =BLOB=                   
+sub-GRIN2B-139 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-139 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-227_ses-2021-07-28_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-227 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-227 GRIN2B-227     University of  Gonzalez-Sulse 2021-07-28     Chronic wirele 2021-07-28 10: 2021-07-28 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-227 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-227 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-227 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-227 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-227 52a3cd29-0e05- EEGElectricalS 250.4          EEGElectricalS Full chronic E 89692333       volts    
+sub-GRIN2B-227 88015843-4aa1- EMGElectricalS 250.4          EMGElectricalS Full chronic E 89692333       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-227 52a3cd29-0e05- 0              EEGArray       0             
+sub-GRIN2B-227 52a3cd29-0e05- 1              EEGArray       1             
+sub-GRIN2B-227 52a3cd29-0e05- 2              EEGArray       2             
+sub-GRIN2B-227 52a3cd29-0e05- 3              EEGArray       3             
+sub-GRIN2B-227 52a3cd29-0e05- 4              EEGArray       4             
+sub-GRIN2B-227 52a3cd29-0e05- 5              EEGArray       5             
+sub-GRIN2B-227 52a3cd29-0e05- 6              EEGArray       6             
+sub-GRIN2B-227 52a3cd29-0e05- 7              EEGArray       7             
+sub-GRIN2B-227 52a3cd29-0e05- 8              EEGArray       8             
+sub-GRIN2B-227 52a3cd29-0e05- 9              EEGArray       9             
+sub-GRIN2B-227 52a3cd29-0e05- 10             EEGArray       10            
+sub-GRIN2B-227 52a3cd29-0e05- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-227 baseline_windo =BLOB=                   
+sub-GRIN2B-227 baseline_windo =BLOB=                   
+sub-GRIN2B-227 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-227 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-228_ses-2021-07-28_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-228 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-228 GRIN2B-228     University of  Gonzalez-Sulse 2021-07-28     Chronic wirele 2021-07-28 10: 2021-07-28 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-228 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-228 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-228 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-228 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-228 20c0781a-77a6- EMGElectricalS 250.4          EMGElectricalS Full chronic E 89686189       volts    
+sub-GRIN2B-228 e39262d9-d1fc- EEGElectricalS 250.4          EEGElectricalS Full chronic E 89686189       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-228 20c0781a-77a6- 0              EMGArray       14            
+sub-GRIN2B-228 20c0781a-77a6- 1              EMGArray       15            
+sub-GRIN2B-228 e39262d9-d1fc- 0              EEGArray       0             
+sub-GRIN2B-228 e39262d9-d1fc- 1              EEGArray       1             
+sub-GRIN2B-228 e39262d9-d1fc- 2              EEGArray       2             
+sub-GRIN2B-228 e39262d9-d1fc- 3              EEGArray       3             
+sub-GRIN2B-228 e39262d9-d1fc- 4              EEGArray       4             
+sub-GRIN2B-228 e39262d9-d1fc- 5              EEGArray       5             
+sub-GRIN2B-228 e39262d9-d1fc- 6              EEGArray       6             
+sub-GRIN2B-228 e39262d9-d1fc- 7              EEGArray       7             
+sub-GRIN2B-228 e39262d9-d1fc- 8              EEGArray       8             
+sub-GRIN2B-228 e39262d9-d1fc- 9              EEGArray       9             
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-228 baseline_windo =BLOB=                   
+sub-GRIN2B-228 baseline_windo =BLOB=                   
+sub-GRIN2B-228 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-228 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-229_ses-2021-07-28_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-229 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-229 GRIN2B-229     University of  Gonzalez-Sulse 2021-07-28     Chronic wirele 2021-07-28 10: 2021-07-28 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-229 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-229 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-229 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-229 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-229 0f4e7025-0061- EEGElectricalS 250.4          EEGElectricalS Full chronic E 89692333       volts    
+sub-GRIN2B-229 a89f1017-44f6- EMGElectricalS 250.4          EMGElectricalS Full chronic E 89692333       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-229 0f4e7025-0061- 0              EEGArray       0             
+sub-GRIN2B-229 0f4e7025-0061- 1              EEGArray       1             
+sub-GRIN2B-229 0f4e7025-0061- 2              EEGArray       2             
+sub-GRIN2B-229 0f4e7025-0061- 3              EEGArray       3             
+sub-GRIN2B-229 0f4e7025-0061- 4              EEGArray       4             
+sub-GRIN2B-229 0f4e7025-0061- 5              EEGArray       5             
+sub-GRIN2B-229 0f4e7025-0061- 6              EEGArray       6             
+sub-GRIN2B-229 0f4e7025-0061- 7              EEGArray       7             
+sub-GRIN2B-229 0f4e7025-0061- 8              EEGArray       8             
+sub-GRIN2B-229 0f4e7025-0061- 9              EEGArray       9             
+sub-GRIN2B-229 0f4e7025-0061- 10             EEGArray       10            
+sub-GRIN2B-229 0f4e7025-0061- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-229 baseline_windo =BLOB=                   
+sub-GRIN2B-229 baseline_windo =BLOB=                   
+sub-GRIN2B-229 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-229 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-236_ses-2021-08-29_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-236 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-236 GRIN2B-236     University of  Gonzalez-Sulse 2021-08-29     Chronic wirele 2021-08-29 08: 2021-08-29 08: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-236 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-236 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-236 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-236 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-236 71eba1e9-f8a0- EEGElectricalS 250.4          EEGElectricalS Full chronic E 69457920       volts    
+sub-GRIN2B-236 857ab234-faec- EMGElectricalS 250.4          EMGElectricalS Full chronic E 69457920       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-236 71eba1e9-f8a0- 0              EEGArray       0             
+sub-GRIN2B-236 71eba1e9-f8a0- 1              EEGArray       1             
+sub-GRIN2B-236 71eba1e9-f8a0- 2              EEGArray       2             
+sub-GRIN2B-236 71eba1e9-f8a0- 3              EEGArray       3             
+sub-GRIN2B-236 71eba1e9-f8a0- 4              EEGArray       4             
+sub-GRIN2B-236 71eba1e9-f8a0- 5              EEGArray       5             
+sub-GRIN2B-236 71eba1e9-f8a0- 6              EEGArray       6             
+sub-GRIN2B-236 71eba1e9-f8a0- 7              EEGArray       7             
+sub-GRIN2B-236 71eba1e9-f8a0- 8              EEGArray       8             
+sub-GRIN2B-236 71eba1e9-f8a0- 9              EEGArray       9             
+sub-GRIN2B-236 71eba1e9-f8a0- 10             EEGArray       10            
+sub-GRIN2B-236 71eba1e9-f8a0- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-236 baseline_windo =BLOB=                   
+sub-GRIN2B-236 baseline_windo =BLOB=                   
+sub-GRIN2B-236 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-236 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-237_ses-2021-08-16_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-237 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-237 GRIN2B-237     University of  Gonzalez-Sulse 2021-08-16     Chronic wirele 2021-08-16 10: 2021-08-16 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-237 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-237 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-237 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-237 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-237 4e07c4d1-8949- EEGElectricalS 250.4          EEGElectricalS Full chronic E 68547560       volts    
+sub-GRIN2B-237 f0f30e48-b8ab- EMGElectricalS 250.4          EMGElectricalS Full chronic E 68547560       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-237 4e07c4d1-8949- 0              EEGArray       0             
+sub-GRIN2B-237 4e07c4d1-8949- 1              EEGArray       1             
+sub-GRIN2B-237 4e07c4d1-8949- 2              EEGArray       2             
+sub-GRIN2B-237 4e07c4d1-8949- 3              EEGArray       3             
+sub-GRIN2B-237 4e07c4d1-8949- 4              EEGArray       4             
+sub-GRIN2B-237 4e07c4d1-8949- 5              EEGArray       5             
+sub-GRIN2B-237 4e07c4d1-8949- 6              EEGArray       6             
+sub-GRIN2B-237 4e07c4d1-8949- 7              EEGArray       7             
+sub-GRIN2B-237 4e07c4d1-8949- 8              EEGArray       8             
+sub-GRIN2B-237 4e07c4d1-8949- 9              EEGArray       9             
+sub-GRIN2B-237 4e07c4d1-8949- 10             EEGArray       10            
+sub-GRIN2B-237 4e07c4d1-8949- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-237 baseline_windo =BLOB=                   
+sub-GRIN2B-237 baseline_windo =BLOB=                   
+sub-GRIN2B-237 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-237 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-238_ses-2021-08-16_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-238 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-238 GRIN2B-238     University of  Gonzalez-Sulse 2021-08-16     Chronic wirele 2021-08-16 10: 2021-08-16 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-238 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-238 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-238 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-238 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-238 0d982a99-5ba5- EEGElectricalS 250.4          EEGElectricalS Full chronic E 68557800       volts    
+sub-GRIN2B-238 79b63819-7e89- EMGElectricalS 250.4          EMGElectricalS Full chronic E 68557800       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-238 0d982a99-5ba5- 0              EEGArray       0             
+sub-GRIN2B-238 0d982a99-5ba5- 1              EEGArray       1             
+sub-GRIN2B-238 0d982a99-5ba5- 2              EEGArray       2             
+sub-GRIN2B-238 0d982a99-5ba5- 3              EEGArray       3             
+sub-GRIN2B-238 0d982a99-5ba5- 4              EEGArray       4             
+sub-GRIN2B-238 0d982a99-5ba5- 5              EEGArray       5             
+sub-GRIN2B-238 0d982a99-5ba5- 6              EEGArray       6             
+sub-GRIN2B-238 0d982a99-5ba5- 7              EEGArray       7             
+sub-GRIN2B-238 0d982a99-5ba5- 8              EEGArray       8             
+sub-GRIN2B-238 0d982a99-5ba5- 9              EEGArray       9             
+sub-GRIN2B-238 0d982a99-5ba5- 10             EEGArray       10            
+sub-GRIN2B-238 0d982a99-5ba5- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-238 baseline_windo =BLOB=                   
+sub-GRIN2B-238 baseline_windo =BLOB=                   
+sub-GRIN2B-238 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-238 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-239_ses-2021-08-16_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-239 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-239 GRIN2B-239     University of  Gonzalez-Sulse 2021-08-16     Chronic wirele 2021-08-16 10: 2021-08-16 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-239 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-239 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-239 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-239 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-239 c7df542f-8fec- EEGElectricalS 250.4          EEGElectricalS Full chronic E 68553704       volts    
+sub-GRIN2B-239 ff514c52-a15d- EMGElectricalS 250.4          EMGElectricalS Full chronic E 68553704       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-239 c7df542f-8fec- 0              EEGArray       0             
+sub-GRIN2B-239 c7df542f-8fec- 1              EEGArray       1             
+sub-GRIN2B-239 c7df542f-8fec- 2              EEGArray       2             
+sub-GRIN2B-239 c7df542f-8fec- 3              EEGArray       3             
+sub-GRIN2B-239 c7df542f-8fec- 4              EEGArray       4             
+sub-GRIN2B-239 c7df542f-8fec- 5              EEGArray       5             
+sub-GRIN2B-239 c7df542f-8fec- 6              EEGArray       6             
+sub-GRIN2B-239 c7df542f-8fec- 7              EEGArray       7             
+sub-GRIN2B-239 c7df542f-8fec- 8              EEGArray       8             
+sub-GRIN2B-239 c7df542f-8fec- 9              EEGArray       9             
+sub-GRIN2B-239 c7df542f-8fec- 10             EEGArray       10            
+sub-GRIN2B-239 c7df542f-8fec- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-239 baseline_windo =BLOB=                   
+sub-GRIN2B-239 baseline_windo =BLOB=                   
+sub-GRIN2B-239 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-239 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-240_ses-2021-08-16_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-240 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-240 GRIN2B-240     University of  Gonzalez-Sulse 2021-08-16     Chronic wirele 2021-08-16 10: 2021-08-16 10: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-240 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-240 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-240 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-240 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-240 9af6ba87-a401- EEGElectricalS 250.4          EEGElectricalS Full chronic E 68552680       volts    
+sub-GRIN2B-240 f5f77973-d953- EMGElectricalS 250.4          EMGElectricalS Full chronic E 68552680       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-240 9af6ba87-a401- 0              EEGArray       0             
+sub-GRIN2B-240 9af6ba87-a401- 1              EEGArray       1             
+sub-GRIN2B-240 9af6ba87-a401- 2              EEGArray       2             
+sub-GRIN2B-240 9af6ba87-a401- 3              EEGArray       3             
+sub-GRIN2B-240 9af6ba87-a401- 4              EEGArray       4             
+sub-GRIN2B-240 9af6ba87-a401- 5              EEGArray       5             
+sub-GRIN2B-240 9af6ba87-a401- 6              EEGArray       6             
+sub-GRIN2B-240 9af6ba87-a401- 7              EEGArray       7             
+sub-GRIN2B-240 9af6ba87-a401- 8              EEGArray       8             
+sub-GRIN2B-240 9af6ba87-a401- 9              EEGArray       9             
+sub-GRIN2B-240 9af6ba87-a401- 10             EEGArray       10            
+sub-GRIN2B-240 9af6ba87-a401- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-240 baseline_windo =BLOB=                   
+sub-GRIN2B-240 baseline_windo =BLOB=                   
+sub-GRIN2B-240 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-240 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-241_ses-2021-08-20_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-241 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-241 GRIN2B-241     University of  Gonzalez-Sulse 2021-08-20     Chronic wirele 2021-08-20 09: 2021-08-20 09: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-241 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-241 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-241 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-241 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-241 2ff9cfa7-a8ff- EEGElectricalS 250.4          EEGElectricalS Full chronic E 67570688       volts    
+sub-GRIN2B-241 9be68e69-f16e- EMGElectricalS 250.4          EMGElectricalS Full chronic E 67570688       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-241 2ff9cfa7-a8ff- 0              EEGArray       0             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 1              EEGArray       1             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 2              EEGArray       2             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 3              EEGArray       3             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 4              EEGArray       4             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 5              EEGArray       5             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 6              EEGArray       6             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 7              EEGArray       7             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 8              EEGArray       8             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 9              EEGArray       9             
+sub-GRIN2B-241 2ff9cfa7-a8ff- 10             EEGArray       10            
+sub-GRIN2B-241 2ff9cfa7-a8ff- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-241 baseline_windo =BLOB=                   
+sub-GRIN2B-241 baseline_windo =BLOB=                   
+sub-GRIN2B-241 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-241 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
+
+##### sub-GRIN2B-373_ses-2022-04-28_ecephys.nwb #####
+
+=== Nwbfile ===
+*nwb_file_name nwb_file_a
++------------+ +--------+
+sub-GRIN2B-373 =BLOB=    
+ (Total: 1)
+
+
+=== Session ===
+*nwb_file_name subject_id     institution_na lab_name       session_id     session_descri session_start_ timestamps_ref experiment_des
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-373 GRIN2B-373     University of  Gonzalez-Sulse 2022-04-28     Chronic wirele 2022-04-28 14: 2022-04-28 14: Chronic wirele
+ (Total: 1)
+
+
+=== DataAcquisitionDevice ===
+*data_acquisit data_acquisiti data_acquisiti adc_circuit   
++------------+ +------------+ +------------+ +------------+
+
+ (Total: 0)
+
+
+=== ElectrodeGroup ===
+*nwb_file_name *electrode_gro region_id     probe_id     description    target_hemisph
++------------+ +------------+ +-----------+ +----------+ +------------+ +------------+
+sub-GRIN2B-373 EEGArray       2             None         14-channel chr Unknown       
+sub-GRIN2B-373 EMGArray       1             None         2-channel chro Unknown       
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *electrode_gro *electrode_id  probe_id     probe_shank    probe_electrod region_id     name     original_refer x       y       z       filtering     impedance     bad_channel    x_warped     y_warped     z_warped     contacts    
++------------+ +------------+ +------------+ +----------+ +------------+ +------------+ +-----------+ +------+ +------------+ +-----+ +-----+ +-----+ +-----------+ +-----------+ +------------+ +----------+ +----------+ +----------+ +----------+
+sub-GRIN2B-373 EEGArray       0              None         None           None           2             0        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       1              None         None           None           2             1        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       2              None         None           None           2             2        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       3              None         None           None           2             3        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       4              None         None           None           2             4        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       5              None         None           None           2             5        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       6              None         None           None           2             6        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       7              None         None           None           2             7        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       8              None         None           None           2             8        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       9              None         None           None           2             9        -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       10             None         None           None           2             10       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+sub-GRIN2B-373 EEGArray       11             None         None           None           2             11       -1             nan     nan     nan     none          nan           False          0.0          0.0          0.0                      
+   ...
+ (Total: 16)
+
+
+=== ImportedEEG ===
+*nwb_file_name *eeg_object_id interval_list_ eeg_sampling_r name           description    num_samples    unit     
++------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +------------+ +-------+
+sub-GRIN2B-373 002256ea-354c- EEGElectricalS 250.4          EEGElectricalS Full chronic E 83723283       volts    
+sub-GRIN2B-373 ec07cf6c-f7ef- EMGElectricalS 250.4          EMGElectricalS Full chronic E 83723283       volts    
+ (Total: 2)
+
+
+=== Electrode ===
+*nwb_file_name *eeg_object_id *region_index  electrode_grou electrode_id  
++------------+ +------------+ +------------+ +------------+ +------------+
+sub-GRIN2B-373 002256ea-354c- 0              EEGArray       0             
+sub-GRIN2B-373 002256ea-354c- 1              EEGArray       1             
+sub-GRIN2B-373 002256ea-354c- 2              EEGArray       2             
+sub-GRIN2B-373 002256ea-354c- 3              EEGArray       3             
+sub-GRIN2B-373 002256ea-354c- 4              EEGArray       4             
+sub-GRIN2B-373 002256ea-354c- 5              EEGArray       5             
+sub-GRIN2B-373 002256ea-354c- 6              EEGArray       6             
+sub-GRIN2B-373 002256ea-354c- 7              EEGArray       7             
+sub-GRIN2B-373 002256ea-354c- 8              EEGArray       8             
+sub-GRIN2B-373 002256ea-354c- 9              EEGArray       9             
+sub-GRIN2B-373 002256ea-354c- 10             EEGArray       10            
+sub-GRIN2B-373 002256ea-354c- 11             EEGArray       11            
+   ...
+ (Total: 16)
+
+
+=== IntervalList ===
+*nwb_file_name *interval_list valid_time pipeline      
++------------+ +------------+ +--------+ +------------+
+sub-GRIN2B-373 baseline_windo =BLOB=                   
+sub-GRIN2B-373 baseline_windo =BLOB=                   
+sub-GRIN2B-373 EEGElectricalS =BLOB=     imported_eeg  
+sub-GRIN2B-373 EMGElectricalS =BLOB=     imported_eeg  
+ (Total: 4)
+
