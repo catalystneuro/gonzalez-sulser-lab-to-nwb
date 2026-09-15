@@ -162,5 +162,5 @@ needs real transformation), `notebooks/spyglass_tutorial.ipynb` (Phase 10).
 
 ## TODOs
 
-- Find a way to insert processing/behavior, epochs in the DB
+- Find a way to insert sleep analysis processing/behavior, epochs in the DB
 - Discuss with spyglass team about the HERD ontologies
