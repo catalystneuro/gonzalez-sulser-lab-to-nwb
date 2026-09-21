@@ -16,6 +16,11 @@ nwb_stub/
 *.log
 .venv/
 
+# Spyglass / DataJoint (credentials + local DB volume)
+spyglass/dj_local_conf.json
+.datajoint_config.json
+spyglass/mysql-data/
+
 # OS
 .DS_Store
 Thumbs.db
