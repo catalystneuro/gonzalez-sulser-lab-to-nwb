@@ -1,0 +1,31 @@
+{
+  "database.host": "127.0.0.1",
+  "database.port": 3306,
+  "database.user": "root",
+  "database.password": "tutorial",
+  "database.use_tls": false,
+  "database.reconnect": true,
+  "loglevel": "INFO",
+  "safemode": true,
+  "fetch_format": "array",
+  "display.limit": 12,
+  "display.show_tuple_count": true,
+  "enable_python_native_blobs": true,
+  "add_hidden_timestamp": false,
+  "filepath_checksum_size_limit": 1073741824,
+  "custom": {
+    "debug_mode": "false",
+    "test_mode": "false",
+    "spyglass_dirs": {
+      "base": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data",
+      "raw": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/raw",
+      "analysis": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/analysis",
+      "recording": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/recording",
+      "sorting": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/spikesorting",
+      "waveforms": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/waveforms",
+      "temp": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/tmp",
+      "video": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/video",
+      "export": "/mnt/f/CN_data/gonzalez-sulser/spyglass_data/export"
+    }
+  }
+}

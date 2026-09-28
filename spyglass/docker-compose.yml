@@ -1,0 +1,30 @@
+# Local Spyglass MySQL database for the Gonzalez-Sulser conversion.
+#
+# Image: datajoint/mysql (pre-configures the mysql_native_password auth plugin so
+# PyMySQL/DataJoint connect without extra flags). Tag 8.0 matches the MySQL version
+# current DataJoint (>=0.14) expects.
+#
+# Storage: the MySQL data directory lives in a Docker *named volume*
+# (spyglass-mysql-data), NOT a bind mount to F:. The F: external disk is exFAT,
+# which has no POSIX permissions or file locking and would corrupt InnoDB. The
+# named volume is stored inside the Docker Desktop WSL2 VM (ext4).
+#
+#   Start:        docker compose up -d
+#   Status:       docker compose ps
+#   Stop:         docker compose stop
+#   Wipe DB:      docker compose down -v   (deletes the named volume)
+
+services:
+  db:
+    image: datajoint/mysql:8.0
+    container_name: spyglass-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=tutorial   # must match dj_local_conf.json
+    volumes:
+      - spyglass-mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  spyglass-mysql-data:

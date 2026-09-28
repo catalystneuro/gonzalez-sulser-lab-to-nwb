@@ -1,0 +1,29 @@
+# Conda environment for Spyglass ingestion of the Gonzalez-Sulser NWB files.
+#
+# Kept separate from `gonzalez-sulser-lab-to-nwb-env` (the conversion env) so
+# DataJoint / Spyglass pins do not collide with the conversion pipeline.
+#
+#   conda env create -f spyglass-env.yaml
+#   conda activate spyglass
+#
+# Spyglass officially targets Linux/macOS; on Windows the ingestion path used here
+# (insert_sessions + DataJoint queries) works, but spike-sorting / position extras
+# are not installed.
+
+name: spyglass
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - hdf5
+  - pip:
+      - spyglass-neuro          # pulls datajoint, pymysql, pynwb, spikeinterface, hdmf
+      - ndx-franklab-novela     # DataAcqDevice / NwbElectrodeGroup / Probe types
+      - neuroconv
+      - nwbinspector
+      - pymatreader
+      - openpyxl
+      - pyyaml
+      - jupyter
+      - matplotlib

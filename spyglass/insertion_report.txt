@@ -1,0 +1,19 @@
+17/17 inserted
+
+{'session': 'sub-GRIN2B-129_ses-2021-03-26_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-130_ses-2021-03-26_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-131_ses-2021-03-26_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-132_ses-2021-03-26_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-137_ses-2021-03-31_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-138_ses-2021-03-31_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-139_ses-2021-03-31_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-227_ses-2021-07-28_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-228_ses-2021-07-28_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-229_ses-2021-07-28_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-236_ses-2021-08-29_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-237_ses-2021-08-16_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-238_ses-2021-08-16_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-239_ses-2021-08-16_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-240_ses-2021-08-16_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-241_ses-2021-08-20_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
+{'session': 'sub-GRIN2B-373_ses-2022-04-28_ecephys.nwb', 'electrode_group': 2, 'electrode': 16, 'imported_eeg': 2, 'imported_eeg_electrode': 16, 'data_acquisition_device': 0}
