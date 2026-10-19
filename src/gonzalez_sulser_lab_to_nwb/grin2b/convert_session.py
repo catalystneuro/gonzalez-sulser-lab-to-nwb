@@ -52,9 +52,7 @@ _BASELINE_LABELS = {"BL1": "baseline_window_1", "BL2": "baseline_window_2"}
 
 def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
     """Parse Sample_start_end_GRIN2B.xlsx → {(animal_id, baseline): {file, start, end}}."""
-    wb = openpyxl.load_workbook(
-        data_dir / _WINDOWS_XLSX, read_only=True, data_only=True
-    )
+    wb = openpyxl.load_workbook(data_dir / _WINDOWS_XLSX, read_only=True, data_only=True)
     ws = wb.active
     rows = list(ws.iter_rows(values_only=True))
     header = rows[0]
@@ -87,9 +85,7 @@ def _parse_dat_date(dat_filename: str) -> datetime:
     return datetime(y, mo, d, tzinfo=_TZ)
 
 
-def _compute_session_start_time(
-    dat_filename: str, windows: dict[tuple[int, str], dict], animal_id: int
-) -> datetime:
+def _compute_session_start_time(dat_filename: str, windows: dict[tuple[int, str], dict], animal_id: int) -> datetime:
     """Compute the absolute timestamp of sample 0 of the .dat file.
 
     The filename date is the recording start date.
@@ -113,9 +109,7 @@ def _compute_session_start_time(
         # recording date (time-of-day unknown for this animal).
         return recording_date
 
-    lights_on = (recording_date + timedelta(days=1)).replace(
-        hour=_LIGHTS_ON_HOUR, minute=0, second=0
-    )
+    lights_on = (recording_date + timedelta(days=1)).replace(hour=_LIGHTS_ON_HOUR, minute=0, second=0)
     bl1_start_s = bl1_window["start"] / _FS
     return lights_on - timedelta(seconds=bl1_start_s)
 
@@ -152,8 +146,7 @@ def session_to_nwb(
     bl2_window = windows.get((animal_id, "BL2"))
     if bl1_window is None and bl2_window is None:
         raise KeyError(
-            f"No BL1 or BL2 window found for animal {animal_id} in "
-            f"{_WINDOWS_XLSX}. Check xlsx for this animal."
+            f"No BL1 or BL2 window found for animal {animal_id} in " f"{_WINDOWS_XLSX}. Check xlsx for this animal."
         )
 
     baseline_windows = {"BL1": bl1_window, "BL2": bl2_window}
@@ -191,9 +184,7 @@ def session_to_nwb(
         for baseline_key, baseline_label in _BASELINE_LABELS.items()
         if baseline_windows[baseline_key] is not None
     ]
-    source_data["BaselineEpochs"] = dict(
-        baseline_windows=baseline_windows_arg, sampling_frequency=_FS
-    )
+    source_data["BaselineEpochs"] = dict(baseline_windows=baseline_windows_arg, sampling_frequency=_FS)
     conversion_options["BaselineEpochs"] = dict(stub_test=stub_test)
 
     sleep_csvs: list[str] = []
@@ -208,13 +199,9 @@ def session_to_nwb(
             continue
 
         sleep_csv = subject_dir / f"{animal_key}_{baseline_key}-dge_ok.csv"
-        seizure_csv = (
-            data_dir / _SEIZURE_DIR / f"{animal_key}_{baseline_key}_Seizures.csv"
-        )
+        seizure_csv = data_dir / _SEIZURE_DIR / f"{animal_key}_{baseline_key}_Seizures.csv"
         swd_csv = subject_dir / "seiz" / f"{animal_key}_{baseline_key}_DGE_SWDs.csv"
-        totals_csv = (
-            subject_dir / "seiz" / f"{animal_key}_{baseline_key}_Seiz_Totals.csv"
-        )
+        totals_csv = subject_dir / "seiz" / f"{animal_key}_{baseline_key}_Seiz_Totals.csv"
         psd_csv = subject_dir / f"{animal_key}_{baseline_key}-pw_spectrum.csv"
 
         if sleep_csv.exists():
@@ -269,9 +256,7 @@ def session_to_nwb(
     # (YYYY_MM_DD in the source filename -> YYYY-MM-DD here).
     session_id = _parse_dat_date(dat_filename).strftime("%Y-%m-%d")
     metadata["NWBFile"]["session_id"] = session_id
-    available_baselines = " and ".join(
-        k for k in _BASELINE_LABELS if baseline_windows[k]
-    )
+    available_baselines = " and ".join(k for k in _BASELINE_LABELS if baseline_windows[k])
     metadata["NWBFile"]["session_description"] = (
         f"Chronic wireless EEG/EMG recording, subject {animal_key}, full raw recording "
         f"with {available_baselines} 24-h baseline window(s) marked in the NWB epochs table. "
@@ -284,15 +269,11 @@ def session_to_nwb(
 
     subj_meta = all_subjects.get(animal_key, {})
     metadata.setdefault("Subject", {})
-    metadata["Subject"].update(
-        {k: v for k, v in subj_meta.items() if not str(v).startswith("TODO")}
-    )
+    metadata["Subject"].update({k: v for k, v in subj_meta.items() if not str(v).startswith("TODO")})
     metadata["Subject"]["subject_id"] = animal_key.replace("_", "-")
     # Ensure required fields are always set (NWB schema requires subject_id, sex, species)
     metadata["Subject"].setdefault("species", "Rattus norvegicus")
-    metadata["Subject"].setdefault(
-        "sex", "U"
-    )  # Unknown until lab provides per-animal table
+    metadata["Subject"].setdefault("sex", "U")  # Unknown until lab provides per-animal table
 
     # ---- Define output file path ----
     output_dir = Path(output_dir)
@@ -301,9 +282,7 @@ def session_to_nwb(
     output_dir = output_dir / f"sub-{animal_key.replace('_','-')}"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    nwbfile_path = (
-        output_dir / f"sub-{animal_key.replace('_','-')}_ses-{session_id}_ecephys.nwb"
-    )
+    nwbfile_path = output_dir / f"sub-{animal_key.replace('_','-')}_ses-{session_id}_ecephys.nwb"
 
     # ---- Run conversion ----
     converter.run_conversion(
@@ -339,5 +318,5 @@ if __name__ == "__main__":
         data_dir="H:/Gonzalez-Sulser-CN-data-share",  # args.data_dir,
         output_dir="H:/gonzalez-nwbfiles",  # args.output_dir,
         animal_id=129,  # args.animal_id,
-        stub_test=True,
+        stub_test=False,
     )

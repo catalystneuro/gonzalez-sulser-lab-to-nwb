@@ -130,6 +130,7 @@ _STEREOTAXIC_COORDINATES_MM: dict[tuple[str, str], tuple[float, float]] = {
 
 # Electrode group name -> ElectricalSeries name prefix
 _SIGNAL_TYPE_TO_GROUP = {"EEG": "EEGArray", "EMG": "EMGArray"}
+_DEVICE_METADATA_KEY = "TainiTecWirelessEEG"
 
 
 class TainiRecordingInterface(BaseRecordingExtractorInterface):
@@ -190,7 +191,7 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             dtype=_DTYPE,
             channel_ids=_CHANNEL_IDS,
             verbose=verbose,
-            es_key=f"{signal_type}ElectricalSeries",
+            metadata_key=f"{signal_type}ElectricalSeries",
         )
 
         # Set per-channel properties (become columns in the NWB electrodes table).
@@ -237,8 +238,12 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
     def get_metadata(self) -> DeepDict:
         metadata = super().get_metadata()
 
-        metadata["Ecephys"]["Device"] = [
-            {
+        # Dict-based NeuroConv metadata: devices live in a top-level "Devices" registry and
+        # electrode groups in Ecephys["ElectrodeGroups"], both keyed by a metadata key; a group
+        # links to its device through "device_metadata_key". Only this instance's own group is
+        # emitted -- the EEG and EMG instances' entries merge in the converter's metadata.
+        metadata["Devices"] = {
+            _DEVICE_METADATA_KEY: {
                 "name": "TainiTecWirelessEEG",
                 "description": (
                     "TainiTec wireless EEG/EMG telemetry system. 16-channel headstage, "
@@ -251,13 +256,11 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 ),
                 "manufacturer": "TainiTec",
             }
-        ]
+        }
 
-        # Fix device reference in auto-generated electrode groups
-        for grp in metadata["Ecephys"]["ElectrodeGroup"]:
-            grp["device"] = "TainiTecWirelessEEG"
-            if grp["name"] == "EEGArray":
-                grp["description"] = (
+        if self._electrode_group_name == "EEGArray":
+            group = {
+                "description": (
                     "14-channel chronic EEG electrode array, Custom H16-Rat EEG16 "
                     "(NeuroNexus). Electrodes target bilateral somatosensory and motor "
                     "cortical sites: S1-Tr (primary somatosensory cortex, trunk region), "
@@ -268,18 +271,28 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                     "cortex, hindlimb/forelimb) - 7 electrodes per hemisphere, at "
                     "stereotaxic AP/ML coordinates from bregma confirmed by the lab "
                     "(see electrode table 'location' column)."
-                )
-                grp["location"] = "cortex"
-            elif grp["name"] == "EMGArray":
-                grp["description"] = (
+                ),
+                "location": "cortex",
+            }
+        else:
+            group = {
+                "description": (
                     "2-channel chronic EMG electrodes (right and left), placed in the "
                     "trapezius muscle."
-                )
-                grp["location"] = "trapezius muscle"
+                ),
+                "location": "trapezius muscle",
+            }
+        metadata["Ecephys"]["ElectrodeGroups"] = {
+            self._electrode_group_name: {
+                "name": self._electrode_group_name,
+                "device_metadata_key": _DEVICE_METADATA_KEY,
+                **group,
+            }
+        }
 
         n_samples = self.recording_extractor.get_num_frames()
         duration_hours = n_samples / _FS / 3600
-        metadata["Ecephys"][self.es_key] = {
+        metadata["Ecephys"]["ElectricalSeries"][self.metadata_key] = {
             "name": f"{self.signal_type}ElectricalSeries",
             "description": (
                 f"Full chronic {self.signal_type} recording ({duration_hours:.1f} h). "
