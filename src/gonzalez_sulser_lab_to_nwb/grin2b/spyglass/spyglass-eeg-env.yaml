@@ -1,0 +1,26 @@
+# Conda environment for testing against the DRAFT common_eeg/ImportedEEG schema
+# (LorenFrankLab/spyglass PR #1638, branch feature/eeg-ingestion). Separate from the
+# `spyglass` env (PyPI spyglass-neuro 0.6.0, verified working) so that env stays a
+# known-good fallback while this one tracks an unstable draft branch.
+#
+#   conda env create -f spyglass-eeg-env.yaml   (inside WSL, Miniforge at /opt/miniforge3)
+#   conda activate spyglass-eeg
+
+name: spyglass-eeg
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - hdf5
+  - git
+  - pip:
+      - "git+https://github.com/LorenFrankLab/spyglass.git@feature/eeg-ingestion"
+      - ndx-franklab-novela
+      - neuroconv
+      - nwbinspector
+      - pymatreader
+      - openpyxl
+      - pyyaml
+      - jupyter
+      - matplotlib

@@ -92,7 +92,7 @@
 
 - [x] NWB Inspector validation (stub) — 2 pending-lab warnings only (ADC gain → conversion; subject age/DOB)
 - [x] Setup Dandiset (public — line is published): [DANDI:001888](https://dandiarchive.org/dandiset/001888/draft)
-- [ ] Example Notebooks (streaming + Spyglass query demo)
+- [x] Example Notebooks (streaming + Spyglass query demo)
 
 ---
 
