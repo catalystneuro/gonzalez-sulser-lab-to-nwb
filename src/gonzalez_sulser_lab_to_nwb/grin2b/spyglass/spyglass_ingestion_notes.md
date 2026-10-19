@@ -16,23 +16,6 @@ this dataset.
   (draft PR, branch `feature/eeg-ingestion`). `common_eeg.py`'s own docstring uses
   `DANDI:001888` — this project's dandiset — as its example, so the PR was almost certainly
   written against these exact files.
-- **Approach:** post-hoc — read the already-converted NWB files as-is and ingest them; do
-  **not** re-run or fork the DANDI conversion pipeline to "bake in" Spyglass requirements. See
-  "Design decision" below.
-- **Status (2026-09-11): all 17 currently-converted subjects inserted and verified, 0 failures,
-  no NWB file changes needed.**
-
-## Design decision: post-hoc ingestion, not a from-scratch Spyglass conversion
-
-The `/spyglass-convert` skill's default stance is to build Spyglass-compatible NWB files from
-scratch instead of reusing a DANDI-oriented conversion. That does not apply here: this repo
-already has a finished, published conversion, and redoing it would waste that work and would
-not generalize to other labs already through a standard conversion. Instead, the plan is a
-**post-hoc interface**: inspect an already-converted NWB file, diff it against what Spyglass
-actually requires, and only transform/prompt for what's genuinely missing. In practice (see
-"Empirical gap analysis" below) the gap turned out to be ~zero, so no transform step exists yet
-— but the intended shape of that tool (`spyglass_interface/`, not built) is documented in the
-project plan file for when a real gap shows up.
 
 ## Environment
 
@@ -62,39 +45,6 @@ Bring the DB up: `docker compose -f docker-compose.yml up -d` (PowerShell, from 
 Activate the env: `wsl -d Ubuntu-24.04`, then `conda activate spyglass-eeg`.
 Config: `dj_local_conf.json` (git-ignored, has DB credentials) — shared by both envs, same DB.
 
-## Empirical gap analysis (2026-09-11)
-
-Rather than trust the `/spyglass-convert` skill's `knowledge/spyglass-nwb-requirements.md`
-(which turned out to describe an older/different Spyglass code path — see below), the actual
-requirement was read directly from the installed source and then confirmed by literally running
-insertion against a real, unmodified file (`dry_run_insertion.py`, subject `GRIN2B-129`).
-
-**What was read from source, before running anything:**
-
-- `common_eeg.ImportedEEG.get_nwb_objects()` selects `acquisition` `ElectricalSeries` objects
-  whose electrodes' `ElectrodeGroup.group_name` contains `"eeg"` or `"emg"` (case-insensitive
-  substring) — our existing `EEGArray`/`EMGArray` group names already match, no rename needed.
-- `common_ephys.ElectrodeGroup.probe_id` and `Electrode.probe_shank`/`probe_electrode`/
-  `Probe.Electrode` are all **nullable FKs with defaults** (`ref_elect_id`→`-1`,
-  `bad_channel`→`False`, probe fields→`None`) — missing NWB electrode columns do **not** crash
-  ingestion. Brain region comes from `ElectrodeGroup.location`, not a per-electrode column
-  (already set to `"cortex"`/`"trapezius muscle"` by `TainiRecordingInterface`).
-- `common_device.DataAcquisitionDevice` only ingests `ndx_franklab_novela.DataAcqDevice`
-  objects; our plain `pynwb.Device` yields 0 rows — confirmed non-fatal.
-
-**What the dry run then confirmed empirically**, against the unmodified, DANDI-published
-`sub-GRIN2B-129_ses-2021-03-26_ecephys.nwb`: `sgi.insert_sessions()` and
-`ImportedEEG.populate()` both completed with **no exception**, populated `Session`(1),
-`ElectrodeGroup`(2), `Electrode`(16), `ImportedEEG`(2), `ImportedEEG.Electrode`(16); read-back
-via `fetch_nwb()` matched the source file's shapes/rate/unit exactly. **`DataAcquisitionDevice`
-= 0 rows** (expected/cosmetic) and **`TaskEpoch`/`Task` did not populate** (no `"tasks"`
-processing module in the file — the BL1/BL2 windows are still present as raw NWB `epochs` and in
-`IntervalList`, just not wired into Spyglass's Task pipeline).
-
-**Net result: zero NWB changes needed** for `common_eeg`/`ImportedEEG` ingestion of this
-dataset. The one environment-level snag (`kachery_cloud` import failure inside
-`insert_sessions()`) was a missing/undeclared dependency, unrelated to the NWB files.
-
 ## Ingestion run (2026-09-11)
 
 All 17 currently-converted subjects, copied unmodified from `F:\CN_data\001888\` into
@@ -117,21 +67,15 @@ All 17 currently-converted subjects, copied unmodified from `F:\CN_data\001888\`
 ```text
 docker-compose.yml         MySQL 8.0 service (named volume, port 3306) — committed
 dj_local_conf.json         DataJoint config + credentials — git-ignored
-spyglass-env.yaml          conda env: PyPI spyglass-neuro 0.6.0 (fallback, no common_eeg)
 spyglass-eeg-env.yaml      conda env: spyglass from feature/eeg-ingestion (used for ingestion)
 bootstrap_wsl.sh           one-time Miniforge + env setup inside WSL2 Ubuntu-24.04
 check_connection.py        DataJoint/Spyglass connection smoke test
-dry_run_insertion.py       empirical gap-analysis script (single subject, verbose)
 insert_session.py          batch insertion — all subjects in the Spyglass raw dir
 verify_insertion.py        batch verification — table printouts + data-integrity read-back
-insertion_report.txt       output of the last insert_session.py run
-tables.txt                 output of the last verify_insertion.py run
+insertion_report.txt       output of the last insert_session.py run — git-ignored
+tables.txt                 output of the last verify_insertion.py run — git-ignored
 spyglass_ingestion_notes.md  this file
 ```
-
-Not yet created: `spyglass_interface/` (the general post-hoc gap-analysis tool described in the
-project plan — not needed yet since the observed gap was zero; revisit if a future dataset/lab
-needs real transformation), `notebooks/spyglass_tutorial.ipynb` (Phase 10).
 
 ## Known gaps / accepted as-is for now
 
@@ -153,12 +97,7 @@ needs real transformation), `notebooks/spyglass_tutorial.ipynb` (Phase 10).
   storing them in the NWB file enough for the ARC deliverable? If queryable: open a Spyglass
   issue (general concept, multiple labs would benefit) vs. a lab-scoped
   `spyglass_extensions/` custom `dj.Imported` table?
-- PR #1638 is a **draft** — worth flagging to whoever's driving it that this project is
-  ingesting against it live (17/17 clean), and tracking if the schema changes before merge.
 - Is closing the `DataAcquisitionDevice`/`TaskEpoch` gaps worth doing, or acceptable as-is?
-- The 16 animals with processed sleep/seizure data but no raw `.dat` on the share (see
-  `../conversion_notes.md` §"File Inventory & Counts") will need the same ingestion once their
-  raw files land and get converted.
 
 ## TODOs
 

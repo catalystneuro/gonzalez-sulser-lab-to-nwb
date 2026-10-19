@@ -20,6 +20,9 @@ nwb_stub/
 spyglass/dj_local_conf.json
 .datajoint_config.json
 spyglass/mysql-data/
+dry_run_insertion.py
+insertion_report.txt 
+tables.txt
 
 # OS
 .DS_Store
