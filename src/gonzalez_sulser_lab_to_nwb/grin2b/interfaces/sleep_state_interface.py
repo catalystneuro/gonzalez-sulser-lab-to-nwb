@@ -3,7 +3,7 @@
 Reads the per-epoch sleep state labels produced by the lab's automated scorer.
 
 Source file(s): `<subject_dir>/<subject_id>_BL{N}-dge_ok.csv`, one per
-baseline window, ordered in time (BL1, BL2, ...).
+baseline window, keyed by baseline label (the epochs-table tag).
   - Single column: `sleep.score`
   - One row per 5-second epoch, covering 24 h (17,280 epochs)
   - State codes confirmed (Hristova et al. 2025 Epilepsia, doi:10.1111/epi.18606,
@@ -19,9 +19,8 @@ Writes a single TimeIntervals table to nwbfile with columns:
   baseline_window (str tag)
 
 Timestamps are in seconds relative to session_start_time. Each file's epoch
-grid origin is taken from the corresponding row of the NWB epochs table
-(added by BaselineEpochsInterface, which must run first), matched
-positionally: the first file_path aligns to the first epoch, and so on.
+grid origin is taken from the NWB epochs-table row with the matching
+baseline tag (added by BaselineEpochsInterface, which must run first).
 """
 from __future__ import annotations
 
@@ -34,6 +33,8 @@ from neuroconv.tools.nwb_helpers import get_module
 from neuroconv.utils import DeepDict
 from pynwb import NWBFile
 from pynwb.epoch import TimeIntervals
+
+from .baseline_epochs_interface import get_baseline_start_times
 
 # State code mapping confirmed from Hristova et al. 2025 supplementary methods
 # (same mapping used by StatePowerSpectrumInterface).
@@ -53,21 +54,20 @@ class SleepStateInterface(BaseDataInterface):
 
     def __init__(
         self,
-        file_paths: list[str | Path],
+        file_paths: dict[str, str | Path],
         epoch_duration_s: float = _EPOCH_DURATION_S,
     ):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*-dge_ok.csv` files, one per baseline window, ordered in
-            time (BL1, BL2, ...) to match the order of rows in the NWB epochs
-            table.
+        file_paths : dict of str to str or Path
+            Paths to `*-dge_ok.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1").
         epoch_duration_s : float
             Duration of each scored epoch in seconds (default 5.0 s).
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
         self.epoch_duration_s = epoch_duration_s
 
     def get_metadata(self) -> DeepDict:
@@ -79,18 +79,7 @@ class SleepStateInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        if nwbfile.epochs is None:
-            raise ValueError(
-                "SleepStateInterface requires the NWB epochs table to already contain the "
-                "baseline windows (add BaselineEpochsInterface earlier in the converter)."
-            )
-        epochs_df = nwbfile.epochs.to_dataframe()
-        if len(epochs_df) != len(self.file_paths):
-            raise ValueError(
-                f"Got {len(self.file_paths)} sleep-score CSV file(s) but {len(epochs_df)} "
-                "baseline window(s) in the NWB epochs table. Provide exactly one CSV per "
-                "baseline window, ordered to match the epochs table."
-            )
+        bl_offsets = get_baseline_start_times(nwbfile, list(self.file_paths), "SleepStateInterface")
 
         sleep_table = TimeIntervals(
             name="sleep_states",
@@ -115,9 +104,8 @@ class SleepStateInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this sleep-state epoch belongs to.",
         )
 
-        for file_path, (_, epoch_row) in zip(self.file_paths, epochs_df.iterrows()):
-            bl_offset_s = float(epoch_row["start_time"])
-            baseline_label = epoch_row["tags"][0] if len(epoch_row["tags"]) else ""
+        for baseline_label, file_path in self.file_paths.items():
+            bl_offset_s = bl_offsets[baseline_label]
 
             df = pd.read_csv(file_path)
             scores = df["sleep.score"].to_numpy(dtype=np.int32)

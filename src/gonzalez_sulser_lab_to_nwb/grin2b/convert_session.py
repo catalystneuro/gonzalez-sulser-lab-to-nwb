@@ -49,9 +49,24 @@ _FS = 250.4  # Hz, confirmed by inspection
 # (baseline key in xlsx/filenames, NWB object-name suffix)
 _BASELINE_LABELS = {"BL1": "baseline_window_1", "BL2": "baseline_window_2"}
 
+# Corrections to the "File" column of the xlsx. The GRIN2B_424 rows list animal
+# 366's recording (copy-paste error); their Start/End offsets belong to 424's own
+# Redo recording, which is the only 424 file on the share.
+_DAT_FILE_CORRECTIONS = {
+    424: "TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat",
+}
+
+# Animals excluded from Hristova et al. 2025 after a breeding mix-up (the wild types
+# had an unusually high number of seizures). Not analysed in the paper and, per the
+# PI (2026-10-20), not published on DANDI.
+EXCLUDED_ANIMAL_IDS = frozenset({362, 363, 364, 365, 366, 367, 368, 369, 371, 382, 383, 430, 433})
+
 
 def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
-    """Parse Sample_start_end_GRIN2B.xlsx → {(animal_id, baseline): {file, start, end}}."""
+    """Parse Sample_start_end_GRIN2B.xlsx → {(animal_id, baseline): {file, start, end}}.
+
+    Applies _DAT_FILE_CORRECTIONS to the "File" column.
+    """
     wb = openpyxl.load_workbook(data_dir / _WINDOWS_XLSX, read_only=True, data_only=True)
     ws = wb.active
     rows = list(ws.iter_rows(values_only=True))
@@ -61,9 +76,10 @@ def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
         if row[0] is None:
             continue
         d = dict(zip(header, row))
-        key = (int(d["Animal ID"]), str(d["Baseline"]))
+        animal_id = int(d["Animal ID"])
+        key = (animal_id, str(d["Baseline"]))
         windows[key] = {
-            "file": d["File"],
+            "file": _DAT_FILE_CORRECTIONS.get(animal_id, d["File"]),
             "start": int(d["Start"]),
             "end": int(d["End"]),
         }
@@ -139,6 +155,9 @@ def session_to_nwb(
         Path to the written NWB file.
     """
 
+    if animal_id in EXCLUDED_ANIMAL_IDS:
+        raise ValueError(f"GRIN2B_{animal_id} was excluded from the study and is not converted.")
+
     # ---- Look up BL windows (an animal may have BL1, BL2, or both) ----
     data_dir = Path(data_dir)
     windows = _load_bl_windows(data_dir)
@@ -155,11 +174,7 @@ def session_to_nwb(
     # ---- Resolve file paths ----
     dat_path = data_dir / _EEG_DIR / dat_filename
     if not dat_path.exists():
-        raise FileNotFoundError(
-            f"Raw .dat file not found: {dat_path}\n"
-            f"Only 21 of 37 animals' .dat files are in the current share. "
-            f"Contact lab to obtain missing files."
-        )
+        raise FileNotFoundError(f"Raw .dat file not found: {dat_path}.")
 
     animal_key = f"GRIN2B_{animal_id}"
     subject_dir = data_dir / _SLEEP_DIR / animal_key
@@ -187,11 +202,14 @@ def session_to_nwb(
     source_data["BaselineEpochs"] = dict(baseline_windows=baseline_windows_arg, sampling_frequency=_FS)
     conversion_options["BaselineEpochs"] = dict(stub_test=stub_test)
 
-    sleep_csvs: list[str] = []
-    seizure_csvs: list[str] = []
-    swd_csvs: list[str] = []
-    totals_csvs: list[str] = []
-    psd_csvs: list[str] = []
+    # Per-stream CSVs keyed by baseline label. A baseline whose CSV is missing for a
+    # stream is left out of that stream only (e.g. no BL1 power spectrum for 140/378;
+    # no BL1 seizures CSV for 375, which had zero seizures in BL1 per the lab).
+    sleep_csvs: dict[str, str] = {}
+    seizure_csvs: dict[str, str] = {}
+    swd_csvs: dict[str, str] = {}
+    totals_csvs: dict[str, str] = {}
+    psd_csvs: dict[str, str] = {}
 
     for baseline_key, baseline_label in _BASELINE_LABELS.items():
         win = baseline_windows[baseline_key]
@@ -205,19 +223,19 @@ def session_to_nwb(
         psd_csv = subject_dir / f"{animal_key}_{baseline_key}-pw_spectrum.csv"
 
         if sleep_csv.exists():
-            sleep_csvs.append(str(sleep_csv))
+            sleep_csvs[baseline_label] = str(sleep_csv)
 
         if seizure_csv.exists():
-            seizure_csvs.append(str(seizure_csv))
+            seizure_csvs[baseline_label] = str(seizure_csv)
 
         if swd_csv.exists():
-            swd_csvs.append(str(swd_csv))
+            swd_csvs[baseline_label] = str(swd_csv)
 
         if totals_csv.exists():
-            totals_csvs.append(str(totals_csv))
+            totals_csvs[baseline_label] = str(totals_csv)
 
         if psd_csv.exists():
-            psd_csvs.append(str(psd_csv))
+            psd_csvs[baseline_label] = str(psd_csv)
 
     if sleep_csvs:
         source_data["SleepStates"] = dict(file_paths=sleep_csvs)

@@ -2,9 +2,10 @@
 
 Three seizure-related data streams, all aligned to the NWB epochs table added
 by BaselineEpochsInterface (which must run first). Each interface takes one
-file per baseline window, ordered in time (BL1, BL2, ...) to match the order
-of rows in the epochs table, and writes a single merged NWB object covering
-all baseline windows, tagged with a "baseline_window" column so the source
+file per baseline window, keyed by the baseline label used as the epochs-table
+tag (e.g. "baseline_window_1"), so a baseline with no file for that stream is
+simply left out. Each writes a single merged NWB object covering the provided
+baseline windows, tagged with a "baseline_window" column so the source
 baseline of each row/sample can be recovered:
 
 1. SeizureInterface
@@ -47,54 +48,34 @@ from neuroconv.utils import DeepDict
 from pynwb import NWBFile
 from pynwb.epoch import TimeIntervals
 
+from .baseline_epochs_interface import get_baseline_start_times
+
 _EPOCH_DURATION_S: float = 5.0
-
-
-def _require_epochs(nwbfile: NWBFile, file_paths: list, interface_name: str) -> pd.DataFrame:
-    """Fetch the NWB epochs table as a DataFrame, checked against file_paths length."""
-    if nwbfile.epochs is None:
-        raise ValueError(
-            f"{interface_name} requires the NWB epochs table to already contain the "
-            "baseline windows (add BaselineEpochsInterface earlier in the converter)."
-        )
-    epochs_df = nwbfile.epochs.to_dataframe()
-    if len(epochs_df) != len(file_paths):
-        raise ValueError(
-            f"Got {len(file_paths)} file(s) but {len(epochs_df)} baseline window(s) in the "
-            "NWB epochs table. Provide exactly one file per baseline window, ordered to "
-            "match the epochs table."
-        )
-    return epochs_df
-
-
-def _epoch_label(epoch_row: pd.Series) -> str:
-    return epoch_row["tags"][0] if len(epoch_row["tags"]) else ""
 
 
 class SeizureInterface(BaseDataInterface):
     """Interface for seizure event intervals (sec_start / sec_end / dur CSVs).
 
-    Aligns each CSV's seizure events to the corresponding row of the NWB
-    epochs table (added by BaselineEpochsInterface, which must run first),
-    matched positionally: the first file_path aligns to the first epoch, and
-    so on. All events from all files are written into a single TimeIntervals
+    Aligns each CSV's seizure events to the NWB epochs-table row with the
+    matching baseline tag (added by BaselineEpochsInterface, which must run
+    first). All events from all files are written into a single TimeIntervals
     table, tagged with the baseline window they came from.
     """
 
     keywords = ["seizure", "EEG"]
 
-    def __init__(self, file_paths: list[str | Path]):
+    def __init__(self, file_paths: dict[str, str | Path]):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*_Seizures.csv` files, one per baseline window, ordered
-            in time (BL1, BL2, ...) to match the order of rows in the NWB
-            epochs table. Columns: sec_start, sec_end, dur. Times are in
-            seconds from the start of the corresponding baseline window.
+        file_paths : dict of str to str or Path
+            Paths to `*_Seizures.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1"). Columns: sec_start,
+            sec_end, dur. Times are in seconds from the start of the
+            corresponding baseline window.
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
 
     def get_metadata(self) -> DeepDict:
         return super().get_metadata()
@@ -105,7 +86,7 @@ class SeizureInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        epochs_df = _require_epochs(nwbfile, self.file_paths, "SeizureInterface")
+        bl_offsets = get_baseline_start_times(nwbfile, list(self.file_paths), "SeizureInterface")
 
         seizure_table = TimeIntervals(
             name="seizure_events",
@@ -123,9 +104,8 @@ class SeizureInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this seizure event belongs to.",
         )
 
-        for file_path, (_, epoch_row) in zip(self.file_paths, epochs_df.iterrows()):
-            bl_offset_s = float(epoch_row["start_time"])
-            baseline_label = _epoch_label(epoch_row)
+        for baseline_label, file_path in self.file_paths.items():
+            bl_offset_s = bl_offsets[baseline_label]
 
             df = pd.read_csv(file_path, sep=None, engine="python")
             if stub_test:
@@ -150,7 +130,7 @@ class SeizureInterface(BaseDataInterface):
             # skip writing the table instead of crashing the conversion.
             warnings.warn(
                 "SeizureInterface: no seizure events found in any baseline window "
-                f"({[str(p) for p in self.file_paths]}) — skipping seizure_events table.",
+                f"({[str(p) for p in self.file_paths.values()]}) — skipping seizure_events table.",
                 stacklevel=2,
             )
             return
@@ -162,32 +142,31 @@ class SeizureInterface(BaseDataInterface):
 class SwdCountsInterface(BaseDataInterface):
     """Interface for per-epoch spike-wave discharge (SWD) counts.
 
-    Aligns each CSV's per-5-s-epoch counts to the corresponding row of the
-    NWB epochs table (added by BaselineEpochsInterface, which must run
-    first), matched positionally. All epochs from all files are written into
-    a single TimeIntervals table, tagged with the baseline window they came
-    from.
+    Aligns each CSV's per-5-s-epoch counts to the NWB epochs-table row with
+    the matching baseline tag (added by BaselineEpochsInterface, which must
+    run first). All epochs from all files are written into a single
+    TimeIntervals table, tagged with the baseline window they came from.
     """
 
     keywords = ["seizure", "SWD", "spike-wave discharge", "EEG"]
 
     def __init__(
         self,
-        file_paths: list[str | Path],
+        file_paths: dict[str, str | Path],
         epoch_duration_s: float = _EPOCH_DURATION_S,
     ):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*_DGE_SWDs.csv` files, one per baseline window, ordered
-            in time (BL1, BL2, ...) to match the order of rows in the NWB
-            epochs table. Each has a single column `DGE_SWDs` (17,280 rows).
+        file_paths : dict of str to str or Path
+            Paths to `*_DGE_SWDs.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1"). Each has a single
+            column `DGE_SWDs` (17,280 rows).
         epoch_duration_s : float
             Duration of each scored epoch in seconds (default 5.0 s).
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
         self.epoch_duration_s = epoch_duration_s
 
     def get_metadata(self) -> DeepDict:
@@ -199,7 +178,7 @@ class SwdCountsInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        epochs_df = _require_epochs(nwbfile, self.file_paths, "SwdCountsInterface")
+        bl_offsets = get_baseline_start_times(nwbfile, list(self.file_paths), "SwdCountsInterface")
 
         swd_table = TimeIntervals(
             name="swd_epoch_counts",
@@ -218,9 +197,8 @@ class SwdCountsInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this epoch belongs to.",
         )
 
-        for file_path, (_, epoch_row) in zip(self.file_paths, epochs_df.iterrows()):
-            bl_offset_s = float(epoch_row["start_time"])
-            baseline_label = _epoch_label(epoch_row)
+        for baseline_label, file_path in self.file_paths.items():
+            bl_offset_s = bl_offsets[baseline_label]
 
             df = pd.read_csv(file_path)
             counts = df["DGE_SWDs"].to_numpy(dtype=np.float32)
@@ -247,26 +225,24 @@ class SeizureTotalsInterface(BaseDataInterface):
     """Interface for per-Zeitgeber-hour seizure totals.
 
     Not time-aligned to the recording (ZT-hour buckets recur every baseline
-    window), so the epochs table is only consulted for the baseline_window
-    tag, matched positionally: the first file_path aligns to the first epoch,
-    and so on. All rows from all files are written into a single
-    DynamicTable, tagged with the baseline window they came from.
+    window), so the epochs table is only checked to contain each baseline
+    label. All rows from all files are written into a single DynamicTable,
+    tagged with the baseline window they came from.
     """
 
     keywords = ["seizure", "circadian", "Zeitgeber", "EEG"]
 
-    def __init__(self, file_paths: list[str | Path]):
+    def __init__(self, file_paths: dict[str, str | Path]):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*_Seiz_Totals.csv` files, one per baseline window,
-            ordered in time (BL1, BL2, ...) to match the order of rows in the
-            NWB epochs table. Columns: N_event, mean_dur, ZT, SWDs, Day
-            (24 rows each).
+        file_paths : dict of str to str or Path
+            Paths to `*_Seiz_Totals.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1"). Columns: N_event,
+            mean_dur, ZT, SWDs, Day (24 rows each).
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
 
     def get_metadata(self) -> DeepDict:
         return super().get_metadata()
@@ -277,7 +253,7 @@ class SeizureTotalsInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        epochs_df = _require_epochs(nwbfile, self.file_paths, "SeizureTotalsInterface")
+        get_baseline_start_times(nwbfile, list(self.file_paths), "SeizureTotalsInterface")
 
         totals_table = DynamicTable(
             name="seizure_totals_by_zt",
@@ -311,8 +287,7 @@ class SeizureTotalsInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this row belongs to.",
         )
 
-        for file_path, (_, epoch_row) in zip(self.file_paths, epochs_df.iterrows()):
-            baseline_label = _epoch_label(epoch_row)
+        for baseline_label, file_path in self.file_paths.items():
             df = pd.read_csv(file_path)
 
             for _, row in df.iterrows():

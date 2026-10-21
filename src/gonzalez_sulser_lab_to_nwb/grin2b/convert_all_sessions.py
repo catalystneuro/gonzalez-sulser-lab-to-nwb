@@ -22,6 +22,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 from gonzalez_sulser_lab_to_nwb.grin2b.convert_session import (
+    EXCLUDED_ANIMAL_IDS,
     _load_bl_windows,
     session_to_nwb,
 )
@@ -30,7 +31,7 @@ _EEG_DIR = "Chronic EEG recordings"
 
 
 def _get_all_subjects(data_dir: Path) -> list[int]:
-    """Return the animal_id for every subject with at least one BL window whose .dat file is on disk."""
+    """Return the animal_id for every non-excluded subject with at least one BL window whose .dat file is on disk."""
     windows = _load_bl_windows(data_dir)
     eeg_dir = data_dir / _EEG_DIR
     on_disk = {f.name for f in eeg_dir.glob("*.dat")}
@@ -38,6 +39,8 @@ def _get_all_subjects(data_dir: Path) -> list[int]:
     animal_ids: dict[int, bool] = {}
     skipped = []
     for (animal_id, baseline), win in windows.items():
+        if animal_id in EXCLUDED_ANIMAL_IDS:
+            continue
         if win["file"] not in on_disk:
             skipped.append((animal_id, baseline, win["file"]))
             continue
