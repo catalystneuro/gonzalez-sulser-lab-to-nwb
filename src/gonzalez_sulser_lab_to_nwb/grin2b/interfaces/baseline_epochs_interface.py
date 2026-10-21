@@ -20,6 +20,29 @@ from pynwb import NWBFile
 _FS: float = 250.4
 
 
+def get_baseline_start_times(nwbfile: NWBFile, baseline_labels: list[str], interface_name: str) -> dict[str, float]:
+    """Look up the start_time of each baseline window in the NWB epochs table by its tag.
+
+    Used by the per-baseline stream interfaces, which take one file per baseline
+    label. A baseline window with no file for a given stream (e.g. a missing
+    power-spectrum CSV) is simply not requested, so the other windows still align.
+    """
+    if nwbfile.epochs is None:
+        raise ValueError(
+            f"{interface_name} requires the NWB epochs table to already contain the "
+            "baseline windows (add BaselineEpochsInterface earlier in the converter)."
+        )
+    epochs_df = nwbfile.epochs.to_dataframe()
+    start_times = {row["tags"][0]: float(row["start_time"]) for _, row in epochs_df.iterrows() if len(row["tags"])}
+    missing = [label for label in baseline_labels if label not in start_times]
+    if missing:
+        raise ValueError(
+            f"{interface_name}: baseline window(s) {missing} not found in the NWB epochs table "
+            f"(available: {list(start_times)})."
+        )
+    return {label: start_times[label] for label in baseline_labels}
+
+
 class BaselineEpochsInterface(BaseDataInterface):
     """Adds an NWB epochs-table row for each available baseline window."""
 
@@ -40,8 +63,8 @@ class BaselineEpochsInterface(BaseDataInterface):
             ``start_sample``/``stop_sample`` are the inclusive sample-index window
             for that baseline in the .dat file. ``baseline_label`` is used as the
             NWB epoch's tag, and as the join key for other interfaces (e.g.
-            SeizureInterface, SleepStateInterface) that align their data to
-            these epochs.
+            SeizureInterface, SleepStateInterface), whose ``file_paths`` are
+            keyed by the same labels.
         sampling_frequency : float
             Sampling frequency of the raw recording (default 250.4 Hz).
         """

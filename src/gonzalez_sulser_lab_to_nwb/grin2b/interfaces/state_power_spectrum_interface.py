@@ -1,7 +1,9 @@
 """Per-sleep-state power spectrum interface.
 
 Source file(s): `<subject_dir>/<subject_id>_BL{N}-pw_spectrum.csv`, one per
-baseline window, ordered in time (BL1, BL2, ...).
+baseline window, keyed by baseline label (the epochs-table tag). The lab's
+script did not produce a BL1 file for GRIN2B_140 and GRIN2B_378; those
+animals carry the BL2 spectrum only.
   - 628 rows (0.2 Hz steps from 0 to 125.2 Hz = Nyquist of 250.4 Hz)
   - Columns: hz, s_0, s_1, s_2, s_4
   - s_N = average power spectral density for brain state N
@@ -15,8 +17,7 @@ Written as a single DynamicTable in processing["ecephys"] with one row per
 "baseline_window" column. There is no time axis for this data (it's
 frequency-indexed, not aligned to the recording clock), so the NWB epochs
 table (added by BaselineEpochsInterface, which must run first) is only
-consulted for the baseline_window tag, matched positionally: the first
-file_path aligns to the first epoch, and so on.
+checked to contain each baseline label.
 """
 
 from __future__ import annotations
@@ -29,6 +30,8 @@ from neuroconv.basedatainterface import BaseDataInterface
 from neuroconv.tools.nwb_helpers import get_module
 from neuroconv.utils import DeepDict
 from pynwb import NWBFile
+
+from .baseline_epochs_interface import get_baseline_start_times
 
 # State code mapping confirmed from Hristova et al. 2025 supplementary methods.
 # State 4 = SWD epochs (classed separately from the three sleep states).
@@ -53,17 +56,16 @@ class StatePowerSpectrumInterface(BaseDataInterface):
 
     keywords = ["power spectrum", "EEG", "sleep", "PSD"]
 
-    def __init__(self, file_paths: list[str | Path]):
+    def __init__(self, file_paths: dict[str, str | Path]):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*-pw_spectrum.csv` files, one per baseline window,
-            ordered in time (BL1, BL2, ...) to match the order of rows in the
-            NWB epochs table.
+        file_paths : dict of str to str or Path
+            Paths to `*-pw_spectrum.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1").
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
 
     def get_metadata(self) -> DeepDict:
         return super().get_metadata()
@@ -74,25 +76,13 @@ class StatePowerSpectrumInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        if nwbfile.epochs is None:
-            raise ValueError(
-                "StatePowerSpectrumInterface requires the NWB epochs table to already "
-                "contain the baseline windows (add BaselineEpochsInterface earlier in "
-                "the converter)."
-            )
-        epochs_df = nwbfile.epochs.to_dataframe()
-        if len(epochs_df) != len(self.file_paths):
-            raise ValueError(
-                f"Got {len(self.file_paths)} power-spectrum CSV file(s) but "
-                f"{len(epochs_df)} baseline window(s) in the NWB epochs table. Provide "
-                "exactly one CSV per baseline window, ordered to match the epochs table."
-            )
+        get_baseline_start_times(nwbfile, list(self.file_paths), "StatePowerSpectrumInterface")
 
         # Read all files up front so the merged table's columns (the union of state
         # columns actually present across baseline windows) are known before any
         # row is added — DynamicTable requires every row to fill every column.
         dfs = []
-        for file_path in self.file_paths:
+        for file_path in self.file_paths.values():
             # The CSV has a spurious first data row of "BL1, BL1, ..." — skip it.
             df = pd.read_csv(file_path, skiprows=[1])
             df.columns = ["hz"] + list(df.columns[1:])
@@ -126,9 +116,7 @@ class StatePowerSpectrumInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this row belongs to.",
         )
 
-        for file_path, df, (_, epoch_row) in zip(self.file_paths, dfs, epochs_df.iterrows()):
-            baseline_label = epoch_row["tags"][0] if len(epoch_row["tags"]) else ""
-
+        for baseline_label, df in zip(self.file_paths, dfs):
             n_rows = 10 if stub_test else len(df)
             for _, row in df.head(n_rows).iterrows():
                 row_data = {"frequency_hz": float(row["hz"]), "baseline_window": baseline_label}
