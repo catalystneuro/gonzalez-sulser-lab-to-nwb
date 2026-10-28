@@ -61,7 +61,10 @@ class BaselineEpochsInterface(BaseDataInterface):
             has the form ``{baseline_label: {"start_sample": int, "stop_sample": int}}``,
             e.g. ``[{"baseline_window_1": {"start_sample": 0, "stop_sample": 100}}]``.
             ``start_sample``/``stop_sample`` are the inclusive sample-index window
-            for that baseline in the .dat file. ``baseline_label`` is used as the
+            for that baseline in the .dat file. Optional keys
+            ``sleep_scoring_eeg_channel`` / ``sleep_scoring_emg_channel`` name the
+            electrode-table channels the lab's sleep scorer used for that window;
+            when given, every window must have them. ``baseline_label`` is used as the
             NWB epoch's tag, and as the join key for other interfaces (e.g.
             SeizureInterface, SleepStateInterface), whose ``file_paths`` are
             keyed by the same labels.
@@ -84,10 +87,36 @@ class BaselineEpochsInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
+        all_bounds = [bounds for window in self.baseline_windows for bounds in window.values()]
+        with_channels = ["sleep_scoring_eeg_channel" in bounds for bounds in all_bounds]
+        if any(with_channels) and not all(with_channels):
+            raise ValueError("Sleep-scoring channels must be given for every baseline window or for none.")
+        if all_bounds and all(with_channels):
+            nwbfile.add_epoch_column(
+                name="sleep_scoring_eeg_channel",
+                description=(
+                    "Electrode-table channel (EEG) the lab's sleep scorer used for this baseline window, "
+                    "identified by matching the lab's *_Channels.csv against the raw recording."
+                ),
+            )
+            nwbfile.add_epoch_column(
+                name="sleep_scoring_emg_channel",
+                description=(
+                    "Electrode-table channel (EMG) the lab's sleep scorer used for this baseline window, "
+                    "identified by matching the lab's *_Channels.csv against the raw recording."
+                ),
+            )
+
         for window in self.baseline_windows:
             for baseline_label, bounds in window.items():
+                channels = {
+                    key: bounds[key]
+                    for key in ("sleep_scoring_eeg_channel", "sleep_scoring_emg_channel")
+                    if key in bounds
+                }
                 nwbfile.add_epoch(
                     start_time=bounds["start_sample"] / self.sampling_frequency,
                     stop_time=(bounds["stop_sample"] + 1) / self.sampling_frequency,
                     tags=[baseline_label],
+                    **channels,
                 )

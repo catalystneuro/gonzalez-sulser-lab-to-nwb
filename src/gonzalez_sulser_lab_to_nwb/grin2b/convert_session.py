@@ -65,7 +65,10 @@ EXCLUDED_ANIMAL_IDS = frozenset({362, 363, 364, 365, 366, 367, 368, 369, 371, 38
 def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
     """Parse Sample_start_end_GRIN2B.xlsx → {(animal_id, baseline): {file, start, end}}.
 
-    Applies _DAT_FILE_CORRECTIONS to the "File" column.
+    Applies _DAT_FILE_CORRECTIONS to the "File" column. The xlsx Start/End are
+    1-based inclusive sample numbers (MATLAB indexing); "start"/"end" are
+    returned as 0-based inclusive indices into the .dat file. Checked against the
+    lab's *_Channels.csv files, whose first row is .dat sample Start - 1.
     """
     wb = openpyxl.load_workbook(data_dir / _WINDOWS_XLSX, read_only=True, data_only=True)
     ws = wb.active
@@ -80,8 +83,8 @@ def _load_bl_windows(data_dir: Path) -> dict[tuple[int, str], dict]:
         key = (animal_id, str(d["Baseline"]))
         windows[key] = {
             "file": _DAT_FILE_CORRECTIONS.get(animal_id, d["File"]),
-            "start": int(d["Start"]),
-            "end": int(d["End"]),
+            "start": int(d["Start"]) - 1,
+            "end": int(d["End"]) - 1,
         }
     return windows
 
@@ -189,16 +192,21 @@ def session_to_nwb(
     source_data["EMGRecording"] = dict(file_path=str(dat_path), signal_type="EMG")
     conversion_options["EMGRecording"] = dict(stub_test=stub_test)
 
-    baseline_windows_arg = [
-        {
-            baseline_label: {
-                "start_sample": baseline_windows[baseline_key]["start"],
-                "stop_sample": baseline_windows[baseline_key]["end"],
-            }
+    scoring_channels_yaml = Path(__file__).parent / "metadata" / "grin2b_sleep_scoring_channels.yaml"
+    with open(scoring_channels_yaml) as f:
+        scoring_channels = yaml.safe_load(f).get(f"GRIN2B_{animal_id}", {})
+
+    baseline_windows_arg = []
+    for baseline_key, baseline_label in _BASELINE_LABELS.items():
+        if baseline_windows[baseline_key] is None:
+            continue
+        bounds = {
+            "start_sample": baseline_windows[baseline_key]["start"],
+            "stop_sample": baseline_windows[baseline_key]["end"],
         }
-        for baseline_key, baseline_label in _BASELINE_LABELS.items()
-        if baseline_windows[baseline_key] is not None
-    ]
+        if baseline_key in scoring_channels:
+            bounds["sleep_scoring_eeg_channel"], bounds["sleep_scoring_emg_channel"] = scoring_channels[baseline_key]
+        baseline_windows_arg.append({baseline_label: bounds})
     source_data["BaselineEpochs"] = dict(baseline_windows=baseline_windows_arg, sampling_frequency=_FS)
     conversion_options["BaselineEpochs"] = dict(stub_test=stub_test)
 

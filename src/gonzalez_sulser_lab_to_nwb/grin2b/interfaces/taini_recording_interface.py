@@ -45,8 +45,9 @@ by channel id, so the table ends up with all 16 rows exactly once).
 ADC full-scale range: 13 mV peak-to-peak (+/- 6.5 mV) over the 12-bit
 (0-4095) range -> gain = 13000 uV / 4095 ~= 3.1746 uV/code, the scaling in
 TainiTec's parse_dat.m (shipped in the lab's AUTOMATIC-SLEEP-SCORER repo).
-Applied via recording_extractor.set_channel_gains(); no per-channel
-offset is applied.
+Applied via recording_extractor.set_channel_gains(). The codes are unsigned,
+so a -6.5 mV offset (code 2047.5 = mid-scale = 0 V) is applied via
+set_channel_offsets(); parse_dat.m itself returns 0-13 mV without an offset.
 
 Samples lost to radio packet loss are stored by TainiTec as the code 32767
 (MISSED_PACKET_SYMBOL in parse_dat.m) on all 16 channels. They are written
@@ -86,6 +87,8 @@ _DTYPE = "int16"
 _ADC_BITS = 12
 _ADC_FULL_SCALE_UV = 13000.0  # 13 mV peak-to-peak, in microvolts
 _GAIN_TO_UV = _ADC_FULL_SCALE_UV / (2**_ADC_BITS - 1)  # ~3.1746 uV/code
+# Codes 0..4095 span -6.5..+6.5 mV, so mid-scale (2047.5) is 0 V.
+_OFFSET_UV = -_ADC_FULL_SCALE_UV / 2
 
 # Code TainiTec writes on every channel during radio packet loss (parse_dat.m).
 _MISSED_PACKET_CODE = 2**15 - 1
@@ -226,10 +229,10 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         self.recording_extractor.set_property("filtering", np.array(filterings))
         self.recording_extractor.set_property("location", xy)
 
-        # 12-bit ADC over a 13 mV peak-to-peak full-scale range. Applied uniformly
-        # to all channels. Offset is set to 0 (must still be set explicitly).
+        # 12-bit ADC over a 13 mV peak-to-peak full-scale range, centred on 0 V.
+        # Applied uniformly to all channels.
         self.recording_extractor.set_channel_gains(np.full(_N_CHANNELS, _GAIN_TO_UV))
-        self.recording_extractor.set_channel_offsets(np.zeros(_N_CHANNELS))
+        self.recording_extractor.set_channel_offsets(np.full(_N_CHANNELS, _OFFSET_UV))
 
         # Restrict to only the channels belonging to this signal type. Properties
         # set above are carried over by select_channels, and the electrode table
@@ -292,6 +295,10 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 ),
                 "location": "trapezius muscle",
             }
+        metadata["Ecephys"]["Electrodes"] = [
+            dict(name="hemisphere", description="Hemisphere of the electrode: R (right) or L (left)."),
+            dict(name="filtering", description="No hardware or software filtering applied by the conversion."),
+        ]
         metadata["Ecephys"]["ElectrodeGroups"] = {
             self._electrode_group_name: {
                 "name": self._electrode_group_name,
@@ -307,11 +314,14 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             "description": (
                 f"Full chronic {self.signal_type} recording ({duration_hours:.1f} h). "
                 f"BL1/BL2 baseline windows within this recording are marked in the NWB "
-                f"epochs table. Values converted to volts using a TainiTec 12-bit ADC "
-                f"over a 13 mV peak-to-peak full-scale range ({_GAIN_TO_UV:.4f} uV/code). "
+                f"epochs table. The data are the unsigned 12-bit TainiTec ADC codes (0-4095); "
+                f"conversion and offset give volts over a 13 mV peak-to-peak full-scale range "
+                f"centred on 0 V ({_GAIN_TO_UV:.4f} uV/code, code 2047.5 = 0 V). "
+                f"A small number of samples (under 0.02%) lie outside 0-4095, mostly just above "
+                f"4095 at saturation plus occasional isolated corrupted values; they are kept unchanged. "
                 f"Samples lost to radio packet loss are stored by the TainiTec system as the raw "
                 f"value {_MISSED_PACKET_CODE} on all channels at once "
-                f"({_MISSED_PACKET_CODE * _GAIN_TO_UV / 1000:.1f} mV after conversion) and are kept "
+                f"({(_MISSED_PACKET_CODE * _GAIN_TO_UV + _OFFSET_UV) / 1000:.1f} mV after conversion) and are kept "
                 f"unchanged; exclude raw values equal to {_MISSED_PACKET_CODE} before analysis. "
                 f"The lab's own pipeline sets these samples to 0 and interpolates over them."
             ),

@@ -11,8 +11,12 @@ baseline window, keyed by baseline label (the epochs-table tag).
       0 = Wake
       1 = NREM
       2 = REM
-      4 = SWD (spike-wave discharge epochs, classed separately from the three
-          sleep states; state 3 is not used by the lab's scoring pipeline)
+  - dge_ok.csv is the scorer's output before SWD epochs are relabelled, so it
+    holds only codes 0-2 (checked for every GRIN2B file). In correct.C
+    (Sleep_autoscore_Beta.R, AUTOMATIC-SLEEP-SCORER repo) the scorer sets
+    epochs flagged in *_DGE_SWDs.csv to 4 = SWD and writes them to
+    *-dge_swd.csv, which is not in the shared data; the flags are in the
+    swd_epochs table (SwdEpochsInterface).
 
 Writes a single TimeIntervals table to nwbfile with columns:
   start_time, stop_time, sleep_score (int), sleep_state (str label),
@@ -42,7 +46,6 @@ _STATE_LABELS: dict[int, str] = {
     0: "Wake",
     1: "NREM",
     2: "REM",
-    4: "SWD",
 }
 _EPOCH_DURATION_S: float = 5.0
 
@@ -86,14 +89,17 @@ class SleepStateInterface(BaseDataInterface):
             description=(
                 "Automated sleep state classifications in 5-second epochs "
                 "produced by the Gonzalez-Sulser lab scoring pipeline "
-                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). "
-                "State codes: 0=Wake, 1=NREM, 2=REM, 4=SWD (spike-wave discharge "
-                "epochs, classed separately from the three sleep states)."
+                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER), from its "
+                "*-dge_ok.csv output. State codes: 0=Wake, 1=NREM, 2=REM. These are the scores "
+                "before spike-wave discharge (SWD) epochs are relabelled, so epochs containing SWDs "
+                "are scored as Wake, NREM or REM here. The scorer labels the epochs flagged in the "
+                "swd_epochs table (is_swd) as SWD (state 4); that relabelled output is not part of "
+                "the shared data."
             ),
         )
         sleep_table.add_column(
             name="sleep_score",
-            description="Integer sleep state code (0=Wake, 1=NREM, 2=REM, 4=SWD).",
+            description="Integer sleep state code (0=Wake, 1=NREM, 2=REM).",
         )
         sleep_table.add_column(
             name="sleep_state",
@@ -109,6 +115,9 @@ class SleepStateInterface(BaseDataInterface):
 
             df = pd.read_csv(file_path)
             scores = df["sleep.score"].to_numpy(dtype=np.int32)
+            unexpected_codes = set(np.unique(scores)) - set(_STATE_LABELS)
+            if unexpected_codes:
+                raise ValueError(f"{file_path}: unexpected sleep.score codes {sorted(unexpected_codes)} (expected 0-2).")
             if stub_test:
                 scores = scores[:100]
 
@@ -121,7 +130,7 @@ class SleepStateInterface(BaseDataInterface):
                     start_time=float(start),
                     stop_time=float(stop),
                     sleep_score=int(score),
-                    sleep_state=_STATE_LABELS.get(int(score), f"code_{score}"),
+                    sleep_state=_STATE_LABELS[int(score)],
                     baseline_window=baseline_label,
                 )
 
