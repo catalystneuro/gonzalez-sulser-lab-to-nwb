@@ -1,0 +1,40 @@
+# EEG and EMG channel used by the lab's sleep scorer for each baseline window, as electrode-table
+# channel names (TainiRecordingInterface._CHANNEL_IDS).
+#
+# Identified on 2026-10-28 by matching each <animal>_BL{1,2}_Channels.csv (the two channels picked in
+# Taini_CheckChoose.m, written in mV as code * 13 / 4095 with packet-loss samples set to 0) sample for
+# sample against the 16 .dat channels over 20,000 samples inside the baseline window. Every window below
+# matched exactly one EEG and one EMG channel.
+#
+# GRIN2B_424 is missing: its Channels.csv does not match any channel anywhere in
+# TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat. It is identical to GRIN2B_366's Channels.csv shifted by
+# the difference between the two animals' xlsx start samples, so its sleep/seizure outputs were computed from
+# 366's recording (TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat, not on the share).
+#
+# Taini_CheckChoose.m only offers .dat columns 4/13 (EEG) and 2/15 (EMG). In the lab's channel table
+# (grin2b_eeg_channels.csv) columns 4/13 are M2_anterior R/L, whereas the paper's Supplementary Methods
+# describe the scoring EEG as an S1 channel.
+
+GRIN2B_129: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_130: { BL1: [M2_anterior_L, EMG_R], BL2: [M2_anterior_L, EMG_R] }
+GRIN2B_131: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_132: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_137: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_138: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_139: { BL1: [M2_anterior_R, EMG_L], BL2: [M2_anterior_R, EMG_L] }
+GRIN2B_140: { BL1: [M2_anterior_R, EMG_L], BL2: [M2_anterior_R, EMG_L] }
+GRIN2B_227: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_228: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_229: { BL1: [M2_anterior_R, EMG_L], BL2: [M2_anterior_R, EMG_L] }
+GRIN2B_236: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_237: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_238: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_239: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_240: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_241: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_373: { BL1: [M2_anterior_L, EMG_R], BL2: [M2_anterior_L, EMG_R] }
+GRIN2B_375: { BL1: [M2_anterior_L, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_378: { BL1: [M2_anterior_L, EMG_L], BL2: [M2_anterior_L, EMG_L] }
+GRIN2B_401: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_402: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
+GRIN2B_404: { BL1: [M2_anterior_L, EMG_R], BL2: [M2_anterior_R, EMG_R] }

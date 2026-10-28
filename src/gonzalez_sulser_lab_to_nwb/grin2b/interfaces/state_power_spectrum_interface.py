@@ -1,22 +1,27 @@
 """Per-sleep-state power spectrum interface.
 
 Source file(s): `<subject_dir>/<subject_id>_BL{N}-pw_spectrum.csv`, one per
-baseline window, ordered in time (BL1, BL2, ...).
+baseline window, keyed by baseline label (the epochs-table tag). The lab's
+script did not produce a BL1 file for GRIN2B_140 and GRIN2B_378; those
+animals carry the BL2 spectrum only.
   - 628 rows (0.2 Hz steps from 0 to 125.2 Hz = Nyquist of 250.4 Hz)
   - Columns: hz, s_0, s_1, s_2, s_4
-  - s_N = average power spectral density for brain state N
+  - s_N = mean spectrum over the epochs of brain state N
   - State codes confirmed (Hristova et al. 2025 supplementary):
       0 = Wake, 1 = NREM, 2 = REM,
       4 = SWD (spike-wave discharge epochs, classed separately from sleep states)
-  - TODO: confirm units (µV²/Hz? normalised? baseline-corrected?)
+  - Units, from rat.spectr / rat.mtspec / rat.norm / rat.lsmth in the lab's
+    sleep_score_library.R (AUTOMATIC-SLEEP-SCORER repo): per-5-s-epoch multitaper
+    spectrum of one EEG channel in mV, as log10(power + 1e-6) / 2 (log10 amplitude),
+    minus each frequency's 5th percentile across the window's epochs, smoothed
+    across similar neighbouring epochs. Dimensionless, not an absolute PSD.
 
 Written as a single DynamicTable in processing["ecephys"] with one row per
 (baseline window, frequency bin) and one column per brain state, plus a
 "baseline_window" column. There is no time axis for this data (it's
 frequency-indexed, not aligned to the recording clock), so the NWB epochs
 table (added by BaselineEpochsInterface, which must run first) is only
-consulted for the baseline_window tag, matched positionally: the first
-file_path aligns to the first epoch, and so on.
+checked to contain each baseline label.
 """
 
 from __future__ import annotations
@@ -30,6 +35,8 @@ from neuroconv.tools.nwb_helpers import get_module
 from neuroconv.utils import DeepDict
 from pynwb import NWBFile
 
+from .baseline_epochs_interface import get_baseline_start_times
+
 # State code mapping confirmed from Hristova et al. 2025 supplementary methods.
 # State 4 = SWD epochs (classed separately from the three sleep states).
 # Maps the raw CSV column name to the actual state name used as the NWB column name.
@@ -41,10 +48,10 @@ _STATE_COLS = {
 }
 
 _STATE_DESCRIPTIONS = {
-    "Wake": "Average baseline-corrected PSD during Wake epochs.",
-    "NREM": "Average baseline-corrected PSD during NREM sleep epochs.",
-    "REM": "Average baseline-corrected PSD during REM sleep epochs.",
-    "SWD": "Average baseline-corrected PSD during spike-wave discharge (SWD/seizure) epochs.",
+    "Wake": "Mean normalized log10 amplitude spectrum over Wake epochs.",
+    "NREM": "Mean normalized log10 amplitude spectrum over NREM sleep epochs.",
+    "REM": "Mean normalized log10 amplitude spectrum over REM sleep epochs.",
+    "SWD": "Mean normalized log10 amplitude spectrum over spike-wave discharge (SWD) epochs.",
 }
 
 
@@ -53,17 +60,16 @@ class StatePowerSpectrumInterface(BaseDataInterface):
 
     keywords = ["power spectrum", "EEG", "sleep", "PSD"]
 
-    def __init__(self, file_paths: list[str | Path]):
+    def __init__(self, file_paths: dict[str, str | Path]):
         """
         Parameters
         ----------
-        file_paths : list of str or Path
-            Paths to `*-pw_spectrum.csv` files, one per baseline window,
-            ordered in time (BL1, BL2, ...) to match the order of rows in the
-            NWB epochs table.
+        file_paths : dict of str to str or Path
+            Paths to `*-pw_spectrum.csv` files keyed by baseline label (the
+            epochs-table tag, e.g. "baseline_window_1").
         """
-        super().__init__(file_paths=[str(file_path) for file_path in file_paths])
-        self.file_paths = [Path(file_path) for file_path in file_paths]
+        super().__init__(file_paths={label: str(file_path) for label, file_path in file_paths.items()})
+        self.file_paths = {label: Path(file_path) for label, file_path in file_paths.items()}
 
     def get_metadata(self) -> DeepDict:
         return super().get_metadata()
@@ -74,25 +80,13 @@ class StatePowerSpectrumInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        if nwbfile.epochs is None:
-            raise ValueError(
-                "StatePowerSpectrumInterface requires the NWB epochs table to already "
-                "contain the baseline windows (add BaselineEpochsInterface earlier in "
-                "the converter)."
-            )
-        epochs_df = nwbfile.epochs.to_dataframe()
-        if len(epochs_df) != len(self.file_paths):
-            raise ValueError(
-                f"Got {len(self.file_paths)} power-spectrum CSV file(s) but "
-                f"{len(epochs_df)} baseline window(s) in the NWB epochs table. Provide "
-                "exactly one CSV per baseline window, ordered to match the epochs table."
-            )
+        get_baseline_start_times(nwbfile, list(self.file_paths), "StatePowerSpectrumInterface")
 
         # Read all files up front so the merged table's columns (the union of state
         # columns actually present across baseline windows) are known before any
         # row is added — DynamicTable requires every row to fill every column.
         dfs = []
-        for file_path in self.file_paths:
+        for file_path in self.file_paths.values():
             # The CSV has a spurious first data row of "BL1, BL1, ..." — skip it.
             df = pd.read_csv(file_path, skiprows=[1])
             df.columns = ["hz"] + list(df.columns[1:])
@@ -105,14 +99,21 @@ class StatePowerSpectrumInterface(BaseDataInterface):
         psd_table = DynamicTable(
             name="sleep_state_power_spectra",
             description=(
-                "Average power spectral density per brain state, computed by the "
-                "Gonzalez-Sulser lab automated scoring pipeline "
-                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). "
+                "Mean EEG spectrum per brain state over each 24-h baseline window, computed by the "
+                "Gonzalez-Sulser lab sleep scorer "
+                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER, functions rat.spectr, "
+                "rat.mtspec, rat.norm and rat.lsmth in sleep_score_library.R). The input is a single "
+                "EEG channel in mV, selected by the experimenter during scoring (which channel is not "
+                "recorded in the shared files), with packet-loss gaps interpolated. For each 5-s epoch "
+                "a multitaper spectrum (6 DPSS tapers) is computed and converted to log10 amplitude as "
+                "log10(power + 1e-6) / 2; each frequency is then normalized by subtracting its 5th "
+                "percentile across all epochs of the window, and each epoch is averaged with its most "
+                "similar epochs within +/-5 epochs. The state columns are means over the epochs scored "
+                "as that state. Values are dimensionless log10 amplitude relative to the per-frequency "
+                "5th percentile (a difference of 0.1 is about a 26% change in amplitude), not an "
+                "absolute power spectral density. "
                 "Frequency bins from 0 to 125.2 Hz (Nyquist of 250.4 Hz) in 0.2 Hz steps. "
-                "State columns: Wake, NREM, REM, SWD (spike-wave discharge epochs). "
-                "Spectra are baseline-corrected by normalizing to the average spectral power "
-                "across REM, NREM, and wake for each animal. "
-                "TODO: confirm absolute units (µV^2/Hz or normalised)."
+                "State columns: Wake, NREM, REM, SWD (spike-wave discharge epochs)."
             ),
         )
         psd_table.add_column(name="frequency_hz", description="Frequency in Hz.")
@@ -126,9 +127,7 @@ class StatePowerSpectrumInterface(BaseDataInterface):
             description="Baseline window (epochs-table tag) this row belongs to.",
         )
 
-        for file_path, df, (_, epoch_row) in zip(self.file_paths, dfs, epochs_df.iterrows()):
-            baseline_label = epoch_row["tags"][0] if len(epoch_row["tags"]) else ""
-
+        for baseline_label, df in zip(self.file_paths, dfs):
             n_rows = 10 if stub_test else len(df)
             for _, row in df.head(n_rows).iterrows():
                 row_data = {"frequency_hz": float(row["hz"]), "baseline_window": baseline_label}
