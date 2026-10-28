@@ -6,11 +6,15 @@ script did not produce a BL1 file for GRIN2B_140 and GRIN2B_378; those
 animals carry the BL2 spectrum only.
   - 628 rows (0.2 Hz steps from 0 to 125.2 Hz = Nyquist of 250.4 Hz)
   - Columns: hz, s_0, s_1, s_2, s_4
-  - s_N = average power spectral density for brain state N
+  - s_N = mean spectrum over the epochs of brain state N
   - State codes confirmed (Hristova et al. 2025 supplementary):
       0 = Wake, 1 = NREM, 2 = REM,
       4 = SWD (spike-wave discharge epochs, classed separately from sleep states)
-  - TODO: confirm units (µV²/Hz? normalised? baseline-corrected?)
+  - Units, from rat.spectr / rat.mtspec / rat.norm / rat.lsmth in the lab's
+    sleep_score_library.R (AUTOMATIC-SLEEP-SCORER repo): per-5-s-epoch multitaper
+    spectrum of one EEG channel in mV, as log10(power + 1e-6) / 2 (log10 amplitude),
+    minus each frequency's 5th percentile across the window's epochs, smoothed
+    across similar neighbouring epochs. Dimensionless, not an absolute PSD.
 
 Written as a single DynamicTable in processing["ecephys"] with one row per
 (baseline window, frequency bin) and one column per brain state, plus a
@@ -44,10 +48,10 @@ _STATE_COLS = {
 }
 
 _STATE_DESCRIPTIONS = {
-    "Wake": "Average baseline-corrected PSD during Wake epochs.",
-    "NREM": "Average baseline-corrected PSD during NREM sleep epochs.",
-    "REM": "Average baseline-corrected PSD during REM sleep epochs.",
-    "SWD": "Average baseline-corrected PSD during spike-wave discharge (SWD/seizure) epochs.",
+    "Wake": "Mean normalized log10 amplitude spectrum over Wake epochs.",
+    "NREM": "Mean normalized log10 amplitude spectrum over NREM sleep epochs.",
+    "REM": "Mean normalized log10 amplitude spectrum over REM sleep epochs.",
+    "SWD": "Mean normalized log10 amplitude spectrum over spike-wave discharge (SWD) epochs.",
 }
 
 
@@ -95,14 +99,21 @@ class StatePowerSpectrumInterface(BaseDataInterface):
         psd_table = DynamicTable(
             name="sleep_state_power_spectra",
             description=(
-                "Average power spectral density per brain state, computed by the "
-                "Gonzalez-Sulser lab automated scoring pipeline "
-                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). "
+                "Mean EEG spectrum per brain state over each 24-h baseline window, computed by the "
+                "Gonzalez-Sulser lab sleep scorer "
+                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER, functions rat.spectr, "
+                "rat.mtspec, rat.norm and rat.lsmth in sleep_score_library.R). The input is a single "
+                "EEG channel in mV, selected by the experimenter during scoring (which channel is not "
+                "recorded in the shared files), with packet-loss gaps interpolated. For each 5-s epoch "
+                "a multitaper spectrum (6 DPSS tapers) is computed and converted to log10 amplitude as "
+                "log10(power + 1e-6) / 2; each frequency is then normalized by subtracting its 5th "
+                "percentile across all epochs of the window, and each epoch is averaged with its most "
+                "similar epochs within +/-5 epochs. The state columns are means over the epochs scored "
+                "as that state. Values are dimensionless log10 amplitude relative to the per-frequency "
+                "5th percentile (a difference of 0.1 is about a 26% change in amplitude), not an "
+                "absolute power spectral density. "
                 "Frequency bins from 0 to 125.2 Hz (Nyquist of 250.4 Hz) in 0.2 Hz steps. "
-                "State columns: Wake, NREM, REM, SWD (spike-wave discharge epochs). "
-                "Spectra are baseline-corrected by normalizing to the average spectral power "
-                "across REM, NREM, and wake for each animal. "
-                "TODO: confirm absolute units (µV^2/Hz or normalised)."
+                "State columns: Wake, NREM, REM, SWD (spike-wave discharge epochs)."
             ),
         )
         psd_table.add_column(name="frequency_hz", description="Frequency in Hz.")

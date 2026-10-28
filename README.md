@@ -59,12 +59,12 @@ python -m gonzalez_sulser_lab_to_nwb.grin2b.convert_session \
 | Stream | Source | NWB location |
 |---|---|---|
 | Raw EEG/EMG (full recording) | TainiTec `.dat` (int16, 250.4 Hz) | `acquisition/EEGElectricalSeries`, `acquisition/EMGElectricalSeries` |
-| BL1/BL2 baseline windows | `Sample_start_end_GRIN2B.xlsx` | `epochs` (tagged `BL1`/`BL2`) |
-| Sleep states | `*-dge_ok.csv` (5-s epochs) | `processing/behavior/sleep_states_baseline_window_{1,2}` |
-| Seizure events | `*_Seizures.csv` | `processing/behavior/seizure_events_baseline_window_{1,2}` |
-| SWD epoch counts | `*_DGE_SWDs.csv` | `processing/behavior/swd_epoch_counts_baseline_window_{1,2}` |
-| Seizure ZT totals | `*_Seiz_Totals.csv` | `processing/behavior/seizure_totals_by_zt_baseline_window_{1,2}` |
-| State power spectra | `*-pw_spectrum.csv` | `processing/ecephys/sleep_state_power_spectra_baseline_window_{1,2}` |
+| BL1/BL2 baseline windows | `Sample_start_end_GRIN2B.xlsx` | `epochs` (tagged `baseline_window_1`/`baseline_window_2`) |
+| Sleep states | `*-dge_ok.csv` (5-s epochs) | `processing/behavior/sleep_states` |
+| Seizure events | `*_Seizures.csv` | `processing/behavior/seizure_events` |
+| SWD epoch flags | `*_DGE_SWDs.csv` | `processing/behavior/swd_epochs` |
+| Seizure counts per ZT hour | `*_Seiz_Totals.csv` | `processing/behavior/seizure_counts_by_zt_hour` |
+| State power spectra | `*-pw_spectrum.csv` | `processing/ecephys/sleep_state_power_spectra` |
 
 ## Project tracking
 

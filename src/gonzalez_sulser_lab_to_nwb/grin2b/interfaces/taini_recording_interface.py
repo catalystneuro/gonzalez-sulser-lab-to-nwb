@@ -43,9 +43,14 @@ electrodes reuses the table built by the first (electrodes are deduplicated
 by channel id, so the table ends up with all 16 rows exactly once).
 
 ADC full-scale range: 13 mV peak-to-peak (+/- 6.5 mV) over the 12-bit
-(0-4095) range -> gain = 13000 uV / 4096 codes ~= 3.174 uV/code.
+(0-4095) range -> gain = 13000 uV / 4095 ~= 3.1746 uV/code, the scaling in
+TainiTec's parse_dat.m (shipped in the lab's AUTOMATIC-SLEEP-SCORER repo).
 Applied via recording_extractor.set_channel_gains(); no per-channel
 offset is applied.
+
+Samples lost to radio packet loss are stored by TainiTec as the code 32767
+(MISSED_PACKET_SYMBOL in parse_dat.m) on all 16 channels. They are written
+unchanged and documented in the ElectricalSeries description.
 
 Per-channel stereotaxic AP/ML coordinates (mm, bregma-referenced) were
 provided keyed by (label, hemisphere) — see _STEREOTAXIC_COORDINATES_MM
@@ -76,9 +81,14 @@ _DTYPE = "int16"
 
 # ADC gain — confirmed by TainiTec support.
 # 12-bit ADC (0-4095 codes) spans a 13 mV peak-to-peak full-scale range (+/- 6.5 mV).
+# TainiTec's parse_dat.m divides by the maximum code (4095), not by 4096; the lab's
+# Channels.csv files match that scaling (e.g. code 2594 -> 8.23492 mV).
 _ADC_BITS = 12
 _ADC_FULL_SCALE_UV = 13000.0  # 13 mV peak-to-peak, in microvolts
-_GAIN_TO_UV = _ADC_FULL_SCALE_UV / (2**_ADC_BITS)  # ~3.174 uV/code
+_GAIN_TO_UV = _ADC_FULL_SCALE_UV / (2**_ADC_BITS - 1)  # ~3.1746 uV/code
+
+# Code TainiTec writes on every channel during radio packet loss (parse_dat.m).
+_MISSED_PACKET_CODE = 2**15 - 1
 
 # ---------------------------------------------------------------------------
 # Channel layout — confirmed from grin2b_eeg_channels.csv (2026-06-19)
@@ -298,7 +308,12 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                 f"Full chronic {self.signal_type} recording ({duration_hours:.1f} h). "
                 f"BL1/BL2 baseline windows within this recording are marked in the NWB "
                 f"epochs table. Values converted to volts using a TainiTec 12-bit ADC "
-                f"over a 13 mV peak-to-peak full-scale range ({_GAIN_TO_UV:.4f} uV/code)."
+                f"over a 13 mV peak-to-peak full-scale range ({_GAIN_TO_UV:.4f} uV/code). "
+                f"Samples lost to radio packet loss are stored by the TainiTec system as the raw "
+                f"value {_MISSED_PACKET_CODE} on all channels at once "
+                f"({_MISSED_PACKET_CODE * _GAIN_TO_UV / 1000:.1f} mV after conversion) and are kept "
+                f"unchanged; exclude raw values equal to {_MISSED_PACKET_CODE} before analysis. "
+                f"The lab's own pipeline sets these samples to 0 and interpolates over them."
             ),
         }
 

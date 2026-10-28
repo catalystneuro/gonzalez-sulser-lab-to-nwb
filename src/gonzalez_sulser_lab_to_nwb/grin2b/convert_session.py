@@ -246,8 +246,8 @@ def session_to_nwb(
         conversion_options["Seizures"] = dict(stub_test=stub_test)
 
     if swd_csvs:
-        source_data["SwdCounts"] = dict(file_paths=swd_csvs)
-        conversion_options["SwdCounts"] = dict(stub_test=stub_test)
+        source_data["SwdEpochs"] = dict(file_paths=swd_csvs)
+        conversion_options["SwdEpochs"] = dict(stub_test=stub_test)
 
     if totals_csvs:
         source_data["SeizureTotals"] = dict(file_paths=totals_csvs)

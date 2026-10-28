@@ -23,8 +23,8 @@ Conversion of chronic EEG/EMG recordings from the Gonzalez-Sulser lab (Universit
 | Sleep power spectrum | CSV, 628 rows × cols `[hz, s_0, s_1, s_2, s_4]` | `..._BL{1,2}-pw_spectrum.csv` | `StatePowerSpectrumInterface` (custom) → `DynamicTable` in `processing["ecephys"]`, instantiated once per available baseline; `s_0..s_4` columns renamed to `Wake`/`NREM`/`REM`/`SWD` |
 | Sleep scoring input (`Channels.csv`) | CSV, 21.6M rows × 2 cols | `..._BL{1,2}_Channels.csv` | **Not converted** — derived envelope/RMS feature, not raw data; will not be republished |
 | Seizure timestamps | CSV, tab-sep, cols `sec_start, sec_end, dur` | `Seizure timestamps/<line>_<animalID>_BL{1,2}_Seizures.csv` | `SeizureInterface` (custom) → `TimeIntervals` in `processing["behavior"]`, instantiated once per available baseline |
-| SWD per-epoch counts | CSV, 1 col, 17,280 rows | `<subject_dir>/seiz/<line>_<animalID>_BL{1,2}_DGE_SWDs.csv` | `SwdCountsInterface` (custom) → `TimeSeries` (rate=0.2 Hz) in `processing["behavior"]`, instantiated once per available baseline |
-| Per-ZT seizure totals | CSV, 24 rows × `[N_event, mean_dur, ZT, SWDs, Day]` | `<subject_dir>/seiz/<line>_<animalID>_BL{1,2}_Seiz_Totals.csv` | `SeizureTotalsInterface` (custom) → `DynamicTable` in `processing["behavior"]`, instantiated once per available baseline |
+| SWD per-epoch flags | CSV, 1 col, 17,280 rows, codes 6 = SWD / 4 = no SWD | `<subject_dir>/seiz/<line>_<animalID>_BL{1,2}_DGE_SWDs.csv` | `SwdEpochsInterface` (custom) → `TimeIntervals` (`swd_epochs`, boolean `is_swd`) in `processing["behavior"]` |
+| Per-ZT-hour seizure counts | CSV, 24 rows × `[N_event, mean_dur, ZT, SWDs, Day]` | `<subject_dir>/seiz/<line>_<animalID>_BL{1,2}_Seiz_Totals.csv` | `SeizureTotalsInterface` (custom) → `DynamicTable` (`seizure_counts_by_zt_hour`, from `ZT`/`SWDs` only) in `processing["behavior"]` |
 | Subject metadata | YAML (curated from lab CSVs + paper) | `src/gonzalez_sulser_lab_to_nwb/grin2b/metadata/grin2b_subjects_metadata.yaml` | `Subject` |
 
 ## Directory Structure
@@ -32,7 +32,7 @@ Conversion of chronic EEG/EMG recordings from the Gonzalez-Sulser lab (Universit
 **Raw data share** (`H:/Gonzalez-Sulser-CN-data-share/`, read-only mount):
 
 ```text
-Chronic EEG recordings/                    # 21 .dat files, ~2.2 GB each
+Chronic EEG recordings/                    # 24 .dat files, ~2.1-2.9 GB each
   TAINI_<dev>_<band>_<line>_<animalID>_<cond>-<date>-0000.dat
   grin2b_eeg_channels.csv                  # confirmed channel layout (idx -> electrode label, hemisphere, group)
 Light cycle timing metadata/
@@ -65,7 +65,7 @@ grin2b/
     taini_recording_interface.py  # raw EEG/EMG, full recording 
     baseline_epochs_interface.py  # BaselineEpochsInterface — BL1/BL2 rows in the NWB epochs table
     sleep_state_interface.py
-    seizure_interface.py          # SeizureInterface, SwdCountsInterface, SeizureTotalsInterface
+    seizure_interface.py          # SeizureInterface, SwdEpochsInterface, SeizureTotalsInterface
     state_power_spectrum_interface.py
   metadata/
     grin2b_general_metadata.yaml
@@ -78,17 +78,16 @@ Per-baseline interfaces (`SleepStates`, `Seizures`, `SwdCounts`, `SeizureTotals`
 
 ## File Inventory & Counts
 
-- **Raw `.dat` files present:** 21 (animals 129–132, 137–140, 227–229, 236–241, 373, 375, 378, 424 — the spring 2021/summer 2022 cohort). All 21 are non-excluded animals and are now convertible.
+- **Raw `.dat` files present:** 24 (animals 129–132, 137–140, 227–229, 236–241, 373, 375, 378, 401, 402, 404, 424). These are all 24 non-excluded animals, and all are convertible. The 401/402/404 files were shared on 2026-10-28.
 - **Animals with sleep/seizure processed data:** 37 (129–140, 227–241, 362–369, 371, 373, 375, 378, 382, 383, 401, 402, 404, 430, 433).
 - **Excluded animals (13):** 362–369, 371, 382, 383, 430, 433. These were excluded from Hristova et al. 2025 after a breeding mix-up (the wild types had an unusually high number of seizures); the exclusion is described in the paper. They have processed sleep/seizure data but no raw `.dat` on the share, and the PI prefers not to publish them. `convert_session.EXCLUDED_ANIMAL_IDS` lists them: `session_to_nwb()` refuses them and `convert_all_sessions` skips them.
-- **Gap:** 3 animals (401, 402, 404) have processed sleep/seizure data and xlsx rows but no raw `.dat` on the share, and are not on the exclusion list. Status asked of the lab.
 - **`GRIN2B_424` xlsx filename error (resolved in code):** the xlsx rows for 424 (rows 70–71) have 424's own Start/End offsets but their `File` column names animal 366's recording, `TAINI_1044_C_GRIN2B_366-2022_04_12-0000.dat`. The 424 file on the share is `TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat` (66,244,248 samples, so the xlsx BL2 end sample 61,042,512 fits). Treated as a copy-paste error in the filename only: `convert_session._DAT_FILE_CORRECTIONS` maps 424 to the Redo file and keeps the xlsx offsets. The resulting `session_start_time` is 2022-06-04 11:17 BST (BL1 at 07:00 on 2022-06-05).
 
 ## Sessions / Subjects
 
 - **Animals (GRIN2B line):** 37, identified by 3-digit IDs (e.g. `GRIN2B_129`); all confirmed Long-Evans (`LE-Grin2bem1Mcwi`, RRID:RGD_14394515), Grin2b+/− (Het) or Grin2b+/+ (WT) littermates.
 - **Age:** not available per-animal as an exact DOB; lab confirmed animals were 16–19 weeks old at recording. `Subject.age` is set to the ISO 8601 range `P16W/P19W` for all animals (DANDI-compliant alternative to `date_of_birth`); weight is not available and is omitted.
-- **Sex/genotype gap:** 5 animals (132, 401, 402, 404, 424) still have `TODO` placeholders for `sex`/`genotype` in `grin2b_subjects_metadata.yaml`. 383, 430 and 433 were filled from the excluded-animal list the PI sent on 2026-10-20 (383 Wt M, 430 Wt M, 433 Het M); the other ten excluded animals already matched that list.
+- **Sex/genotype:** set for all 37 animals in `grin2b_subjects_metadata.yaml`, all matching `Subject metadata/GRIN2B_CDKL5_Seizures_Overall.csv`. That CSV lists every GRIN2B animal; 132, 401, 402, 404 and 424 had been left as `TODO` by mistake and were filled from it on 2026-10-28 (132 Wt M, 401/402/404 Wt F, 424 Het M). The excluded-animal list the PI sent on 2026-10-20 also agrees with it.
 - **Per animal:** one NWB file containing the full 72–96 h raw recording, with two baselines (BL1, BL2) — each a 24-h window (21,634,560 samples at 250.4 Hz) — marked as rows in the NWB epochs table. BL1 starts at Zeitgeber time 07:00 (lights-on) the day after headstage connection; BL2 immediately follows BL1. Published sleep/seizure numbers are averaged across BL1+BL2 where both are usable — a few animals may have only one usable baseline, and this is not currently flagged per-animal anywhere.
 - **Recording device:** TainiTec transmitters (device IDs 1044, 1045, 1047, 1048); up to 4 animals recorded in parallel on the same date.
 - **Filename convention** (confirmed): `TAINI_<deviceID>_<band>_<line>_<animalID>_<condition>-<YYYY_MM_DD>-0000.dat`
@@ -110,13 +109,13 @@ Per-baseline interfaces (`SleepStates`, `Seizures`, `SwdCounts`, `SeizureTotals`
 
 | Interface | Writes | Status |
 |---|---|---|
-| `TainiRecordingInterface` (×2: EEG/EMG) | Two `ElectricalSeries` (`EEGElectricalSeries`, `EMGElectricalSeries`), each covering the **full raw recording** (`starting_time=0`), sharing one 16-row electrode table, distinct `ElectrodeGroup`s (`EEGArray`/`EMGArray`) | Channel map, ADC gain (`13000 µV / 4096 codes ≈ 3.174 µV/code`, applied via `set_channel_gains`), and per-channel AP/ML stereotaxic coordinates (keyed by `(label, hemisphere)`, not TAINI pin) are all implemented. |
+| `TainiRecordingInterface` (×2: EEG/EMG) | Two `ElectricalSeries` (`EEGElectricalSeries`, `EMGElectricalSeries`), each covering the **full raw recording** (`starting_time=0`), sharing one 16-row electrode table, distinct `ElectrodeGroup`s (`EEGArray`/`EMGArray`) | Channel map, ADC gain (`13000 µV / 4095 ≈ 3.1746 µV/code`, as in TainiTec's `parse_dat.m`, applied via `set_channel_gains`), and per-channel AP/ML stereotaxic coordinates (keyed by `(label, hemisphere)`, not TAINI pin) are all implemented. Packet-loss samples (`32767`) are kept and documented in the series description. |
 | `BaselineEpochsInterface` | NWB `epochs` table rows for BL1 and/or BL2 (tags `["BL1"]`/`["BL2"]`) | Marks the baseline windows within the full recording; replaces the old per-baseline-file design. |
 | `SleepStateInterface` | `TimeIntervals` (`sleep_states`, `baseline_window` column) in `processing["behavior"]` | Functional; state-code mapping (0=Wake, 1=NREM, 2=REM, 4=SWD) matches `StatePowerSpectrumInterface`. |
 | `SeizureInterface` | `TimeIntervals` (`seizure_events`, `baseline_window` column) in `processing["behavior"]` | Functional. Table is skipped if no baseline has any seizure (e.g. GRIN2B_238). |
-| `SwdCountsInterface` | `TimeIntervals` (`swd_epoch_counts`, 5-s epochs, `baseline_window` column) in `processing["behavior"]` | Functional. |
-| `SeizureTotalsInterface` | `DynamicTable` (`seizure_totals_by_zt`, `baseline_window` column) in `processing["behavior"]` | Functional; column semantics (`N_event`, `mean_dur`, `Day`) still marked TODO for lab confirmation in the table description. |
-| `StatePowerSpectrumInterface` | `DynamicTable` (`sleep_state_power_spectra`, `baseline_window` column) in `processing["ecephys"]`, columns named `Wake`/`NREM`/`REM`/`SWD` (renamed from `s_0`/`s_1`/`s_2`/`s_4`) | Functional; state labels confirmed from paper supplement; absolute PSD units (µV²/Hz vs. normalized) still unconfirmed. These are standard outputs of the lab's sleep pipeline; the spectra in the paper were computed another way (Alfredo, 2026-10-20). |
+| `SwdEpochsInterface` | `TimeIntervals` (`swd_epochs`, 5-s epochs, boolean `is_swd`, `baseline_window` column) in `processing["behavior"]` | Functional; code meaning from `cepstral_analysis.m`. |
+| `SeizureTotalsInterface` | `DynamicTable` (`seizure_counts_by_zt_hour`, `baseline_window` column) in `processing["behavior"]` | Functional; writes the hourly `SWDs` counts only (see Lab analysis code below). |
+| `StatePowerSpectrumInterface` | `DynamicTable` (`sleep_state_power_spectra`, `baseline_window` column) in `processing["ecephys"]`, columns named `Wake`/`NREM`/`REM`/`SWD` (renamed from `s_0`/`s_1`/`s_2`/`s_4`) | Functional; units derived from the lab's R code (see Lab analysis code below). These are standard outputs of the lab's sleep pipeline; the spectra in the paper were computed another way (Alfredo, 2026-10-20). |
 
 `Grin2bNWBConverter` (`grin2bnwbconverter.py`) registers 8 interface slots: `EEGRecording`, `EMGRecording`, `BaselineEpochs`, and one slot for each of the 5 per-baseline stream interfaces. `convert_session.py::session_to_nwb()` resolves the `.dat` file and any available BL1/BL2 windows per `animal_id`, collects each stream's CSVs into a dict keyed by baseline label (a missing CSV is left out of that stream), and merges general + per-subject metadata YAMLs into a single NWB file per subject. `convert_all_sessions.py` batches this over every animal with a `.dat` file present (one `session_to_nwb()` call per animal, covering both baselines), using `ProcessPoolExecutor` and per-subject error capture. CLI `argparse` blocks in both scripts are currently commented out in favor of hardcoded local paths in `__main__` — not yet portable/CI-ready.
 
@@ -128,7 +127,7 @@ Dependencies (`pyproject.toml`, `[grin2b]` extra): `neuroconv`, `spikeinterface>
 
 - **`grin2b_general_metadata.yaml`**: `NWBFile` (experiment description, institution, lab, full experimenter list, keywords, `related_publications: doi:10.1111/epi.18606`), `LightCycle` (12:12 LD, lights-on 07:00, Europe/London), `SleepScoring` (epoch duration, scorer/SWD-detector repo links, confirmed `state_labels` 0/1/2/4 = Wake/NREM/REM/SWD). `Device`/`ElectrodeGroup`/per-channel electrode metadata are deliberately **not** set in this yaml — they are computed programmatically in `TainiRecordingInterface.get_metadata()`/`__init__()` (ADC gain, stereotaxic coordinates, ground/reference details), which is documented in both files as the single source of truth; a duplicate `Device`/`ElectrodeGroup` block here would silently win over the code-computed values via `dict_deep_update(code_metadata, yaml_metadata)` in `convert_session.py`.
 - **Ontology annotation (HERD)** — `grin2b_general_metadata.yaml` carries an `ontology` block in NeuroConv's file-wide format (`ontology.species` / `ontology.strain` / `ontology.brain_regions`, each keyed by the exact value string it annotates, each term an explicit `{id, uri}`). NeuroConv's `run_conversion` writes these as HERD references under `/general/external_resources` automatically — no call in `convert_session.py`. Terms are stated explicitly, not inferred with `infer_*_ontology_metadata`: the per-channel location labels (`S1_Tr`, `M2_Fra`, ...) are lab acronyms that NeuroConv's rat (UBERON fallback) vocabulary does not recognize, and NeuroConv's generic `Long-Evans` strain term is the Charles River `Crl:LE` RRID (`RGD_2308852`), whereas these animals are the MCW line `LE-Grin2bem1Mcwi` (`RRID:RGD_14394515`, used for `Subject.strain = "Long-Evans"`). A GRIN2B_129 stub produces 12 references: species (`NCBITaxon:10116`), strain, 8 electrode-table `location` values, and the 2 `ElectrodeGroup.location` values (`cortex` → `UBERON:0000956`, `trapezius muscle` → `UBERON:0002380`). This replaced the earlier top-level `BrainRegions` key, which newer NeuroConv no longer reads.
-- **`grin2b_subjects_metadata.yaml`**: all 37 `GRIN2B_<id>` entries with `species`, `strain` ("Long-Evans"), `age` (`P16W/P19W`), boilerplate `description` (IACUC/RRID text); `genotype`/`sex` populated for 29/37 animals, `TODO` placeholders remain for the other 8 (132, 383, 401, 402, 404, 424, 430, 433). Missing/`TODO` fields are filtered out at conversion time in `convert_session.py` before being merged into the NWB `Subject` metadata (so a `TODO` string never leaks into an output file); `sex` defaults to `"U"` and `species` to `"Rattus norvegicus"` if absent.
+- **`grin2b_subjects_metadata.yaml`**: all 37 `GRIN2B_<id>` entries with `species`, `strain` ("Long-Evans"), `age` (`P16W/P19W`), boilerplate `description` (IACUC/RRID text); `genotype`/`sex` populated for all 37 animals from `GRIN2B_CDKL5_Seizures_Overall.csv`. Missing/`TODO` fields are filtered out at conversion time in `convert_session.py` before being merged into the NWB `Subject` metadata (so a `TODO` string never leaks into an output file); `sex` defaults to `"U"` and `species` to `"Rattus norvegicus"` if absent.
 
 ## Temporal Alignment
 
@@ -175,16 +174,37 @@ Alfredo replied on 2026-10-20 after meeting with Katerina Hristova (first author
 
 Expected convertible set after these changes: the 17 previously converted animals plus 140, 375, 378 and 424 = 21, i.e. every non-excluded animal with a raw file.
 
+## Animals 401, 402, 404 (2026-10-28)
+
+The lab shared the raw `.dat` files for the three remaining non-excluded animals. Their filenames match the xlsx `File` column, so no correction is needed, and `convert_all_sessions` picks them up automatically. All CSV streams exist for both baselines.
+
+| Animal | `.dat` file | Length | `session_start_time` | Seizures BL1 / BL2 |
+|---|---|---|---|---|
+| 401 | `TAINI_1048_A_Grin2B_401-2022_05_03-0000.dat` | 72.5 h | 2022-05-03 13:48 BST | 39 / 64 |
+| 402 | `TAINI_1045_D_Grin2B_402-2022_05_03-0000.dat` | 72.5 h | 2022-05-03 13:48 BST | 1 / 1 |
+| 404 | `TAINI_1048_A_GRIN2B_404-2022_04_28-0000.dat` | 93.9 h | 2022-04-28 13:23 BST | 1 / 0 |
+
+- Full conversions to `H:/gonzalez-nwbfiles` succeeded with no code changes (15–17 min each, 3 in parallel; 1.1–1.5 GB). 404 has no BL2 seizures, so `seizure_events` holds BL1 rows only.
+- Seizure counts reproduce the per-animal averages in `GRIN2B_CDKL5_Seizures_Overall.csv` (51.5, 1, 0.5).
+- NWB Inspector (`--config dandi`) reports only the best-practice suggestions already seen on the other animals.
+- The `32767` dropout rate within the baselines (401: 8.5% / 6.2%, 402: 1.1% / 1.0%, 404: 1.6% / 1.6%) is within the range of the other animals (see Open Questions).
+- These files were written before the sex/genotype fix and have `sex="U"` and no genotype. 401, 402, 404, 132 and 424 need to be reconverted.
+
+Convertible set: 24 animals, every non-excluded animal.
+
+## Lab analysis code (2026-10-28)
+
+The open questions on dropped samples, power-spectrum units, `Seiz_Totals` columns and `DGE_SWDs` codes were resolved from the lab's public code in [`AUTOMATIC-SLEEP-SCORER`](https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER) and checked against the GRIN2B files:
+
+- **ADC scaling and dropped samples** — `MATLAB_FILES/parse_dat.m` (TainiTec's reader) converts codes to mV as `code / 4095 * 13.0` and defines `MISSED_PACKET_SYMBOL = 2^15-1` for radio packet loss, which it sets to 0. `Channels.csv` matches this scaling (code 2594 → 8.23492 mV in GRIN2B_129 BL1), so the gain is now 13000/4095 µV/code (it was /4096, 0.02% low). The R scorer (`rat.patchsgn` in `Sleep_autoscore_Beta.R`) interpolates over the zeroed gaps. We keep `32767` in the raw data and document it in the `ElectricalSeries` description. Rates within the baselines range from 0.5% to 20% of samples (highest in 238).
+- **Power spectra** — `rat.spectr`, `rat.mtspec`, `rat.norm` and `rat.lsmth` in `R_SleepAutoscorer_FILES/sleep_score_library.R`: per-5-s-epoch multitaper spectrum (6 DPSS tapers) of one EEG channel in mV, `log10(power + 1e-6) / 2`, minus each frequency's 5th percentile across the window's epochs, smoothed across similar neighbouring epochs, then averaged per state (`rat.spctr_by_state`). Dimensionless, not µV²/Hz.
+- **`Seiz_Totals.csv`** — `MATLAB_FILES/cepstral_analysis.m`: `ZT`/`SWDs` are hourly seizure counts (an event crossing an hour boundary counts in the hour it ends); `N_event`, `mean_dur` and `Day` are window totals in row 0 with rows 1–23 zero-padded. In all 47 GRIN2B files the totals equal the `_Seizures.csv` row count and mean `dur`, and `Day` equals the sum of `SWDs`, so only the hourly counts are written.
+- **`DGE_SWDs.csv`** — same script: detected events are marked as 6 (else 4) on the 0.2-s spectrogram grid and every 25th point is kept, one per 5-s epoch. The sleep scorer (`correct.C`) turns 6 into state 4 = SWD. Written as boolean `is_swd`.
+- **Single-baseline caveat** — not an issue: for all 24 animals, `N_events` and `Total_duration` in `GRIN2B_CDKL5_Seizures_Overall.csv` equal the mean of BL1 and BL2, so both baselines were used.
+
 ## Open Questions
 
-Items that need input from the lab (Natalie Hung / Niamh McLaughlin / Alfredo Gonzalez-Sulser) before they can be resolved:
-
-- **Animals 401, 402, 404** — processed data and xlsx rows exist but no raw `.dat`, and they are not on the exclusion list. Were they analysed in the paper, and can the raw files be shared?
-- **Sex/genotype** still missing for 5 animals (132, 401, 402, 404, 424).
-- **Power spectrum units** (`s_0…s_4` in `pw_spectrum.csv`) — known to be baseline-corrected/normalized per-animal, but absolute units (µV²/Hz?) unconfirmed.
-- **`Seiz_Totals.csv` column semantics** (`N_event`, `mean_dur`, `Day` encoding) not fully confirmed.
-- **Single-baseline caveat** — confirm which (if any) animals have only BL1 or only BL2 usable, so downstream averages aren't silently mis-computed; not flagged per-animal in any source yet. Partly answered: 140/378 lack a BL1 spectrum because of a script crash, and 375's missing BL1 seizure files mean zero seizures.
-- **Sleep state classifications folder README** — no per-file documentation exists yet from the lab for what each file/plot in `Sleep state classifications/<animal>/` represents beyond what's been reverse-engineered here.
+None pending with the lab for GRIN2B.
 
 ## TODOs
 

@@ -14,17 +14,23 @@ baseline of each row/sample can be recovered:
    → a single pynwb.epoch.TimeIntervals in processing["behavior"]
      (seizure_events)
 
-2. SwdCountsInterface
+2. SwdEpochsInterface
    Source: `<subject_dir>/seiz/<subject_id>_BL{N}_DGE_SWDs.csv`
-   Single column: DGE_SWDs (per 5-s epoch SWD count)
+   Single column: DGE_SWDs, one value per 5-s epoch: 6 = SWD, 4 = no SWD
+   (written by cepstral_analysis.m in the lab's AUTOMATIC-SLEEP-SCORER repo;
+   the sleep scorer turns 6 into sleep state 4 = SWD)
    → a single pynwb.epoch.TimeIntervals in processing["behavior"]
-     (swd_epoch_counts)
+     (swd_epochs) with a boolean is_swd column
 
 3. SeizureTotalsInterface
    Source: `<subject_dir>/seiz/<subject_id>_BL{N}_Seiz_Totals.csv`
-   Columns: N_event, mean_dur, ZT, SWDs, Day (24 rows = per-ZT-hour)
+   Columns: N_event, mean_dur, ZT, SWDs, Day (24 rows). Per cepstral_analysis.m,
+   ZT/SWDs are the per-hour seizure counts; N_event, mean_dur and Day are
+   baseline-window totals stored in row 0 with rows 1-23 zero-padded. The
+   totals equal the row count / mean duration of the matching Seizures.csv and
+   the sum of SWDs (checked for every GRIN2B file), so only ZT/SWDs are written.
    → a single hdmf.common.DynamicTable in processing["behavior"]
-     (seizure_totals_by_zt); not time-aligned (ZT-hour buckets recur every
+     (seizure_counts_by_zt_hour); not time-aligned (ZT-hour buckets recur every
      baseline window), so the epochs table is only consulted for the
      baseline_window tag, not for timing.
 
@@ -139,10 +145,10 @@ class SeizureInterface(BaseDataInterface):
         behavior_module.add(seizure_table)
 
 
-class SwdCountsInterface(BaseDataInterface):
-    """Interface for per-epoch spike-wave discharge (SWD) counts.
+class SwdEpochsInterface(BaseDataInterface):
+    """Interface for per-epoch spike-wave discharge (SWD) flags.
 
-    Aligns each CSV's per-5-s-epoch counts to the NWB epochs-table row with
+    Aligns each CSV's per-5-s-epoch flags to the NWB epochs-table row with
     the matching baseline tag (added by BaselineEpochsInterface, which must
     run first). All epochs from all files are written into a single
     TimeIntervals table, tagged with the baseline window they came from.
@@ -161,7 +167,7 @@ class SwdCountsInterface(BaseDataInterface):
         file_paths : dict of str to str or Path
             Paths to `*_DGE_SWDs.csv` files keyed by baseline label (the
             epochs-table tag, e.g. "baseline_window_1"). Each has a single
-            column `DGE_SWDs` (17,280 rows).
+            column `DGE_SWDs` (17,280 rows, 6 = SWD, 4 = no SWD).
         epoch_duration_s : float
             Duration of each scored epoch in seconds (default 5.0 s).
         """
@@ -178,19 +184,24 @@ class SwdCountsInterface(BaseDataInterface):
         metadata: dict,
         stub_test: bool = False,
     ) -> None:
-        bl_offsets = get_baseline_start_times(nwbfile, list(self.file_paths), "SwdCountsInterface")
+        bl_offsets = get_baseline_start_times(nwbfile, list(self.file_paths), "SwdEpochsInterface")
 
         swd_table = TimeIntervals(
-            name="swd_epoch_counts",
+            name="swd_epochs",
             description=(
-                "Number of spike-wave discharge (SWD) events per 5-second epoch, "
-                "computed by the Gonzalez-Sulser lab automated scoring pipeline. "
+                "Per-5-second-epoch spike-wave discharge (SWD) flag used by the Gonzalez-Sulser lab "
+                "sleep scorer to label SWD epochs (sleep state 4). Written by cepstral_analysis.m "
+                "(https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER): the detected SWD "
+                "events (seizure_events) are marked on the 0.2-s time grid of the detection "
+                "spectrogram, and every 25th grid point is kept, i.e. one point near the start of "
+                "each epoch. An epoch is therefore flagged when that point falls inside an SWD, not "
+                "whenever an SWD overlaps the epoch. "
                 "start_time/stop_time are in seconds relative to session_start_time."
             ),
         )
         swd_table.add_column(
-            name="swd_count",
-            description="Number of SWD events in this epoch.",
+            name="is_swd",
+            description="True if this epoch is labelled as SWD (DGE_SWDs code 6), False otherwise (code 4).",
         )
         swd_table.add_column(
             name="baseline_window",
@@ -201,19 +212,22 @@ class SwdCountsInterface(BaseDataInterface):
             bl_offset_s = bl_offsets[baseline_label]
 
             df = pd.read_csv(file_path)
-            counts = df["DGE_SWDs"].to_numpy(dtype=np.float32)
+            codes = df["DGE_SWDs"].to_numpy()
+            unexpected_codes = set(np.unique(codes)) - {4, 6}
+            if unexpected_codes:
+                raise ValueError(f"{file_path}: unexpected DGE_SWDs codes {sorted(unexpected_codes)} (expected 4 or 6).")
             if stub_test:
-                counts = counts[:100]
+                codes = codes[:100]
 
-            n_epochs = len(counts)
+            n_epochs = len(codes)
             start_times = bl_offset_s + np.arange(n_epochs) * self.epoch_duration_s
             stop_times = start_times + self.epoch_duration_s
 
-            for start, stop, count in zip(start_times, stop_times, counts):
+            for start, stop, code in zip(start_times, stop_times, codes):
                 swd_table.add_interval(
                     start_time=float(start),
                     stop_time=float(stop),
-                    swd_count=float(count),
+                    is_swd=bool(code == 6),
                     baseline_window=baseline_label,
                 )
 
@@ -222,7 +236,7 @@ class SwdCountsInterface(BaseDataInterface):
 
 
 class SeizureTotalsInterface(BaseDataInterface):
-    """Interface for per-Zeitgeber-hour seizure totals.
+    """Interface for per-Zeitgeber-hour seizure counts.
 
     Not time-aligned to the recording (ZT-hour buckets recur every baseline
     window), so the epochs table is only checked to contain each baseline
@@ -256,31 +270,22 @@ class SeizureTotalsInterface(BaseDataInterface):
         get_baseline_start_times(nwbfile, list(self.file_paths), "SeizureTotalsInterface")
 
         totals_table = DynamicTable(
-            name="seizure_totals_by_zt",
+            name="seizure_counts_by_zt_hour",
             description=(
-                "Per-Zeitgeber-hour seizure event totals. "
-                "ZT (Zeitgeber Time) = hours since lights-on. "
-                "TODO: confirm column definitions (N_event, mean_dur, SWDs, Day) with lab."
+                "Number of seizure (spike-wave discharge) events per hour of each 24-h baseline "
+                "window, from the lab's *_Seiz_Totals.csv (SWDs column, computed by "
+                "cepstral_analysis.m in https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). "
+                "Baseline windows start at lights-on, so hour h is Zeitgeber time ZTh. "
+                "An event that crosses an hour boundary is counted in the hour in which it ends. "
+                "Whole-window totals (event count, mean duration) can be computed from seizure_events."
             ),
         )
         totals_table.add_column(
-            name="zeitgeber_hour", description="Zeitgeber hour (hours since lights-on)."
+            name="zeitgeber_hour", description="Zeitgeber hour (hours since lights-on, 0-23)."
         )
         totals_table.add_column(
             name="number_of_seizure_events",
-            description="Number of seizure events in this ZT hour.",
-        )
-        totals_table.add_column(
-            name="mean_seizure_duration",
-            description="Mean seizure duration (seconds) in this ZT hour.",
-        )
-        totals_table.add_column(
-            name="spike_wave_discharge",
-            description="Number of spike-wave discharge (SWD) in this ZT hour.",
-        )
-        totals_table.add_column(
-            name="Day",
-            description="Day index within the baseline window (TODO: confirm encoding).",
+            description="Number of seizure events in this Zeitgeber hour.",
         )
         totals_table.add_column(
             name="baseline_window",
@@ -293,10 +298,7 @@ class SeizureTotalsInterface(BaseDataInterface):
             for _, row in df.iterrows():
                 totals_table.add_row(
                     zeitgeber_hour=int(row["ZT"]),
-                    number_of_seizure_events=int(row["N_event"]),
-                    mean_seizure_duration=float(row["mean_dur"]),
-                    spike_wave_discharge=int(row["SWDs"]),
-                    Day=int(row["Day"]),
+                    number_of_seizure_events=int(row["SWDs"]),
                     baseline_window=baseline_label,
                 )
 
