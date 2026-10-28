@@ -3,8 +3,9 @@
 # sex and genotype filled from GRIN2B_CDKL5_Seizures_Overall.csv (2026-06-19)
 # Recording dates and associated .dat filenames are derived from Sample_start_end_GRIN2B.xlsx
 #
-# NOTE on animal 424: The xlsx "File" column for 424 names animal 366's recording (copy-paste
-# error). convert_session._DAT_FILE_CORRECTIONS maps it to TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat.
+# NOTE on animal 424: The xlsx "File" column for 424 names animal 366's recording.
+# convert_session._DAT_FILE_CORRECTIONS maps it to TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat,
+# but 424's processed data were computed from 366's recording (see conversion_notes.md).
 #
 # NOTE on excluded animals: 362-369, 371, 382, 383, 430, 433 were excluded from the study
 # (breeding mix-up) and are not converted (convert_session.EXCLUDED_ANIMAL_IDS). Their

@@ -50,8 +50,10 @@ _FS = 250.4  # Hz, confirmed by inspection
 _BASELINE_LABELS = {"BL1": "baseline_window_1", "BL2": "baseline_window_2"}
 
 # Corrections to the "File" column of the xlsx. The GRIN2B_424 rows list animal
-# 366's recording (copy-paste error); their Start/End offsets belong to 424's own
-# Redo recording, which is the only 424 file on the share.
+# 366's recording; the Redo file is the only 424 recording on the share. This was
+# assumed to be a filename typo, but 424's Channels.csv matches 366's recording
+# over 424's windows, not the Redo file, so 424's processed data do not belong to
+# this recording. Pending the lab's answer (see conversion_notes.md).
 _DAT_FILE_CORRECTIONS = {
     424: "TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat",
 }
