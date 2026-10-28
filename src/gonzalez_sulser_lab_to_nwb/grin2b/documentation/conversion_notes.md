@@ -202,25 +202,6 @@ The open questions on dropped samples, power-spectrum units, `Seiz_Totals` colum
 - **`DGE_SWDs.csv`** — same script: detected events are marked as 6 (else 4) on the 0.2-s spectrogram grid and every 25th point is kept, one per 5-s epoch. The sleep scorer (`correct.C`) turns 6 into state 4 = SWD. Written as boolean `is_swd`.
 - **Single-baseline caveat** — not an issue: for all 24 animals, `N_events` and `Total_duration` in `GRIN2B_CDKL5_Seizures_Overall.csv` equal the mean of BL1 and BL2, so both baselines were used.
 
-## Issue #10 triage (2026-10-28)
-
-Findings from the reproduction attempt in https://github.com/catalystneuro/gonzalez-sulser-lab-to-nwb/issues/10, checked against the source data:
-
-- 1 (missing animals): accurate for the July upload (17 files). The rerun holds all 24 analysed animals, 15 Het and 9 WT as in the paper. Pharmacology, infusion, western blot, development and visual-scoring data are not on the share.
-- 2 (132 sex/genotype): accurate; fixed in the YAML.
-- 3 (selection undocumented): accurate for the July upload; to be stated in the Dandiset description. GRIN2B-228 (Het) has 0 SWDs in BL1 and 2 in BL2 in the lab's own CSVs, a source-data property.
-- 4 (sleep code 4): accurate. `dge_ok.csv` is the scorer's output before SWD relabelling and holds only 0–2; description fixed, code 4 removed. The relabelled `dge_swd.csv` is not on the share.
-- 5, 6, 7 (DGE_SWDs, Seiz_Totals, power spectra): accurate; fixed (see Lab analysis code).
-- 8 (raw format): accurate. Codes are unsigned 0–4095; a −6.5 mV offset now centres the ±6.5 mV range on 0 V (DC drops from ~8 mV to ~1.5 mV). `32767` packet loss is documented. Under 0.02% of samples lie outside 0–4095 (mostly 4096–4115 at saturation, plus isolated values near 21,900); documented, kept unchanged.
-- 9 (asset summary count): DANDI-side summary; recheck after upload.
-- 10, 11, 12, 14: about the paper or its methods, not the conversion.
-- 13 (scoring channels): fixed. Matching each `Channels.csv` against the `.dat` channels identifies the scored EEG and EMG channel for every baseline of 23 animals (`metadata/grin2b_sleep_scoring_channels.yaml`), written as `sleep_scoring_eeg_channel` / `sleep_scoring_emg_channel` columns in the epochs table. The EEG channel is always M2_anterior (R or L) in the lab's channel table, which disagrees with the paper's statement that an S1 channel was used.
-
-Found during triage:
-
-- The xlsx `Start`/`End` are 1-based. `Channels.csv` starts at `.dat` index `Start − 1`, so the baseline epochs (and every derived stream) were 1 sample (4 ms) late; `_load_bl_windows` now converts to 0-based. Baseline windows now start on whole seconds.
-- GRIN2B_424's `Channels.csv` does not match any channel anywhere in the 424 Redo recording, so its sleep/seizure outputs come from another recording, and the `_DAT_FILE_CORRECTIONS` assumption (filename typo only) does not hold.
-
 ## Open Questions
 
 - GRIN2B_424: which recording were its sleep/seizure outputs computed from (the 366 file named in the xlsx, or an earlier 424 session), and can it be shared?
