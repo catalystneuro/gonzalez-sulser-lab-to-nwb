@@ -144,6 +144,7 @@ _STEREOTAXIC_COORDINATES_MM: dict[tuple[str, str], tuple[float, float]] = {
 # Electrode group name -> ElectricalSeries name prefix
 _SIGNAL_TYPE_TO_GROUP = {"EEG": "EEGArray", "EMG": "EMGArray"}
 _DEVICE_METADATA_KEY = "TainiTecWirelessEEG"
+_DEVICE_MODEL_METADATA_KEY = "TainiTecTransmitter"
 
 
 class TainiRecordingInterface(BaseRecordingExtractorInterface):
@@ -253,8 +254,20 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
 
         # Dict-based NeuroConv metadata: devices live in a top-level "Devices" registry and
         # electrode groups in Ecephys["ElectrodeGroups"], both keyed by a metadata key; a group
-        # links to its device through "device_metadata_key". Only this instance's own group is
-        # emitted -- the EEG and EMG instances' entries merge in the converter's metadata.
+        # links to its device through "device_metadata_key", and the device to its model through
+        # "device_model_metadata_key" (pynwb 4 moved the manufacturer to DeviceModel). Only this
+        # instance's own group is emitted -- the EEG and EMG instances' entries merge in the
+        # converter's metadata.
+        metadata["DeviceModels"] = {
+            _DEVICE_MODEL_METADATA_KEY: {
+                "name": "TainiTec wireless EEG and EMG transmitter",
+                "manufacturer": "TainiTec",
+                "description": (
+                    "16-channel wireless telemetry transmitter, 12-bit ADC over a 13 mV "
+                    "peak-to-peak full-scale range, 250.4 Hz sampling."
+                ),
+            }
+        }
         metadata["Devices"] = {
             _DEVICE_METADATA_KEY: {
                 "name": "TainiTecWirelessEEG",
@@ -267,7 +280,7 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
                     "not interconnected. A separate cerebellar ground screw (-11.5 mm AP, "
                     "+/-0.5 mm ML from bregma) was connected to the grid via silver paint."
                 ),
-                "manufacturer": "TainiTec",
+                "device_model_metadata_key": _DEVICE_MODEL_METADATA_KEY,
             }
         }
 
