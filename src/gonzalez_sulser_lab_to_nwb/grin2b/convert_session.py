@@ -50,13 +50,18 @@ _FS = 250.4  # Hz, confirmed by inspection
 _BASELINE_LABELS = {"BL1": "baseline_window_1", "BL2": "baseline_window_2"}
 
 # Corrections to the "File" column of the xlsx. The GRIN2B_424 rows list animal
-# 366's recording; the Redo file is the only 424 recording on the share. This was
-# assumed to be a filename typo, but 424's Channels.csv matches 366's recording
-# over 424's windows, not the Redo file, so 424's processed data do not belong to
-# this recording. Pending the lab's answer (see conversion_notes.md).
+# 366's recording by mistake; the Start/End values are correct for the Redo file.
+# The lab re-ran 424's analysis on the Redo file on 2026-11-11 and confirmed these
+# windows (see conversion_notes.md).
 _DAT_FILE_CORRECTIONS = {
     424: "TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat",
 }
+
+# Animals whose *_DGE_SWDs.csv is not in the per-epoch format and is left out of the
+# conversion. GRIN2B_424's re-analysed files have no header and hold the full 0.2-s
+# detection grid (424,208 rows, not 17,280 epochs), which does not reduce to the
+# 5-s sleep epochs. Pending the lab's answer (see conversion_notes.md).
+_SKIP_SWD_EPOCHS = frozenset({424})
 
 # Animals excluded from Hristova et al. 2025 after a breeding mix-up (the wild types
 # had an unusually high number of seizures). Not analysed in the paper and, per the
@@ -238,7 +243,7 @@ def session_to_nwb(
         if seizure_csv.exists():
             seizure_csvs[baseline_label] = str(seizure_csv)
 
-        if swd_csv.exists():
+        if swd_csv.exists() and animal_id not in _SKIP_SWD_EPOCHS:
             swd_csvs[baseline_label] = str(swd_csv)
 
         if totals_csv.exists():
