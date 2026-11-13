@@ -9,7 +9,7 @@ from .interfaces.baseline_epochs_interface import BaselineEpochsInterface
 from .interfaces.sleep_state_interface import SleepStateInterface
 from .interfaces.seizure_interface import (
     SeizureInterface,
-    SwdCountsInterface,
+    SwdEpochsInterface,
     SeizureTotalsInterface,
 )
 from .interfaces.state_power_spectrum_interface import StatePowerSpectrumInterface
@@ -25,7 +25,7 @@ class Grin2bNWBConverter(NWBConverter):
     BL2, ...) within that recording are marked in the NWB epochs table
     (BaselineEpochs), which must run before all derived streams below since
     each aligns its per-file data to the epochs table rows. SleepStates,
-    Seizures, SwdCounts, SeizureTotals, and StatePowerSpectrum each take one
+    Seizures, SwdEpochs, SeizureTotals, and StatePowerSpectrum each take one
     file per baseline window (ordered BL1, BL2, ...) and write a single
     merged table tagged with a "baseline_window" column, so all baselines
     coexist in one table in processing["behavior"] / processing["ecephys"].
@@ -40,7 +40,7 @@ class Grin2bNWBConverter(NWBConverter):
         BaselineEpochs=BaselineEpochsInterface,
         SleepStates=SleepStateInterface,
         Seizures=SeizureInterface,
-        SwdCounts=SwdCountsInterface,
+        SwdEpochs=SwdEpochsInterface,
         SeizureTotals=SeizureTotalsInterface,
         StatePowerSpectrum=StatePowerSpectrumInterface,
     )
