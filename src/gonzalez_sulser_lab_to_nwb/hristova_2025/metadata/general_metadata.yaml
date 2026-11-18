@@ -16,7 +16,6 @@ NWBFile:
     baseline windows (BL1, BL2) were extracted per animal. Automated pipelines
     classified sleep states (Wake, NREM, REM) in 5-s epochs and detected SWD
     seizure events. Data contribute to the SFARI Autism Rat Models Consortium (ARC).
-    See Hristova et al., Epilepsia 2025 (doi:10.1111/epi.18606).
 
   institution: University of Edinburgh
   lab: Gonzalez-Sulser Lab
@@ -70,6 +69,29 @@ Subject:
     with support from the Simons Foundation Autism Research Initiative (LE-Grin2bem1Mcwi, RRID:RGD_14394515), and
     Grin2b heterozygous knockouts are hereafter referred to as Grin2b+/-, whereas wild-type littermates are
     Grin2b+/+. Subject.genotype is LE-Grin2bem1Mcwi for heterozygous knockouts and WT for wild-type littermates.
+
+# HED annotation of the sleep states, written by SleepStateInterface: a MeaningsTable on the sleep_state column of
+# processing/behavior/sleep_states with the meaning and HED tags of each state, the HED schema versions
+# (HedLabMetaData, ndx-hed), and a HERD reference from each state to a Neuro Behavior Ontology term. The HED tags follow
+# the proposed NWB best practice for sleep states (https://github.com/NeurodataWithoutBorders/nwbinspector/pull/775).
+SleepStates:
+  hed_schema_version: '["8.4.0", "sc:score_2.1.0"]'
+  description: >-
+    Meaning of each sleep state label. Scored in 5-s epochs by the Gonzalez-Sulser lab's automated sleep scorer
+    (https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER) from one EEG and one EMG channel.
+  states:
+    Wake:
+      meaning: Wakefulness.
+      HED: Awake
+      ontology_term: { id: "NBO:0000066", uri: "http://purl.obolibrary.org/obo/NBO_0000066" }
+    NREM:
+      meaning: Non-rapid eye movement (NREM) sleep.
+      HED: Asleep
+      ontology_term: { id: "NBO:0000161", uri: "http://purl.obolibrary.org/obo/NBO_0000161" }
+    REM:
+      meaning: Rapid eye movement (REM) sleep.
+      HED: Asleep, sc:Sleep-stage-REM
+      ontology_term: { id: "NBO:0000159", uri: "http://purl.obolibrary.org/obo/NBO_0000159" }
 
 # Ontology annotation (HERD). NeuroConv reads every term from this one file-wide `ExternalResources`
 # block, each map keyed by the exact value string it annotates, and writes the references in-file under
