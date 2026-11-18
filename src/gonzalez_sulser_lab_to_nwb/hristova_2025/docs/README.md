@@ -1,7 +1,7 @@
 # Hristova 2025 conversion
 
 Documentation of the conversion of the GRIN2B recordings of Hristova et al. (2025) to NWB, for the people who run it.
-For the conversion pipeline in general, see the [repository docs](../../../../docs/).
+For the conversion pipeline in general and how to extend it, see the [repository docs](../../../../docs/).
 
 1. [Data organization](data_organization.md): the data share layout, subjects, the recording protocol and the lab files.
 2. [Converting sessions](converting_sessions.md): converting sessions, and the output files.

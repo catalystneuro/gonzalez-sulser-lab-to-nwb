@@ -1,7 +1,7 @@
 # Data organization
 
-The conversion reads the lab's data share (`H:/Gonzalez-Sulser-CN-data-share` on the CatalystNeuro machine). It covers
-the GRIN2B rats of Hristova K, et al. "Absence seizures and sleep-wake abnormalities in a rat model of GRIN2B
+The conversion reads the lab's data share, the folder described below, given to the conversion as `<data folder>`.
+It covers the GRIN2B rats of Hristova K, et al. "Absence seizures and sleep-wake abnormalities in a rat model of GRIN2B
 neurodevelopmental disorder." Epilepsia. 2025;66:4996-5013.
 [doi:10.1111/epi.18606](https://doi.org/10.1111/epi.18606).
 
@@ -27,18 +27,20 @@ Sleep state classifications/
       GRIN2B_<id>_BL{1,2}_Seizures.csv                             copy of the file in Seizure timestamps/
 Seizure timestamps/
   GRIN2B_<id>_BL{1,2}_Seizures.csv                                 seizure start, end and duration
-Analysed_GRIN2B_424 1/                                             the lab's re-analysis of GRIN2B_424 (see below)
+Analysed_GRIN2B_424 1/Analysed_GRIN2B_424/
+  rat_day_index_GRIN2B.csv                                         windows and scoring channels of every animal
 additional recordings/                                             16p11.2 recordings, not part of this conversion
 ```
 
-The paper, its supplementary material and the lab's emails are also in the share root.
+The paper and its supplementary material are also in the share root. A new animal's files go in the same folders
+with the same names; see [Converting sessions](converting_sessions.md#adding-animals).
 
 ## Subjects
 
 The lab files list 37 GRIN2B rats (Long-Evans, LE-Grin2bem1Mcwi heterozygous knockouts and wild-type littermates).
-13 of them (362 to 369, 371, 382, 383, 430, 433) were excluded from the paper after a breeding mix-up, and the PI
-asked that they not be published. They have no raw recording on the share and are listed in
-`EXCLUDED_ANIMAL_IDS` in `convert_session.py`, which refuses to convert them.
+13 of them (362 to 369, 371, 382, 383, 430, 433) were excluded from the paper after a breeding mix-up and are not
+published. They have no raw recording on the share and are listed in `EXCLUDED_ANIMAL_IDS` in `convert_session.py`,
+which refuses to convert them.
 
 The other 24 animals are converted, one NWB file each:
 
@@ -78,6 +80,10 @@ The binary layout (16 int16 channels interleaved, no header) and the channel ord
 `Baseline` (`BL1` or `BL2`), `Start` and `End`. Start and End are 1-based inclusive sample numbers in the `.dat` file
 (MATLAB indexing); the conversion subtracts 1. The conversion finds each animal's raw file from the `File` column.
 
+`rat_day_index_GRIN2B.csv` gives, for every animal, the sample windows used by the lab's analysis and the scoring
+EEG and EMG channel of each window (`eeg` and `emg`, 1-based `.dat` columns). The conversion does not read it; it is
+the source of `metadata/sleep_scoring_channels.yaml` for a new animal.
+
 `GRIN2B_CDKL5_Seizures_Overall.csv` has one row per animal of the GRIN2B and CDKL5 lines, with columns `ID`,
 `Genotype` (`Het` or `Wt`), `Sex` (`Male` or `Female`), `Line` (`Grin2b` or `Cdkl5`), and the animal's mean seizure
 count and duration over BL1 and BL2. The conversion reads the sex and genotype from it (see [Metadata](metadata.md)).
@@ -98,11 +104,11 @@ and codes:
 
 - GRIN2B_424: the `File` column of its xlsx rows names animal 366's recording. The Start and End values are right for
   424's own file, `TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat`, which `DAT_FILE_CORRECTIONS` in
-  `convert_session.py` substitutes. The lab's first analysis of 424 had also read 366's recording; on 2026-11-11 the
-  lab re-ran it on 424's own file (`Analysed_GRIN2B_424 1/`), and the new files replaced the old ones in the standard
-  folders. The re-analysed `DGE_SWDs.csv` holds the full 0.2-s detection grid instead of one value per 5-s epoch, so
-  424 is converted without the SWD epoch table (`SKIPPED_STREAMS`) until the lab sends the per-epoch file.
-  `GRIN2B_CDKL5_Seizures_Overall.csv` still gives 424's seizure count from the first analysis.
+  `convert_session.py` substitutes. Its processed files come from an analysis of that file (`Analysed_GRIN2B_424 1/`,
+  copied into the standard folders). Its `DGE_SWDs.csv` holds the full 0.2-s detection grid instead of one value per
+  5-s epoch and cannot be aligned to the sleep epochs, so 424 is converted without the SWD epoch table
+  (`SKIPPED_STREAMS`). The seizure count of 424 in `GRIN2B_CDKL5_Seizures_Overall.csv` (1,146.5) is from an earlier
+  analysis of the wrong recording; the converted files have 1,126 (BL1) and 995 (BL2).
 - GRIN2B_140 and GRIN2B_378: no BL1 power spectrum (the lab's script fails for them). Their files have the BL2
   spectrum only.
 - GRIN2B_375: no seizure in either window. The BL1 seizure files are missing and the BL2 `Seizures.csv` is empty, so

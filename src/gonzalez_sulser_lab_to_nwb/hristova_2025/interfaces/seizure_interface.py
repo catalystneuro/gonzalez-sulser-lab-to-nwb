@@ -8,7 +8,7 @@
 - SeizureTotalsInterface: Sleep state classifications/<subject>/seiz/<subject>_BL{N}_Seiz_Totals.csv, columns
   N_event, mean_dur, ZT, SWDs, Day (24 rows). ZT/SWDs are hourly seizure counts; N_event, mean_dur and Day are
   window totals in row 0 with rows 1-23 zero-padded, and equal the row count and mean duration of Seizures.csv and
-  the sum of SWDs (checked for every GRIN2B file), so only ZT/SWDs are written, to
+  the sum of SWDs (true of every GRIN2B file), so only ZT/SWDs are written, to
   processing/behavior/seizure_counts_by_zt_hour.
 """
 

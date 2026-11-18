@@ -46,7 +46,8 @@ The conversion pipeline in general, in [docs/](docs/):
 
 - [The conversion pipeline](docs/conversion_pipeline.md): NWB, NeuroConv, the parts of a conversion and the steps from
   recordings to DANDI.
-- [Building a new conversion pipeline](docs/new_conversion_pipeline.md): converting another experiment to NWB.
+- [Building a new conversion pipeline](docs/new_conversion_pipeline.md): extending this conversion (more animals, a
+  new stream, another SFARI line) and converting another experiment to NWB.
 
 The Hristova 2025 conversion, in [hristova_2025/docs/](src/gonzalez_sulser_lab_to_nwb/hristova_2025/docs/):
 

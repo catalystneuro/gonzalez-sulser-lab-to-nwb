@@ -71,8 +71,8 @@ uploaded (see [DANDI staging](dandi_staging.md)).
 from gonzalez_sulser_lab_to_nwb.hristova_2025.convert_session import session_to_nwb
 
 nwbfile_path = session_to_nwb(
-    data_dir="H:/Gonzalez-Sulser-CN-data-share",
-    output_dir="H:/gonzalez-nwbfiles",
+    data_dir="<data folder>",
+    output_dir="<output folder>",
     animal_id=129,
     stub_test=True,
 )
@@ -81,6 +81,22 @@ nwbfile_path = session_to_nwb(
 `session_to_nwb` overwrites an existing file. `subjects_file_path` sets another subject sheet than the default
 `Subject metadata/GRIN2B_CDKL5_Seizures_Overall.csv` of the data folder. `dataset_to_nwb` in
 `convert_all_sessions.py` is the function behind `hristova-2025 convert`.
+
+## Adding animals
+
+To convert a new GRIN2B animal recorded and analyzed the same way:
+
+1. Put its files in the data share with the usual names (see [Data organization](data_organization.md)): the `.dat`
+   file in `Chronic EEG recordings/`, the processed files in `Sleep state classifications/GRIN2B_<id>/` and
+   `Seizure timestamps/`.
+2. Add its BL1 and BL2 rows to `Sample_start_end_GRIN2B.xlsx` and its row to
+   `GRIN2B_CDKL5_Seizures_Overall.csv`.
+3. Add its sleep-scoring channels to `metadata/sleep_scoring_channels.yaml` (see [Metadata](metadata.md#sleep-scoring-channels)).
+4. Convert it with `--stub-test`, check the stub file, then convert it in full. `convert` without `--overwrite`
+   converts only the animals that have no file yet.
+
+A missing processed file leaves that window out of that stream only. A file in another layout raises an error; see
+[Troubleshooting](troubleshooting.md).
 
 ## Tests
 

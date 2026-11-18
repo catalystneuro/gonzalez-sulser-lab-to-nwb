@@ -64,14 +64,15 @@ The 14 EEG channels and the 2 EMG channels are written as two series of the same
 One epochs-table row per window, tagged `baseline_window_1` (BL1) or `baseline_window_2` (BL2). The row also gives
 the EEG and EMG channel the lab's sleep scorer used for the window, from `metadata/sleep_scoring_channels.yaml`. These
 were found by matching each window's `*_Channels.csv` against the 16 raw channels; every window matched one M2
-anterior EEG channel and one EMG channel. The paper's supplementary methods name an S1 channel; the lab confirmed this
-is an error in the paper.
+anterior EEG channel and one EMG channel. The paper's supplementary methods name an S1 channel, which is an error in the
+paper.
 
 ## Sleep states
 
 `*-dge_ok.csv` has one column, `sleep.score`, with one value per 5-s epoch (17,280 per window): 0 = Wake, 1 = NREM,
 2 = REM. These are the scores before the scorer relabels SWD epochs as state 4; the relabelled file is not in the
-share. The SWD flags are in the SWD epochs table.
+share. The SWD flags are in the SWD epochs table. Each state label is annotated with its meaning, HED tags and a Neuro
+Behavior Ontology term (see [Metadata](metadata.md#hed-tags-of-the-sleep-states)).
 
 ## Seizure events
 

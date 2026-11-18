@@ -9,7 +9,7 @@ that they can be corrected without changing code. After an edit, convert the aff
 
 | File | Content |
 |---|---|
-| `metadata/general_metadata.yaml` | experiment description, institution, lab, experimenters, keywords, related publication; the subject fields shared by every animal (species, strain, age, description); ontology terms |
+| `metadata/general_metadata.yaml` | experiment description, institution, lab, experimenters, keywords, related publication; the subject fields shared by every animal (species, strain, age, description); HED tags of the sleep states; ontology terms |
 | `metadata/sleep_scoring_channels.yaml` | the EEG and EMG channel the lab's sleep scorer used for each animal and window |
 | `Subject metadata/GRIN2B_CDKL5_Seizures_Overall.csv` (data share) | sex and genotype of each animal |
 
@@ -48,8 +48,8 @@ For each subject, `session_to_nwb` merges, in this order:
 | `Genotype` `Het` | `genotype` `LE-Grin2bem1Mcwi` (the RGD name of the line, RRID:RGD_14394515) |
 | `Genotype` `Wt` | `genotype` `WT` |
 
-`strain` is the background strain, `Long-Evans`, for every animal. `age` is `P16W/P19W`: the lab confirmed the
-animals were 16 to 19 weeks old at recording, and dates of birth are not available.
+`strain` is the background strain, `Long-Evans`, for every animal. `age` is `P16W/P19W`: the animals were 16 to 19
+weeks old at recording, and dates of birth are not available.
 
 ## Ontology terms
 
@@ -68,8 +68,32 @@ Each map is keyed by the exact value it annotates:
 NeuroConv has no map for `genotype`, so the genotype carries no reference; the RRID of the line is in the subject
 description.
 
+The sleep states have their own ontology terms, in the `SleepStates` block (see below).
+
 A new location string or experimenter needs an entry with exactly the same spelling. `tests/test_external_resources.py`
 checks that the block follows NeuroConv's schema and that the terms reach the file.
+
+## HED tags of the sleep states
+
+The `SleepStates` block of `general_metadata.yaml` describes each value of the `sleep_state` column:
+
+```yaml
+SleepStates:
+  hed_schema_version: '["8.4.0", "sc:score_2.1.0"]'
+  description: Meaning of each sleep state label. ...
+  states:
+    Wake: { meaning: Wakefulness., HED: Awake, ontology_term: { id: "NBO:0000066", uri: ... } }
+    NREM: { meaning: Non-rapid eye movement (NREM) sleep., HED: Asleep, ontology_term: { id: "NBO:0000161", ... } }
+    REM: { meaning: Rapid eye movement (REM) sleep., HED: "Asleep, sc:Sleep-stage-REM", ontology_term: { id: "NBO:0000159", ... } }
+```
+
+`SleepStateInterface` writes it as a `MeaningsTable` on the `sleep_state` column, with the schema versions in the
+file's `HedLabMetaData` ([ndx-hed](https://github.com/hed-standard/ndx-hed)), and links each state to its
+[Neuro Behavior Ontology](https://www.ebi.ac.uk/ols4/ontologies/nbo) term in the file's HERD. The tags use the HED
+standard schema and the SCORE library (`sc:`), as in the
+[proposed NWB best practice for sleep states](https://github.com/NeurodataWithoutBorders/nwbinspector/pull/775). The
+conversion validates the tags against the schema and fails on an invalid tag. The block must define exactly the
+states Wake, NREM and REM.
 
 ## Sleep-scoring channels
 

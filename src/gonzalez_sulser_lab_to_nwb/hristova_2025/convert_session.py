@@ -42,9 +42,9 @@ GENOTYPE = {"Het": "LE-Grin2bem1Mcwi", "Wt": "WT"}
 TIMEZONE = ZoneInfo("Europe/London")
 LIGHTS_ON = time(7)  # Zeitgeber time 0; BL1 starts at lights-on the day after the recording started
 
-# Excluded from Hristova et al. 2025 after a breeding mix-up; per the PI (2026-10-20) not published on DANDI.
+# Excluded from Hristova et al. 2025 after a breeding mix-up, and not published.
 EXCLUDED_ANIMAL_IDS = frozenset({362, 363, 364, 365, 366, 367, 368, 369, 371, 382, 383, 430, 433})
-# The xlsx "File" of GRIN2B_424 names 366's recording; its Start/End are right for 424's own file (lab, 2026-11-11).
+# The xlsx "File" of GRIN2B_424 names 366's recording; its Start/End are those of 424's own file.
 DAT_FILE_CORRECTIONS = {424: "TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat"}
 # GRIN2B_424's re-analysed DGE_SWDs.csv holds the full 0.2-s detection grid, not one code per 5-s epoch, and cannot
 # be aligned to the sleep epochs. Left out until the lab sends the per-epoch file.
@@ -60,7 +60,7 @@ def load_baseline_windows(data_dir: str | Path) -> dict[int, dict[str, dict]]:
     """Read Sample_start_end_GRIN2B.xlsx: animal ID -> baseline ("BL1", "BL2") -> {"file", "start", "end"}.
 
     The xlsx Start/End are 1-based inclusive sample numbers (MATLAB); "start"/"end" are 0-based inclusive indices
-    into the .dat file, as checked against the lab's *_Channels.csv. DAT_FILE_CORRECTIONS is applied to "file".
+    into the .dat file (the first row of the lab's *_Channels.csv is .dat sample Start - 1). DAT_FILE_CORRECTIONS is applied to "file".
     """
     table = pd.read_excel(Path(data_dir) / WINDOWS_FILE).dropna(subset=["Animal ID"])
     windows: dict[int, dict[str, dict]] = {}
@@ -102,7 +102,7 @@ def get_recording_date(dat_file_name: str) -> date:
 def get_session_start_time(dat_file_name: str, bl1_start_sample: int) -> datetime:
     """The time of the first .dat sample: BL1 starts at lights-on (07:00 Edinburgh) the day after the recording date.
 
-    The file name has the date only. The lab confirmed the BL1 anchor, so the start is lights-on minus the BL1 offset.
+    The file name has the date only, so the start is lights-on minus the BL1 offset.
     """
     lights_on = datetime.combine(get_recording_date(dat_file_name) + timedelta(days=1), LIGHTS_ON, tzinfo=TIMEZONE)
     elapsed = timedelta(seconds=bl1_start_sample / SAMPLING_FREQUENCY)

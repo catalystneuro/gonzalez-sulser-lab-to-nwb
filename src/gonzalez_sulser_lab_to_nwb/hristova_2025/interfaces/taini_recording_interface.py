@@ -1,6 +1,6 @@
 """TainiTec wireless EEG/EMG recording (.dat).
 
-Format, confirmed by inspection and TainiTec's parse_dat.m (shipped in the lab's AUTOMATIC-SLEEP-SCORER repo):
+Format, as in TainiTec's parse_dat.m (shipped in the lab's AUTOMATIC-SLEEP-SCORER repo):
 16 channels interleaved sample by sample, int16 little-endian, no header, 250.4 Hz. Values are unsigned 12-bit ADC
 codes (0-4095) over a 13 mV peak-to-peak range: 13000 / 4095 uV per code, with code 2047.5 = 0 V (parse_dat.m returns
 0-13 mV; the offset centres it on 0 V). Radio packet loss is stored as code 32767 on all channels; it is kept
@@ -68,9 +68,25 @@ ELECTRODE_GROUPS = {
 
 
 class TainiRecordingInterface(BaseRecordingExtractorInterface):
-    """The EEG or the EMG channels of a TainiTec .dat recording, written as one ElectricalSeries in acquisition."""
+    """The EEG or the EMG channels of a TainiTec .dat recording, written as one ElectricalSeries in acquisition.
+
+    The electrode layout is set by the class attributes: channels (label and hemisphere of each .dat column, with
+    "EMG" labelling the EMG channels), coordinates_mm (AP, ML of each EEG label), electrode_groups and
+    device_description. For a line with another layout, subclass this interface and override them.
+    """
 
     keywords = ["EEG", "EMG", "chronic", "TainiTec", "wireless"]
+    channels: list[tuple[str, str]] = CHANNELS
+    coordinates_mm: dict[str, tuple[float, float]] = COORDINATES_MM
+    electrode_groups: dict[str, dict] = ELECTRODE_GROUPS
+    device_description: str = (
+        "TainiTec wireless EEG/EMG telemetry system. 16-channel headstage, Custom H16-Rat EEG16 grid "
+        "(NeuroNexus). Sampling frequency 250.4 Hz, 12-bit ADC stored as int16 LE, 13 mV peak-to-peak "
+        "full-scale range. The grid's plus-symbol reference point was aligned over bregma during "
+        "implantation; all EEG electrodes are independent of one another and are not interconnected. A "
+        "separate cerebellar ground screw (-11.5 mm AP, +/-0.5 mm ML from bregma) was connected to the "
+        "grid via silver paint."
+    )
 
     @classmethod
     def get_extractor_class(cls):
@@ -91,31 +107,34 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             Which channels this instance writes.
         verbose : bool
         """
-        if signal_type not in ELECTRODE_GROUPS:
-            raise ValueError(f"signal_type must be one of {list(ELECTRODE_GROUPS)}, got {signal_type!r}")
+        if signal_type not in self.electrode_groups:
+            raise ValueError(f"signal_type must be one of {list(self.electrode_groups)}, got {signal_type!r}")
         self.signal_type = signal_type
+        channel_ids = [f"{label}_{hemisphere}" for label, hemisphere in self.channels]
         super().__init__(
             file_paths=[str(file_path)],
             sampling_frequency=SAMPLING_FREQUENCY,
-            num_channels=len(CHANNELS),
+            num_channels=len(self.channels),
             dtype="int16",
-            channel_ids=CHANNEL_IDS,
+            channel_ids=channel_ids,
             verbose=verbose,
             metadata_key=f"{signal_type}ElectricalSeries",
         )
 
         # "brain_area" becomes the electrode-table "location" column; spikeinterface's "location" is the XY position.
         recording = self.recording_extractor
-        labels = [label for label, _ in CHANNELS]
-        recording.set_property("group_name", np.array([ELECTRODE_GROUPS["EMG" if l == "EMG" else "EEG"]["name"] for l in labels]))
+        labels = [label for label, _ in self.channels]
+        signal_types = ["EMG" if label == "EMG" else "EEG" for label in labels]
+        n_channels = len(self.channels)
+        recording.set_property("group_name", np.array([self.electrode_groups[s]["name"] for s in signal_types]))
         recording.set_property("brain_area", np.array(labels))
-        recording.set_property("hemisphere", np.array([hemisphere for _, hemisphere in CHANNELS]))
-        recording.set_property("filtering", np.array(["none"] * len(CHANNELS)))
-        recording.set_property("location", np.array([COORDINATES_MM.get(label, (np.nan, np.nan)) for label in labels]))
-        recording.set_channel_gains(np.full(len(CHANNELS), GAIN_TO_UV))
-        recording.set_channel_offsets(np.full(len(CHANNELS), OFFSET_UV))
+        recording.set_property("hemisphere", np.array([hemisphere for _, hemisphere in self.channels]))
+        recording.set_property("filtering", np.array(["none"] * n_channels))
+        recording.set_property("location", np.array([self.coordinates_mm.get(label, (np.nan, np.nan)) for label in labels]))
+        recording.set_channel_gains(np.full(n_channels, GAIN_TO_UV))
+        recording.set_channel_offsets(np.full(n_channels, OFFSET_UV))
         self.recording_extractor = recording.select_channels(
-            [channel_id for channel_id, label in zip(CHANNEL_IDS, labels) if (label == "EMG") == (signal_type == "EMG")]
+            [channel_id for channel_id, s in zip(channel_ids, signal_types) if s == signal_type]
         )
 
     def get_metadata(self) -> DeepDict:
@@ -136,18 +155,11 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         metadata["Devices"] = {
             DEVICE_KEY: dict(
                 name="TainiTecWirelessEEG",
-                description=(
-                    "TainiTec wireless EEG/EMG telemetry system. 16-channel headstage, Custom H16-Rat EEG16 grid "
-                    "(NeuroNexus). Sampling frequency 250.4 Hz, 12-bit ADC stored as int16 LE, 13 mV peak-to-peak "
-                    "full-scale range. The grid's plus-symbol reference point was aligned over bregma during "
-                    "implantation; all EEG electrodes are independent of one another and are not interconnected. A "
-                    "separate cerebellar ground screw (-11.5 mm AP, +/-0.5 mm ML from bregma) was connected to the "
-                    "grid via silver paint."
-                ),
+                description=self.device_description,
                 device_model_metadata_key=DEVICE_MODEL_KEY,
             )
         }
-        group = ELECTRODE_GROUPS[self.signal_type]
+        group = self.electrode_groups[self.signal_type]
         metadata["Ecephys"]["ElectrodeGroups"] = {group["name"]: dict(group, device_metadata_key=DEVICE_KEY)}
         metadata["Ecephys"]["Electrodes"] = [
             dict(name="hemisphere", description="Hemisphere of the electrode: R (right) or L (left)."),

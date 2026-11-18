@@ -57,7 +57,7 @@ NWBFile:
 
 # Shared by every subject. sex and genotype are read per subject from the lab's subject sheet
 # (Subject metadata/GRIN2B_CDKL5_Seizures_Overall.csv) in convert_session.get_subject_metadata, and subject_id is set
-# from the animal ID. Exact dates of birth are not available; the lab confirmed the animals were 16-19 weeks old.
+# from the animal ID. Exact dates of birth are not available; the animals were 16-19 weeks old.
 Subject:
   species: Rattus norvegicus
   strain: Long-Evans
