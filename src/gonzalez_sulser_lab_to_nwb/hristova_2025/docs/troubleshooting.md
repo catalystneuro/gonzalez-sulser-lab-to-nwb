@@ -26,7 +26,8 @@ A warning "no rows in ...; seizure_events is not written" is expected for an ani
 - A subject is not converted again: `convert` skips subjects whose NWB file exists. Add `--overwrite`.
 - `herd_references` is 0 in the conversion summary: the ontology terms were not written. NeuroConv writes them from
   the `ExternalResources` block of `general_metadata.yaml`; check that the installed NeuroConv is the version pinned
-  in `pyproject.toml` (releases up to 0.10.2 do not write them) and run `pytest tests/test_external_resources.py`.
+  in `pyproject.toml` (releases up to 0.10.2 do not write them), and that every location and experimenter has an
+  entry with exactly the same spelling (see [Metadata](metadata.md#ontology-terms)).
 - NWB Inspector messages: the report of each file is in `inspector_reports/`. `CRITICAL`, `ERROR` and
   `PYNWB_VALIDATION` messages must be fixed before uploading. The known `BEST_PRACTICE_SUGGESTION` messages follow
   from the data and need no change:

@@ -26,7 +26,7 @@ conda activate gonzalez-sulser-lab-to-nwb-env
 
 This creates a conda environment with the package installed in editable mode, so that changes to the code and
 metadata files apply without installing again. Without conda, use Python 3.11 or 3.12 and run
-`pip install --editable ".[test]"` in the cloned folder.
+`pip install --editable .` in the cloned folder.
 
 ## Quick start
 
@@ -76,7 +76,6 @@ src/gonzalez_sulser_lab_to_nwb/hristova_2025/
 ├── metadata/                 metadata files
 ├── docs/                     documentation of this conversion
 └── 001888_demo/              notebook that reads the files on DANDI
-tests/                        tests of the lab's conventions, missing windows, subject metadata and ontology terms
 ```
 
 ## Citation

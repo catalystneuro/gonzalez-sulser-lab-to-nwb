@@ -97,12 +97,3 @@ To convert a new GRIN2B animal recorded and analyzed the same way:
 
 A missing processed file leaves that window out of that stream only. A file in another layout raises an error; see
 [Troubleshooting](troubleshooting.md).
-
-## Tests
-
-```bash
-pip install --editable ".[test]"
-pytest tests
-```
-
-The tests use small generated files, not the data share, and run in a few seconds.

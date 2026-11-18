@@ -28,9 +28,6 @@ dependencies = [
     "pyyaml",
 ]
 
-[project.optional-dependencies]
-test = ["pytest", "jsonschema"]
-
 [project.scripts]
 hristova-2025 = "gonzalez_sulser_lab_to_nwb.hristova_2025.cli:main"
 

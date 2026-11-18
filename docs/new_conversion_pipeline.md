@@ -25,7 +25,6 @@ A lab file with one file per baseline window (for example a new table from the s
    windows. `SeizureInterface` in `seizure_interface.py` is a short example.
 2. An entry in `data_interface_classes` of `nwbconverter.py`, after `BaselineEpochs`.
 3. Its file pattern in `STREAM_FILES` of `convert_session.py`, under the same name as in the converter.
-4. A test in `tests/` with a small generated file, as in `tests/test_lab_pipeline_conventions.py`.
 
 A stream that is not split by window (one file for the whole recording) subclasses NeuroConv's `BaseDataInterface`
 directly and writes its times in seconds from `session_start_time`.

@@ -71,9 +71,8 @@ description.
 
 The sleep states have their own ontology terms, in the `SleepStates` block (see below).
 
-A new location string or experimenter needs an entry with exactly the same spelling. `tests/test_external_resources.py`
-checks that the block follows NeuroConv's schema, that the terms reach the file, and that every location the
-recording interface writes has a term.
+A new location string or experimenter needs an entry with exactly the same spelling; the `herd_references` column of
+the conversion summary shows whether the terms reached the files.
 
 ## HED tags of the sleep states
 

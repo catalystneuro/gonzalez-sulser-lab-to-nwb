@@ -46,8 +46,6 @@ A conversion runs in these steps:
 
 - Metadata lives in YAML files and in the lab's own sheets, so that it can be corrected and reviewed without changing
   code.
-- The tests in `tests/` check the conventions taken from the lab's analysis code (scaling, sample indexing, codes),
-  so that a change to the code that breaks them fails.
 - NWB Inspector runs after each conversion, and DANDI's validation before each upload.
 - Ontology terms (species, strain, brain regions, experimenters, institution) are written into the files, so that the
   values can be found by their standard identifiers.
