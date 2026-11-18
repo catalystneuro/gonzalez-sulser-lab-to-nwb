@@ -12,11 +12,11 @@ import openpyxl
 import pytest
 from pynwb import NWBFile
 
-from gonzalez_sulser_lab_to_nwb.grin2b.convert_session import _load_bl_windows
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.baseline_epochs_interface import BaselineEpochsInterface
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.seizure_interface import SeizureTotalsInterface, SwdEpochsInterface
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.sleep_state_interface import SleepStateInterface
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.taini_recording_interface import TainiRecordingInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.convert_session import load_baseline_windows
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.baseline_epochs_interface import BaselineEpochsInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.seizure_interface import SeizureTotalsInterface, SwdEpochsInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.sleep_state_interface import SleepStateInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.taini_recording_interface import TainiRecordingInterface
 
 FS = 250.4
 
@@ -29,7 +29,7 @@ def nwbfile():
         session_start_time=datetime(2021, 3, 26, tzinfo=timezone.utc),
     )
     BaselineEpochsInterface(
-        baseline_windows=[{"baseline_window_1": {"start_sample": 0, "stop_sample": 999}}], sampling_frequency=FS
+        baseline_windows={"baseline_window_1": {"start_sample": 0, "stop_sample": 999}}, sampling_frequency=FS
     ).add_to_nwbfile(nwbfile, metadata={})
     return nwbfile
 
@@ -55,7 +55,7 @@ def test_xlsx_sample_numbers_are_converted_to_zero_based(tmp_path):
     workbook.active.append([129, "GRIN2B", "TAINI_1047_B_Grin2B_129_Baseline-2021_03_26-0000.dat", "BL1", 101, 200])
     workbook.save(xlsx)
 
-    window = _load_bl_windows(tmp_path)[(129, "BL1")]
+    window = load_baseline_windows(tmp_path)[129]["BL1"]
 
     assert (window["start"], window["end"]) == (100, 199)
 
@@ -80,7 +80,7 @@ def test_sleep_scoring_channels_are_written_to_epochs():
         "sleep_scoring_emg_channel": "EMG_R",
     }
 
-    BaselineEpochsInterface(baseline_windows=[{"baseline_window_1": bounds}], sampling_frequency=FS).add_to_nwbfile(
+    BaselineEpochsInterface(baseline_windows={"baseline_window_1": bounds}, sampling_frequency=FS).add_to_nwbfile(
         nwbfile, metadata={}
     )
 

@@ -7,11 +7,12 @@ CSV; the BL2 file must still land on the BL2 epoch.
 from datetime import datetime, timezone
 
 import pytest
-from pynwb import NWBFile
+from pynwb import NWBHDF5IO, NWBFile
 
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.baseline_epochs_interface import BaselineEpochsInterface
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.seizure_interface import SeizureInterface
-from gonzalez_sulser_lab_to_nwb.grin2b.interfaces.state_power_spectrum_interface import StatePowerSpectrumInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.baseline_epochs_interface import BaselineEpochsInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.seizure_interface import SeizureInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.sleep_state_interface import SleepStateInterface
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.state_power_spectrum_interface import StatePowerSpectrumInterface
 
 FS = 250.4
 BL1 = {"start_sample": 1000, "stop_sample": 1999}
@@ -26,7 +27,7 @@ def nwbfile():
         session_start_time=datetime(2022, 5, 7, tzinfo=timezone.utc),
     )
     BaselineEpochsInterface(
-        baseline_windows=[{"baseline_window_1": BL1}, {"baseline_window_2": BL2}], sampling_frequency=FS
+        baseline_windows={"baseline_window_1": BL1, "baseline_window_2": BL2}, sampling_frequency=FS
     ).add_to_nwbfile(nwbfile, metadata={})
     return nwbfile
 
@@ -51,3 +52,32 @@ def test_power_spectrum_with_only_bl2_file(nwbfile, tmp_path):
     df = nwbfile.processing["ecephys"]["sleep_state_power_spectra"].to_dataframe()
     assert set(df["baseline_window"]) == {"baseline_window_2"}
     assert list(df["Wake"]) == [1.0, 1.1]
+
+
+def test_no_seizures_in_any_window_writes_no_table(nwbfile, tmp_path):
+    # GRIN2B_238 has header-only Seizures.csv files in both windows.
+    csv = tmp_path / "GRIN2B_238_BL1_Seizures.csv"
+    csv.write_text("sec_start\tsec_end\tdur\n")
+
+    with pytest.warns(UserWarning, match="seizure_events is not written"):
+        SeizureInterface(file_paths={"baseline_window_1": csv}).add_to_nwbfile(nwbfile, metadata={})
+
+    assert "behavior" not in nwbfile.processing
+
+
+def test_tables_of_both_windows_are_written_and_read_back(nwbfile, tmp_path):
+    sleep_csvs = {}
+    for label in ("baseline_window_1", "baseline_window_2"):
+        sleep_csvs[label] = tmp_path / f"{label}-dge_ok.csv"
+        sleep_csvs[label].write_text("sleep.score\n0\n1\n2\n")
+    SleepStateInterface(file_paths=sleep_csvs).add_to_nwbfile(nwbfile, metadata={})
+    nwbfile_path = tmp_path / "test.nwb"
+    with NWBHDF5IO(nwbfile_path, "w") as io:
+        io.write(nwbfile)
+
+    with NWBHDF5IO(nwbfile_path, "r") as io:
+        df = io.read().processing["behavior"]["sleep_states"].to_dataframe()
+
+    assert list(df["sleep_state"]) == ["Wake", "NREM", "REM"] * 2
+    assert list(df["baseline_window"]) == ["baseline_window_1"] * 3 + ["baseline_window_2"] * 3
+    assert df["start_time"].iloc[3] == pytest.approx(BL2["start_sample"] / FS)

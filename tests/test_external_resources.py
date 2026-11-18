@@ -1,4 +1,4 @@
-"""The ontology terms in grin2b_general_metadata.yaml must reach the file as HERD references.
+"""The ontology terms in general_metadata.yaml must reach the file as HERD references.
 
 NeuroConv reads them from the maps of metadata["ExternalResources"] it knows and writes nothing for any
 other key, so a map under an outdated name produces a file without those references.
@@ -16,7 +16,7 @@ from pynwb import NWBFile
 from pynwb.file import Subject
 
 GENERAL_METADATA = (
-    Path(__file__).parents[1] / "src" / "gonzalez_sulser_lab_to_nwb" / "grin2b" / "metadata" / "grin2b_general_metadata.yaml"
+    Path(__file__).parents[1] / "src" / "gonzalez_sulser_lab_to_nwb" / "hristova_2025" / "metadata" / "general_metadata.yaml"
 )
 
 

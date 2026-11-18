@@ -1,5 +1,5 @@
 # EEG and EMG channel used by the lab's sleep scorer for each baseline window, as electrode-table
-# channel names (TainiRecordingInterface._CHANNEL_IDS).
+# channel names (taini_recording_interface.CHANNEL_IDS).
 #
 # Identified on 2026-10-28 by matching each <animal>_BL{1,2}_Channels.csv (the two channels picked in
 # Taini_CheckChoose.m, written in mV as code * 13 / 4095 with packet-loss samples set to 0) sample for

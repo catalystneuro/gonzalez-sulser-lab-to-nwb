@@ -9,6 +9,7 @@ dependencies:
     - matplotlib
     - numpy
     - pandas
-    - pynwb>=2.8
-    - ndx-events>=0.2.2
+    - pynwb>=4.0.0
     - h5py
+    - remfile
+    - dandi
