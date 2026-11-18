@@ -37,12 +37,16 @@ rows. The electrode table lists the EEG rows first, so a row number is not the c
 
 | Column | Content |
 |---|---|
-| `location` | the lab's label of the site, for example `S1_Tr`, `M2_anterior`, or `EMG` |
-| `channel_name` | label and hemisphere, for example `M2_anterior_R` |
+| `location` | the area: the full name with the paper's abbreviation, for example `primary motor cortex, anterior (M1-Ant)`, or `trapezius muscle` for the EMG electrodes |
+| `channel_name` | the lab's label and the hemisphere, for example `M2_anterior_R`; the same names as the sleep-scoring channels of the epochs table |
 | `hemisphere` | `R` or `L` |
-| `rel_x`, `rel_y` | AP and ML from bregma, in mm (NaN for EMG); ML is unsigned, use `hemisphere` for the side |
-| `group`, `group_name` | `EEGArray` (H16-Rat EEG16 grid, cortex) or `EMGArray` (trapezius muscle) |
+| `x` | stereotaxic anterior-posterior position, in microns from bregma, positive posterior (NaN for EMG) |
+| `z` | stereotaxic medial-lateral position, in microns from bregma, positive right (NaN for EMG) |
+| `group`, `group_name` | `EEGArray` (H16-Rat EEG16 grid, cerebral cortex) or `EMGArray` (trapezius muscle) |
 | `filtering` | `none` |
+
+The axes follow NWB's convention for `x`, `y` and `z` (+x posterior, +y inferior, +z right, in microns). The depth
+(`y`) of skull-surface electrodes is not defined, so the table has no `y` column.
 
 ## Epochs
 

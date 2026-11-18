@@ -177,49 +177,26 @@ ExternalResources:
         id: "RRID:RGD_2308852",
         uri: "https://scicrunch.org/resolver/RRID:RGD_2308852",
       }
-  # Electrode-table / ElectrodeGroup `location` strings. Per-channel labels from
-  # taini_recording_interface.CHANNELS; S1_Tr and S1Hl_S1Fl both map to the
-  # general primary somatosensory cortex term (UBERON has no rat-specific trunk/hindlimb/forelimb
-  # subdivision), and M2_Fra/M2_anterior both map to the secondary motor cortex term (UBERON's
-  # "premotor cortex" entry, whose synonyms include "secondary motor cortex").
+  # Electrode-table and ElectrodeGroup `location` strings (taini_recording_interface.LOCATIONS and ELECTRODE_GROUPS).
+  # UBERON has no rat-specific subdivisions of the cortical areas, so each maps to the general area: both S1 sites to
+  # primary somatosensory cortex, and both M2 sites to UBERON's "premotor cortex", whose synonyms include "secondary
+  # motor cortex".
   anatomical_structures:
-    S1_Tr: {
-        id: "UBERON:0008933",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0008933",
-      } # primary somatosensory cortex
-    S1Hl_S1Fl: {
-        id: "UBERON:0008933",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0008933",
-      } # primary somatosensory cortex
-    M1_anterior: {
-        id: "UBERON:0001384",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0001384",
-      } # primary motor cortex
-    M2_Fra: {
-        id: "UBERON:0016634",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0016634",
-      } # secondary motor (premotor) cortex
-    M2_anterior: {
-        id: "UBERON:0016634",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0016634",
-      } # secondary motor (premotor) cortex
-    V1_M: {
-        id: "UBERON:0002436",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0002436",
-      } # primary visual cortex
-    V2_ML: {
-        id: "UBERON:0022232",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0022232",
-      } # secondary visual cortex
-    EMG: {
-        id: "UBERON:0002380",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0002380",
-      } # trapezius muscle (EMG electrode placement, not brain)
-    cortex: {
-        id: "UBERON:0000956",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0000956",
-      } # cerebral cortex (ElectrodeGroup.location for EEGArray)
-    trapezius muscle: {
-        id: "UBERON:0002380",
-        uri: "http://purl.obolibrary.org/obo/UBERON_0002380",
-      } # ElectrodeGroup.location for EMGArray
+    "primary somatosensory cortex, trunk region (S1-Tr)":
+      { id: "UBERON:0008933", uri: "http://purl.obolibrary.org/obo/UBERON_0008933" } # primary somatosensory cortex
+    "primary somatosensory cortex, hindlimb and forelimb regions (S1-HL/FL)":
+      { id: "UBERON:0008933", uri: "http://purl.obolibrary.org/obo/UBERON_0008933" } # primary somatosensory cortex
+    "primary motor cortex, anterior (M1-Ant)":
+      { id: "UBERON:0001384", uri: "http://purl.obolibrary.org/obo/UBERON_0001384" } # primary motor cortex
+    "secondary motor cortex, anterior (M2-Ant)":
+      { id: "UBERON:0016634", uri: "http://purl.obolibrary.org/obo/UBERON_0016634" } # premotor cortex, synonym secondary motor cortex
+    "secondary motor cortex, frontal association area (M2-FrA)":
+      { id: "UBERON:0016634", uri: "http://purl.obolibrary.org/obo/UBERON_0016634" } # premotor cortex, synonym secondary motor cortex
+    "primary visual cortex, monocular area (V1-M)":
+      { id: "UBERON:0002436", uri: "http://purl.obolibrary.org/obo/UBERON_0002436" } # primary visual cortex
+    "secondary visual cortex, mediolateral area (V2-ML)":
+      { id: "UBERON:0022232", uri: "http://purl.obolibrary.org/obo/UBERON_0022232" } # secondary visual cortex
+    "trapezius muscle":
+      { id: "UBERON:0002380", uri: "http://purl.obolibrary.org/obo/UBERON_0002380" } # trapezius muscle; EMG electrodes and their ElectrodeGroup
+    "cerebral cortex":
+      { id: "UBERON:0000956", uri: "http://purl.obolibrary.org/obo/UBERON_0000956" } # cerebral cortex; ElectrodeGroup of the EEG grid

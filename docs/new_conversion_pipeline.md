@@ -47,8 +47,9 @@ example `src/gonzalez_sulser_lab_to_nwb/<author>_<year>/`:
    publication, the `Subject` block (description and strain) and their ontology terms. Fill
    `metadata/sleep_scoring_channels.yaml` for the line's animals.
 4. If the electrodes differ (the SCN2A rats have screw electrodes on an interface board instead of the NeuroNexus
-   grid), subclass `TainiRecordingInterface` and override `channels`, `coordinates_mm`, `electrode_groups` and
-   `device_description`; use the subclass in the converter.
+   grid), subclass `TainiRecordingInterface` and override `channels`, `locations`, `coordinates_mm`, `electrode_groups`
+   and `device_description`, and add each new location to `anatomical_structures` in the metadata; use the subclass
+   in the converter.
 5. In the copied `cli.py`, import the shared modules from `gonzalez_sulser_lab_to_nwb.hristova_2025`, set the
    default dandiset ID of the line (`stage --dandiset-id` also takes it), and add the command to
    `[project.scripts]` in `pyproject.toml`. An unpublished line goes to an embargoed dandiset.

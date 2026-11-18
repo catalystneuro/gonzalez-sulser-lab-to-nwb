@@ -62,8 +62,9 @@ Each map is keyed by the exact value it annotates:
 - `institution`: the ROR ID of the University of Edinburgh.
 - `species`: NCBI Taxonomy.
 - `strain`: the RRID of Crl:LE (Charles River), the Long-Evans background the line was made in.
-- `anatomical_structures`: UBERON terms for the electrode locations (`S1_Tr`, `M2_Fra`, ...) and the electrode
-  group locations (`cortex`, `trapezius muscle`).
+- `anatomical_structures`: UBERON terms for the electrode locations (for example
+  `primary motor cortex, anterior (M1-Ant)`) and the electrode group locations (`cerebral cortex`,
+  `trapezius muscle`). UBERON has no rat-specific subdivisions of these areas, so each maps to its general area.
 
 NeuroConv has no map for `genotype`, so the genotype carries no reference; the RRID of the line is in the subject
 description.
@@ -71,7 +72,8 @@ description.
 The sleep states have their own ontology terms, in the `SleepStates` block (see below).
 
 A new location string or experimenter needs an entry with exactly the same spelling. `tests/test_external_resources.py`
-checks that the block follows NeuroConv's schema and that the terms reach the file.
+checks that the block follows NeuroConv's schema, that the terms reach the file, and that every location the
+recording interface writes has a term.
 
 ## HED tags of the sleep states
 

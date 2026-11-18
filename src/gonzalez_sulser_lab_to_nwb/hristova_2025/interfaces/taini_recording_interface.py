@@ -6,8 +6,11 @@ codes (0-4095) over a 13 mV peak-to-peak range: 13000 / 4095 uV per code, with c
 0-13 mV; the offset centres it on 0 V). Radio packet loss is stored as code 32767 on all channels; it is kept
 unchanged and documented in the series description.
 
-The channel layout and AP/ML coordinates (mm from bregma) are from the lab's grin2b_eeg_channels.csv and coordinate
-table. EEG: custom H16-Rat EEG16 grid (NeuroNexus); EMG: trapezius muscle.
+The channel layout is from the lab's grin2b_eeg_channels.csv and the AP/ML coordinates from the lab's coordinate
+table. EEG: custom H16-Rat EEG16 grid (NeuroNexus); EMG: trapezius muscle. In the electrode table, "location" is the
+area of each electrode (full name and abbreviation, as in the paper), "channel_name" the lab's label and hemisphere
+(e.g. "S1_Tr_R"), and "x" and "z" the stereotaxic position in microns from bregma, with the NWB axes: +x posterior,
++z right. The depth (NWB "y") of skull-surface electrodes is not defined, so there is no "y" column.
 
 The interface writes the full recording of one signal type: instantiate it with signal_type="EEG" and again with
 "EMG". Both share one electrode table (rows deduplicated by channel id) with separate ElectrodeGroups.
@@ -37,7 +40,18 @@ CHANNELS = [
     ("M2_anterior", "L"), ("M2_Fra", "L"), ("EMG", "L"), ("S1_Tr", "L"),
 ]  # fmt: skip
 CHANNEL_IDS = [f"{label}_{hemisphere}" for label, hemisphere in CHANNELS]
-# AP, ML in mm from bregma; the same on both hemispheres. EMG channels have none (NaN).
+# Area of each label, written to the electrode-table "location" column.
+LOCATIONS = {
+    "S1_Tr": "primary somatosensory cortex, trunk region (S1-Tr)",
+    "S1Hl_S1Fl": "primary somatosensory cortex, hindlimb and forelimb regions (S1-HL/FL)",
+    "M1_anterior": "primary motor cortex, anterior (M1-Ant)",
+    "M2_anterior": "secondary motor cortex, anterior (M2-Ant)",
+    "M2_Fra": "secondary motor cortex, frontal association area (M2-FrA)",
+    "V1_M": "primary visual cortex, monocular area (V1-M)",
+    "V2_ML": "secondary visual cortex, mediolateral area (V2-ML)",
+    "EMG": "trapezius muscle",
+}
+# AP (anterior positive) and ML (unsigned) in mm from bregma; the same on both hemispheres. EMG channels have none.
 COORDINATES_MM = {
     "V1_M": (-7.0, 3.0), "V2_ML": (-5.0, 3.0), "S1_Tr": (-3.0, 2.8), "S1Hl_S1Fl": (-1.0, 2.8),
     "M1_anterior": (1.5, 2.8), "M2_anterior": (1.5, 1.2), "M2_Fra": (3.6, 1.2),
@@ -48,15 +62,12 @@ DEVICE_MODEL_KEY = "TainiTecTransmitter"
 ELECTRODE_GROUPS = {
     "EEG": dict(
         name="EEGArray",
-        location="cortex",
+        location="cerebral cortex",
         description=(
-            "14-channel chronic EEG electrode array, Custom H16-Rat EEG16 (NeuroNexus). Electrodes target bilateral "
-            "somatosensory and motor cortical sites: S1-Tr (primary somatosensory cortex, trunk region), M2-FrA "
-            "(secondary motor cortex, frontal association area), M2-Ant (secondary motor cortex, anterior), M1-Ant "
-            "(primary motor cortex, anterior), V2-ML (secondary visual cortex, mediolateral), V1-M (primary visual "
-            "cortex, monocular), S1Hl/Fl (primary somatosensory cortex, hindlimb/forelimb) - 7 electrodes per "
-            "hemisphere, at stereotaxic AP/ML coordinates from bregma confirmed by the lab (see electrode table "
-            "'location' column)."
+            "14-channel chronic EEG skull-surface electrode grid, Custom H16-Rat EEG16 (NeuroNexus), 7 electrodes per "
+            "hemisphere over somatosensory, motor and visual cortex. The area of each electrode is in the location "
+            "column of the electrode table, and its stereotaxic position in the x (+ posterior) and z (+ right) "
+            "columns, in microns from bregma."
         ),
     ),
     "EMG": dict(
@@ -71,12 +82,14 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
     """The EEG or the EMG channels of a TainiTec .dat recording, written as one ElectricalSeries in acquisition.
 
     The electrode layout is set by the class attributes: channels (label and hemisphere of each .dat column, with
-    "EMG" labelling the EMG channels), coordinates_mm (AP, ML of each EEG label), electrode_groups and
-    device_description. For a line with another layout, subclass this interface and override them.
+    "EMG" labelling the EMG channels), locations (area of each label), coordinates_mm (AP, ML of each EEG label),
+    electrode_groups and device_description. For a line with another layout, subclass this interface and override
+    them.
     """
 
     keywords = ["EEG", "EMG", "chronic", "TainiTec", "wireless"]
     channels: list[tuple[str, str]] = CHANNELS
+    locations: dict[str, str] = LOCATIONS
     coordinates_mm: dict[str, tuple[float, float]] = COORDINATES_MM
     electrode_groups: dict[str, dict] = ELECTRODE_GROUPS
     device_description: str = (
@@ -121,16 +134,20 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
             metadata_key=f"{signal_type}ElectricalSeries",
         )
 
-        # "brain_area" becomes the electrode-table "location" column; spikeinterface's "location" is the XY position.
+        # "brain_area" becomes the electrode-table "location" column. NWB's x is posterior and z right, in microns.
         recording = self.recording_extractor
         labels = [label for label, _ in self.channels]
+        hemispheres = [hemisphere for _, hemisphere in self.channels]
         signal_types = ["EMG" if label == "EMG" else "EEG" for label in labels]
         n_channels = len(self.channels)
+        ap_ml_mm = np.array([self.coordinates_mm.get(label, (np.nan, np.nan)) for label in labels])
+        ml_sign = np.array([1.0 if hemisphere == "R" else -1.0 for hemisphere in hemispheres])
         recording.set_property("group_name", np.array([self.electrode_groups[s]["name"] for s in signal_types]))
-        recording.set_property("brain_area", np.array(labels))
-        recording.set_property("hemisphere", np.array([hemisphere for _, hemisphere in self.channels]))
+        recording.set_property("brain_area", np.array([self.locations[label] for label in labels]))
+        recording.set_property("hemisphere", np.array(hemispheres))
         recording.set_property("filtering", np.array(["none"] * n_channels))
-        recording.set_property("location", np.array([self.coordinates_mm.get(label, (np.nan, np.nan)) for label in labels]))
+        recording.set_property("x", -ap_ml_mm[:, 0] * 1000)
+        recording.set_property("z", ml_sign * ap_ml_mm[:, 1] * 1000)
         recording.set_channel_gains(np.full(n_channels, GAIN_TO_UV))
         recording.set_channel_offsets(np.full(n_channels, OFFSET_UV))
         self.recording_extractor = recording.select_channels(
@@ -164,6 +181,16 @@ class TainiRecordingInterface(BaseRecordingExtractorInterface):
         metadata["Ecephys"]["Electrodes"] = [
             dict(name="hemisphere", description="Hemisphere of the electrode: R (right) or L (left)."),
             dict(name="filtering", description="No hardware or software filtering applied by the conversion."),
+            dict(
+                name="x",
+                description="Stereotaxic anterior-posterior position in microns from bregma, positive posterior "
+                "(NWB convention). NaN for the EMG electrodes.",
+            ),
+            dict(
+                name="z",
+                description="Stereotaxic medial-lateral position in microns from bregma, positive right "
+                "(NWB convention). NaN for the EMG electrodes.",
+            ),
         ]
         duration_hours = self.recording_extractor.get_num_frames() / SAMPLING_FREQUENCY / 3600
         metadata["Ecephys"]["ElectricalSeries"][self.metadata_key] = dict(

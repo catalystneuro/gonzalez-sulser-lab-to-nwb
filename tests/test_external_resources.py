@@ -15,6 +15,8 @@ from neuroconv.utils import load_dict_from_file
 from pynwb import NWBFile
 from pynwb.file import Subject
 
+from gonzalez_sulser_lab_to_nwb.hristova_2025.interfaces.taini_recording_interface import ELECTRODE_GROUPS, LOCATIONS
+
 GENERAL_METADATA = (
     Path(__file__).parents[1] / "src" / "gonzalez_sulser_lab_to_nwb" / "hristova_2025" / "metadata" / "general_metadata.yaml"
 )
@@ -30,8 +32,8 @@ def _nwbfile(genotype: str) -> NWBFile:
         subject=Subject(subject_id="GRIN2B-129", species="Rattus norvegicus", strain="Long-Evans", genotype=genotype, sex="M"),
     )
     device = nwbfile.create_device(name="TainiTecWirelessEEG")
-    group = nwbfile.create_electrode_group(name="EEGArray", description="EEG", location="cortex", device=device)
-    nwbfile.add_electrode(location="S1_Tr", group=group)
+    group = nwbfile.create_electrode_group(name="EEGArray", description="EEG", location="cerebral cortex", device=device)
+    nwbfile.add_electrode(location=LOCATIONS["S1_Tr"], group=group)
     return nwbfile
 
 
@@ -59,6 +61,13 @@ def test_yaml_terms_are_written_as_herd_references():
         "University of Edinburgh": "ror:01nrxwf90",
         "Rattus norvegicus": "NCBITaxon:10116",
         "Long-Evans": "RRID:RGD_2308852",
-        "S1_Tr": "UBERON:0008933",
-        "cortex": "UBERON:0000956",
+        LOCATIONS["S1_Tr"]: "UBERON:0008933",
+        "cerebral cortex": "UBERON:0000956",
     }
+
+
+def test_every_electrode_location_has_a_term():
+    terms = load_dict_from_file(GENERAL_METADATA)["ExternalResources"]["anatomical_structures"]
+    locations = set(LOCATIONS.values()) | {group["location"] for group in ELECTRODE_GROUPS.values()}
+
+    assert locations - set(terms) == set()

@@ -57,7 +57,11 @@ Channel order of the `.dat` columns (from `grin2b_eeg_channels.csv`), with AP/ML
 | 6, 8 | V1_M | R, L | -7.0 | 3.0 |
 | 7, 10 | S1Hl_S1Fl | R, L | -1.0 | 2.8 |
 
-The 14 EEG channels and the 2 EMG channels are written as two series of the same electrode table.
+The 14 EEG channels and the 2 EMG channels are written as two series of the same electrode table. Each electrode's
+`location` is the full name of its area with the paper's abbreviation (`LOCATIONS` in
+`taini_recording_interface.py`), for example `primary somatosensory cortex, trunk region (S1-Tr)`, and its AP/ML
+position is written to the `x` and `z` columns in microns, with NWB's axes (see
+[NWB file structure](nwb_file_structure.md#electrode-table)).
 
 ## Baseline windows
 
