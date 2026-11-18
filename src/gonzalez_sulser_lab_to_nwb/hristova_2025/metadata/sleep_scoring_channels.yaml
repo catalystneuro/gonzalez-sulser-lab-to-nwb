@@ -1,18 +1,16 @@
-# EEG and EMG channel used by the lab's sleep scorer for each baseline window, as electrode-table
-# channel names (TainiRecordingInterface._CHANNEL_IDS).
+# EEG and EMG channel used by the lab's sleep scorer for each baseline window, as electrode-table channel names
+# (taini_recording_interface.CHANNEL_IDS). Written to the sleep_scoring_eeg_channel and sleep_scoring_emg_channel
+# columns of the epochs table.
 #
-# Identified on 2026-10-28 by matching each <animal>_BL{1,2}_Channels.csv (the two channels picked in
-# Taini_CheckChoose.m, written in mV as code * 13 / 4095 with packet-loss samples set to 0) sample for
-# sample against the 16 .dat channels over 20,000 samples inside the baseline window. Every window below
-# matched exactly one EEG and one EMG channel.
+# The scorer's input is <animal>_BL{1,2}_Channels.csv: the two channels picked in Taini_CheckChoose.m, in mV
+# (code * 13 / 4095) with packet-loss samples set to 0. Taini_CheckChoose.m offers .dat columns 4/13 for EEG
+# (M2_anterior R/L) and 2/15 for EMG (EMG R/L). Each window's channels were identified by matching its Channels.csv
+# sample for sample against the 16 .dat channels inside the window; every window matched exactly one EEG and one EMG
+# channel. The channels agree with the eeg/emg columns of the lab's rat_day_index_GRIN2B.csv. (The paper's
+# supplementary methods describe the scoring EEG as an S1 channel, which is an error in the paper.)
 #
-# GRIN2B_424 is from the lab's re-analysis of 2026-11-11 on TAINI_1044_C_Grin2B_424_Redo-2022_06_04-0000.dat
-# (the earlier 424 outputs had been computed from 366's recording). Checked over 200,000 samples per window;
-# it also agrees with the eeg/emg columns of the lab's rat_day_index_GRIN2B.csv.
-#
-# Taini_CheckChoose.m only offers .dat columns 4/13 (EEG) and 2/15 (EMG). In the lab's channel table
-# (grin2b_eeg_channels.csv) columns 4/13 are M2_anterior R/L. The paper's Supplementary Methods describe the
-# scoring EEG as an S1 channel; the lab confirmed on 2026-11-11 that this is an error in the paper.
+# For a new animal, take the channels from rat_day_index_GRIN2B.csv (1-based .dat columns) or match its Channels.csv
+# in the same way. An animal not listed here gets no channel columns.
 
 GRIN2B_129: { BL1: [M2_anterior_R, EMG_R], BL2: [M2_anterior_R, EMG_R] }
 GRIN2B_130: { BL1: [M2_anterior_L, EMG_R], BL2: [M2_anterior_L, EMG_R] }
