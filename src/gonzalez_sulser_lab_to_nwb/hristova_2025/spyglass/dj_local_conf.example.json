@@ -1,0 +1,31 @@
+{
+  "database.host": "127.0.0.1",
+  "database.port": 3306,
+  "database.user": "root",
+  "database.password": "tutorial",
+  "database.use_tls": false,
+  "database.reconnect": true,
+  "loglevel": "INFO",
+  "safemode": true,
+  "fetch_format": "array",
+  "display.limit": 12,
+  "display.show_tuple_count": true,
+  "enable_python_native_blobs": true,
+  "add_hidden_timestamp": false,
+  "filepath_checksum_size_limit": 1073741824,
+  "custom": {
+    "debug_mode": "false",
+    "test_mode": "false",
+    "spyglass_dirs": {
+      "base": "/path/to/spyglass_data_gonzalez",
+      "raw": "/path/to/spyglass_data_gonzalez/raw",
+      "analysis": "/path/to/spyglass_data_gonzalez/analysis",
+      "recording": "/path/to/spyglass_data_gonzalez/recording",
+      "sorting": "/path/to/spyglass_data_gonzalez/spikesorting",
+      "waveforms": "/path/to/spyglass_data_gonzalez/waveforms",
+      "temp": "/path/to/spyglass_data_gonzalez/tmp",
+      "video": "/path/to/spyglass_data_gonzalez/video",
+      "export": "/path/to/spyglass_data_gonzalez/export"
+    }
+  }
+}

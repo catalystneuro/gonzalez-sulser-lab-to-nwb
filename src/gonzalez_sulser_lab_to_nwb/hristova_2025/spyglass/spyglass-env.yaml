@@ -1,0 +1,42 @@
+# Conda environment for ingesting the DANDI:001888 NWB files into Spyglass.
+#
+# Spyglass comes from the `gonzalez-sulser-example-v1` tag of the CatalystNeuro fork
+# (https://github.com/catalystneuro/spyglass), so this install doesn't change when branches
+# move. The tag merges upstream `master` (da36473c) with the branches these files need, which
+# are open PRs on LorenFrankLab/spyglass:
+#   - EEG/EMG (common_eeg.ImportedEEG): https://github.com/LorenFrankLab/spyglass/pull/1638
+#   - HERD external resources: https://github.com/LorenFrankLab/spyglass/pull/1722
+#   - HED annotations: https://github.com/LorenFrankLab/spyglass/pull/1723
+#   - sleep scoring and seizure events: branch `sleep-scoring` of the fork
+# See src/gonzalez_sulser_lab_to_nwb/hristova_2025/docs/spyglass_ingestion.md.
+#
+# Create it with bootstrap_wsl.sh, not `conda env create` alone: the script creates it from
+# this file and then installs the pins below, which pip cannot resolve together with the
+# packages here because they conflict with requirements Spyglass and ndx-franklab-novela
+# declare:
+#
+#   1. pynwb 4.2.0 and hdmf 6.2.0, with ndx-hed 0.3.0.
+#      The files use NWB 2.11, hdmf-common 1.10, HERD external resources and ndx-hed 0.3.0
+#      types. ndx-franklab-novela declares `hdmf<5`. ndx-hed 0.3.0 pulls hedtools, which
+#      needs numpy>=2, so scipy is pinned to 1.15.3: Spyglass's `scipy<1.13` (kept for
+#      SpikeInterface 0.99, unused here) cannot load with numpy 2.
+#   2. kachery-cloud, then pubnub<6.4.
+#      insert_sessions() imports Spyglass's spike-sorting modules. kachery-cloud wants
+#      pubnub>=7.2, Spyglass wants pubnub<6.4; re-pinning pubnub keeps both importable.
+#
+#   wsl -d Ubuntu-24.04 -- bash /mnt/c/<path to repo>/src/gonzalez_sulser_lab_to_nwb/hristova_2025/spyglass/bootstrap_wsl.sh
+
+name: spyglass-gonzalez-sulser-lab-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - hdf5
+  - git
+  - pip:
+      - "git+https://github.com/catalystneuro/spyglass.git@gonzalez-sulser-example-v1"
+      - ndx-franklab-novela==0.2.4
+      - pyyaml
+      - jupyter
+      - matplotlib
