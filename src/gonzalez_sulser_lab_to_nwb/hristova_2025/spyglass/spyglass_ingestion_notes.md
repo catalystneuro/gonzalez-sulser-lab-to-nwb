@@ -1,105 +1,88 @@
-# Spyglass Ingestion Notes — Gonzalez-Sulser Lab GRIN2B
+# Spyglass ingestion notes
 
-## Project Overview
+Tracks the Spyglass pull requests and issues that ingesting the DANDI:001888 files depends on, while they are under
+development, and the open questions about what else to ingest. Remove the tracking part once the PRs are all merged
+into LorenFrankLab/spyglass and the environment installs a Spyglass release. How to set up Spyglass, ingest the files
+and run the notebooks is in [docs/spyglass_ingestion.md](../docs/spyglass_ingestion.md). The overview for the
+Spyglass team is the tracking issue on this repository (to be opened).
 
-Ingestion of the already-converted, DANDI-published GRIN2B chronic EEG/EMG NWB files
-(`DANDI:001888`, produced by `src/gonzalez_sulser_lab_to_nwb/`, see `../conversion_notes.md`)
-into a Spyglass (DataJoint) database, for the SFARI ARC deliverable. Target schema:
-**`common_eeg`/`ImportedEEG`**, a chronic-EEG ingestion path added to Spyglass specifically for
-this dataset.
+Check the live state of each link before acting on it.
 
-- **Lab POC:** Natalie Hung / Niamh McLaughlin
-- **PI:** Prof. Alfredo Gonzalez-Sulser
-- **CN team:** Ben Dichter, Alessandra Trapani
-- **Upstream Spyglass work:** [LorenFrankLab/spyglass#1634](https://github.com/LorenFrankLab/spyglass/issues/1634)
-  (issue, cites this project by name) → [LorenFrankLab/spyglass#1638](https://github.com/LorenFrankLab/spyglass/pull/1638)
-  (draft PR, branch `feature/eeg-ingestion`). `common_eeg.py`'s own docstring uses
-  `DANDI:001888` — this project's dandiset — as its example, so the PR was almost certainly
-  written against these exact files.
+## Current build
 
-## Environment
+`spyglass-env.yaml` and `bootstrap_wsl.sh` install the tag `gonzalez-sulser-example-v1` of
+https://github.com/catalystneuro/spyglass (`268541a5`), the head of branch `gonzalez-sulser-integration`. It is
+upstream `master` (`da36473c`) with these branches merged, in order:
 
-Full runbook: see git history of this file / the project plan. Summary of what's running:
+1. `feature/eeg-ingestion` of LorenFrankLab/spyglass (`aac13e01`, #1638);
+2. `herd-external-resources` of the fork (`a83f0903`, #1722);
+3. `hed-annotations` of the fork (`8d025e3f`, #1723);
+4. `sleep-scoring` of the fork (`6ae9e586`, #1726).
 
-| Layer | Where | Details |
-|---|---|---|
-| MySQL DB | Docker Desktop container `spyglass-db` | `datajoint/mysql:8.0`, port 3306, data in the named volume `spyglass_spyglass-mysql-data` (not a bind mount — `F:` is exFAT and can't back InnoDB) |
-| Spyglass Python | WSL2 **Ubuntu-24.04**, Miniforge at `/opt/miniforge3` | Native Windows can't run Spyglass at all (`spyglass-neuro` calls `multiprocessing.set_start_method("fork")` at import time, which doesn't exist on Windows) |
-| Data | External SSD `F:\CN_data` (exFAT) | Published NWBs at `F:\CN_data\001888\sub-GRIN2B-<id>\*.nwb`; Spyglass data root at `F:\CN_data\gonzalez-sulser\spyglass_data\` (raw/analysis/recording/...), seen from WSL as `/mnt/f/CN_data/...` |
+The merge conflicts were all in the lists of tables (`__init__.py`, `populate_all_common.py`, `CHANGELOG.md`,
+`docs/src/ForDevelopers/UsingNWB.md`) and were resolved by keeping both sides.
 
-Two WSL conda envs, both defined in this folder:
+Checked on 2026-11-19 against a freshly reset database, with an env built by `bootstrap_wsl.sh` from the tag: all 24
+files ingest with no `InsertError` rows in about 100 s, and the three notebooks run.
 
-- **`spyglass`** (`spyglass-env.yaml`) — PyPI `spyglass-neuro 0.6.0`. Verified working
-  (`check_connection.py`), but does **not** have `common_eeg`/`ImportedEEG` — it's the release,
-  PR #1638 hasn't merged. Kept as a known-good fallback.
-- **`spyglass-eeg`** (`spyglass-eeg-env.yaml`) — spyglass installed straight from the PR branch:
-  `git+https://github.com/LorenFrankLab/spyglass.git@feature/eeg-ingestion`
-  (resolves to `spyglass-neuro 0.5.5a2.dev87+gaac13e01a`). **This is the env actually used for
-  GRIN2B ingestion.** Needed two extra installs beyond the yaml to work:
-  `pip install kachery-cloud` (a `ModuleNotFoundError` inside `insert_sessions()` otherwise),
-  then `pip install "pubnub<6.4"` to re-pin after `kachery-cloud` pulled `pubnub>=7.2` and broke
-  `spyglass-neuro`'s own `pubnub<6.4` constraint. This conflict is unresolved upstream — pinning
-  `pubnub<6.4` works for everything exercised so far.
+Installed from the tag, Spyglass reports its version as `1`: setuptools-scm reads the tag name's trailing `v1` as the
+version. Nothing in the ingestion depends on it.
 
-Bring the DB up: `docker compose -f docker-compose.yml up -d` (PowerShell, from this folder).
-Activate the env: `wsl -d Ubuntu-24.04`, then `conda activate spyglass-eeg`.
-Config: `dj_local_conf.json` (git-ignored, has DB credentials) — shared by both envs, same DB.
+## Spyglass PRs
 
-## Ingestion run (2026-09-11)
+| Data | Branch | Upstream PR |
+| --- | --- | --- |
+| EEG/EMG series (`ImportedEEG`, `.Electrode`) | `feature/eeg-ingestion` (edeno) | https://github.com/LorenFrankLab/spyglass/pull/1638, open; follows https://github.com/LorenFrankLab/spyglass/issues/1634 |
+| HERD external resources (`OntologyTerm`, `ExternalResources`) | `herd-external-resources` (fork) | https://github.com/LorenFrankLab/spyglass/pull/1722, draft |
+| HED annotations (`HedMetadata`, `HedAnnotation`) | `hed-annotations` (fork) | https://github.com/LorenFrankLab/spyglass/pull/1723, draft |
+| Sleep scoring and seizures (`SleepStateScoring`, `SeizureEvents`) | `sleep-scoring` (fork) | https://github.com/LorenFrankLab/spyglass/pull/1726, draft |
 
-All 17 currently-converted subjects, copied unmodified from `F:\CN_data\001888\` into
-`F:\CN_data\gonzalez-sulser\spyglass_data\raw\` (~19.8 GB), inserted via `insert_session.py`:
+The HERD and HED PRs were opened for the Uchida lab ingestion (DANDI:001935) and name no lab; these files use them
+unchanged. `sleep-scoring` is the follow-up promised on #1634
+(https://github.com/LorenFrankLab/spyglass/issues/1634#issuecomment-5677814596). It selects a sleep scoring table by
+its `sleep_state` column and a seizure table by the name `seizure_events`; the PR, opened as a draft on 2026-11-19,
+asks the Spyglass team whether those conventions suit them. Its tests pass on upstream's CI setup (pynwb 3, numpy
+1.26).
 
-- **17/17 subjects inserted, 0 failures.**
-- Every subject: `ElectrodeGroup=2, Electrode=16, ImportedEEG=2, ImportedEEG.Electrode=16,
-  DataAcquisitionDevice=0` (see `insertion_report.txt` for the raw per-subject dump).
-- `verify_insertion.py`: **34/34 series pass** data-integrity check (first 1000 samples of every
-  `EEGElectricalSeries`/`EMGElectricalSeries`, compared between the Spyglass `fetch_nwb()`
-  read-back and a direct read of the source NWB file). Table printouts for all 17 subjects in
-  `tables.txt`.
-- Subjects covered: 129, 130, 131, 132, 137, 138, 139, 227, 228, 229, 236, 237, 238, 239, 240,
-  241, 373 (the same 17 with a raw `.dat` on the share per `../conversion_notes.md` §"Conversion
-  Run Log" — GRIN2B_424 excluded there too, for the xlsx/file-naming mismatch documented in that
-  file's "GRIN2B_424 xlsx error" section).
+## Other upstream work these files depend on
 
-## File Inventory (`spyglass/`)
+| Link | State | Relevance |
+| --- | --- | --- |
+| https://github.com/LorenFrankLab/spyglass/issues/1694 | issue, open | pynwb>=4 / hdmf>=6. The files are NWB 2.11 and need pynwb 4.2 / hdmf 6.2; the bootstrap installs them over Spyglass's pins. |
+| https://github.com/LorenFrankLab/spyglass/pull/1609 | PR, open | Spyglass pins `numpy<2` and `scipy<1.13` until this lands; the bootstrap overrides both because ndx-hed needs numpy 2. |
+| https://github.com/LorenFrankLab/ndx-franklab-novela/pull/26 | PR, open | Reworks novela's pyproject, keeps `hdmf<5`. |
 
-```text
-docker-compose.yml         MySQL 8.0 service (named volume, port 3306) — committed
-dj_local_conf.json         DataJoint config + credentials — git-ignored
-spyglass-eeg-env.yaml      conda env: spyglass from feature/eeg-ingestion (used for ingestion)
-bootstrap_wsl.sh           one-time Miniforge + env setup inside WSL2 Ubuntu-24.04
-check_connection.py        DataJoint/Spyglass connection smoke test
-insert_session.py          batch insertion — all subjects in the Spyglass raw dir
-verify_insertion.py        batch verification — table printouts + data-integrity read-back
-insertion_report.txt       output of the last insert_session.py run — git-ignored
-tables.txt                 output of the last verify_insertion.py run — git-ignored
-spyglass_ingestion_notes.md  this file
-```
+## Known gaps
 
-## Known gaps / accepted as-is for now
+- `Electrode` takes its region from the electrode group, so every EEG electrode is in `cerebral cortex`. The cortical
+  area and channel name of each screw (the `location` and `channel_name` columns of the electrodes table) have no
+  Spyglass column; the notebooks read them from the file.
+- `DataAcquisitionDevice` stays empty: it needs an `ndx_franklab_novela.DataAcqDevice`, and the files have a plain
+  `Device` (`TainiTecWirelessEEG`).
+- `TaskEpoch` stays empty: the files have no task table. The baseline windows are in `IntervalList` from the epochs
+  table.
+- Not ingested: `swd_epochs` (spike-wave discharge flags per epoch), `seizure_counts_by_zt_hour` and
+  `sleep_state_power_spectra`. They stay in the NWB files.
+- GRIN2B-228 is heterozygous but its file has 2 seizures, against 887 to 2121 in the other heterozygous rats. The
+  source file has the same 2 rows, so this is a question for the lab, not an ingestion error.
 
-- **`DataAcquisitionDevice`: 0 rows.** Would need `ndx_franklab_novela.DataAcqDevice` instead of
-  the plain `Device("TainiTecWirelessEEG")` written by `TainiRecordingInterface`. Cosmetic —
-  nothing currently ingested depends on it.
-- **`TaskEpoch`/`Task`: not populated.** Would need a `"tasks"` processing module + `task_table`
-  in the NWB file (not currently written). BL1/BL2 are still queryable as raw NWB `epochs` /
-  `IntervalList` rows; only the Task-pipeline convenience layer is missing.
-- **Derived streams have no Spyglass table at all**: sleep states, seizure events, SWD epoch
-  counts, per-ZT seizure totals, state power spectra (all in `processing["behavior"]`/
-  `processing["ecephys"]` — see `../conversion_notes.md` §"Data Streams"). PR #1638 does not
-  cover these. Still stored in the NWB file and reachable via `Nwbfile.get_abs_path()`, just not
-  queryable through DataJoint yet.
+## Idea to pitch: the sleep analysis as a Spyglass pipeline
 
-## Open Questions
+The files carry the lab's analysis results: the sleep scoring, the seizure detection, the spike-wave discharge
+flags, the hourly seizure counts and the power spectrum of each state, computed by the lab's
+[AUTOMATIC-SLEEP-SCORER](https://github.com/Gonzalez-Sulser-Team/AUTOMATIC-SLEEP-SCORER). With `ImportedEEG` and the
+sleep tables in Spyglass, the same analysis could run as Spyglass computed tables: for example a state power spectrum
+table that depends on `ImportedEEG` and `SleepStateScoring`, and a scoring table computed from the EEG and EMG with
+versioned parameters, next to the imported one. This needs the lab to agree that the method can be reproduced
+outside their code, and the Spyglass team to agree on where such tables belong. It is only an idea for now; nobody has
+started on it.
 
-- Do the derived streams (sleep/seizure/SWD/PSD) need to be *queryable in Spyglass*, or is
-  storing them in the NWB file enough for the ARC deliverable? If queryable: open a Spyglass
-  issue (general concept, multiple labs would benefit) vs. a lab-scoped
-  `spyglass_extensions/` custom `dj.Imported` table?
-- Is closing the `DataAcquisitionDevice`/`TaskEpoch` gaps worth doing, or acceptable as-is?
+## When a PR changes or merges
 
-## TODOs
-
-- Find a way to insert sleep analysis processing/behavior, epochs in the DB
-- Discuss with spyglass team about the HERD ontologies
+1. Rebuild the branch `gonzalez-sulser-integration` on the fork from upstream `master` and the PR branches still
+   open, and tag it (`gonzalez-sulser-example-v2`, ...).
+2. Point `spyglass-env.yaml` and `bootstrap_wsl.sh` at the new tag, or at a Spyglass release once everything is
+   merged.
+3. Rebuild the env, reset the database, ingest the 24 files and re-run the notebooks, as in the docs. Update the
+   notebooks if table names or fetchers changed.
+4. Update this file, the docs and the tracking issue.

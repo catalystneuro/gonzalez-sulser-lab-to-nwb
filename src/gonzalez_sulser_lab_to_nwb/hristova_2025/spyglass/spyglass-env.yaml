@@ -7,7 +7,7 @@
 #   - EEG/EMG (common_eeg.ImportedEEG): https://github.com/LorenFrankLab/spyglass/pull/1638
 #   - HERD external resources: https://github.com/LorenFrankLab/spyglass/pull/1722
 #   - HED annotations: https://github.com/LorenFrankLab/spyglass/pull/1723
-#   - sleep scoring and seizure events: branch `sleep-scoring` of the fork
+#   - sleep scoring and seizure events: https://github.com/LorenFrankLab/spyglass/pull/1726
 # See src/gonzalez_sulser_lab_to_nwb/hristova_2025/docs/spyglass_ingestion.md.
 #
 # Create it with bootstrap_wsl.sh, not `conda env create` alone: the script creates it from

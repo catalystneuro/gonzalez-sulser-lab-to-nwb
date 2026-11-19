@@ -1,12 +1,12 @@
 """Smoke test: confirm DataJoint can reach the local Spyglass MySQL container
 and that the Spyglass schemas materialize.
 
-Run from this directory inside the `spyglass` conda env:
+Run from this directory inside the `spyglass-gonzalez-sulser-lab-env` conda env (WSL):
 
-    conda activate spyglass
+    conda activate spyglass-gonzalez-sulser-lab-env
     python check_connection.py
 
-Critical ordering (see spyglass-insertion-patterns.md):
+Critical ordering:
   1. dj.config.load(...) BEFORE importing any spyglass module — spyglass runs
      dj.schema(...) at import time and would otherwise connect with TLS defaults.
 """

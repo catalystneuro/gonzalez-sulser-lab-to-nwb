@@ -17,9 +17,9 @@ nwb_stub/
 .venv/
 
 # Spyglass / DataJoint (credentials + local DB volume)
-spyglass/dj_local_conf.json
+src/gonzalez_sulser_lab_to_nwb/hristova_2025/spyglass/dj_local_conf.json
 .datajoint_config.json
-spyglass/mysql-data/
+src/gonzalez_sulser_lab_to_nwb/hristova_2025/spyglass/mysql-data/
 dry_run_insertion.py
 insertion_report.txt 
 tables.txt
