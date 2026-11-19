@@ -4,7 +4,7 @@ Tracks the Spyglass pull requests and issues that ingesting the DANDI:001888 fil
 development, and the open questions about what else to ingest. Remove the tracking part once the PRs are all merged
 into LorenFrankLab/spyglass and the environment installs a Spyglass release. How to set up Spyglass, ingest the files
 and run the notebooks is in [docs/spyglass_ingestion.md](../docs/spyglass_ingestion.md). The overview for the
-Spyglass team is the tracking issue on this repository (to be opened).
+Spyglass team is https://github.com/catalystneuro/gonzalez-sulser-lab-to-nwb/issues/13.
 
 Check the live state of each link before acting on it.
 
@@ -85,4 +85,4 @@ started on it.
    merged.
 3. Rebuild the env, reset the database, ingest the 24 files and re-run the notebooks, as in the docs. Update the
    notebooks if table names or fetchers changed.
-4. Update this file, the docs and the tracking issue.
+4. Update this file, the docs and https://github.com/catalystneuro/gonzalez-sulser-lab-to-nwb/issues/13.

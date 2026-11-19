@@ -160,7 +160,8 @@ The tables used here come from these branches:
 
 Upstream Spyglass also needs pynwb 4 to read these files
 ([#1694](https://github.com/LorenFrankLab/spyglass/issues/1694)); the bootstrap installs it over Spyglass's pins. The
-current state of each PR is in [spyglass_ingestion_notes.md](../spyglass/spyglass_ingestion_notes.md).
+current state of each PR is in [spyglass_ingestion_notes.md](../spyglass/spyglass_ingestion_notes.md) and in
+[issue #13](https://github.com/catalystneuro/gonzalez-sulser-lab-to-nwb/issues/13).
 
 The sleep tables are the most likely to change: the conventions that select a sleep scoring table (a `sleep_state`
 column) and a seizure table (the name `seizure_events`) are still to be discussed with the Spyglass team. When a PR
